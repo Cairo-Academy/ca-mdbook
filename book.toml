@@ -1,8 +1,0 @@
-[book]
-authors = ["Faith M. Roberts"]
-language = "en"
-multilingual = false
-src = "src"
-title = "Cairo Academy Book"
-[output.html]
-site-url = "/book/"
