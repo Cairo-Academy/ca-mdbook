@@ -26,7 +26,6 @@ Cairo Academy offers a variety of templates catering to different use cases:
 ## How to Use the Templates
 
 1.  **Browse Templates:** Explore the available templates and choose one that fits your project requirements.
-2.  **Download/Clone:** Download or clone the template repository.
-3.  **Customize:** Modify the template code to fit your specific application logic.
-4.  **Deploy:** Compile and deploy your customized smart contract on Starknet.
-5.  **Iterate:** Build upon the template and add new features.
+2.  **Customize:** Modify the template code to fit your specific application logic.
+3.  **Deploy:** Compile and deploy your customized smart contract on Starknet.
+4.  **Iterate:** Build upon the template and add new features.

@@ -177,7 +177,6 @@
 <h2 id="how-to-use-the-templates"><a class="header" href="#how-to-use-the-templates">How to Use the Templates</a></h2>
 <ol>
 <li><strong>Browse Templates:</strong> Explore the available templates and choose one that fits your project requirements.</li>
-<li><strong>Download/Clone:</strong> Download or clone the template repository.</li>
 <li><strong>Customize:</strong> Modify the template code to fit your specific application logic.</li>
 <li><strong>Deploy:</strong> Compile and deploy your customized smart contract on Starknet.</li>
 <li><strong>Iterate:</strong> Build upon the template and add new features.</li>
@@ -206,6 +205,22 @@
 
         </div>
 
+        <!-- Livereload script (if served using the cli tool) -->
+        <script>
+            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
+            const socket = new WebSocket(wsAddress);
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
 
 
 
