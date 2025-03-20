@@ -250,6 +250,173 @@
 <h2 id="cairo-academy-an-educational-resource"><a class="header" href="#cairo-academy-an-educational-resource">Cairo Academy: An Educational Resource</a></h2>
 <p>Cairo Academy is dedicated to providing high-quality educational resources for developers interested in learning Cairo and building on StarkNet. We curate and share sample smart contracts, tutorials, and other learning materials to facilitate the mastery of Cairo and encourage contributions to the StarkNet ecosystem.</p>
 <p><strong>Important Note:</strong> Cairo Academy focuses exclusively on educational resources. The provided contracts are not intended for production use.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="cairo-academy-understanding-a-basic-erc20-token-contract"><a class="header" href="#cairo-academy-understanding-a-basic-erc20-token-contract">Cairo Academy: Understanding a Basic ERC20 Token Contract</a></h1>
+<p>This chapter delves into a fundamental ERC20 token contract implemented in Cairo. This contract demonstrates the core functionalities of a standard ERC20 token, providing a practical example for learning how to build fungible tokens on StarkNet.</p>
+<h2 id="purpose-and-functionality"><a class="header" href="#purpose-and-functionality">Purpose and Functionality</a></h2>
+<p>The provided Cairo code defines a basic ERC20 token contract. It implements essential functionalities such as:</p>
+<ul>
+<li><strong>Token Minting:</strong> Creating new tokens and assigning them to an address.</li>
+<li><strong>Token Transfer:</strong> Moving tokens between different addresses.</li>
+<li><strong>Allowance and Approval:</strong> Allowing one address to transfer tokens on behalf of another.</li>
+<li><strong>Balance and Supply Tracking:</strong> Maintaining records of user balances and the total token supply.</li>
+<li><strong>Metadata:</strong> Providing basic token information like name, symbol, and decimals.</li>
+<li><strong>Withdrawal:</strong> Allowing the contract owner to withdraw tokens from the contract.</li>
+</ul>
+<p>This contract serves as a foundational example for understanding the mechanics of ERC20 tokens within the StarkNet ecosystem.</p>
+<pre><code class="language-cairo">use starknet::ContractAddress;
+use starknet::storage::Map;
+use starknet::{get_caller_address, get_contract_address};
+
+#[starknet::interface]
+trait IToken&lt;TContractState&gt; {
+    fn mint(ref self: TContractState, address: ContractAddress);
+    fn transfer(ref self: TContractState, address: ContractAddress, amount: u128);
+    fn approval(ref self: TContractState, from: ContractAddress, to: ContractAddress, amount: u128);
+    fn allowance(self: @TContractState, from: ContractAddress, to: ContractAddress) -&gt; u128;
+    fn transfer_from(ref self: TContractState, from: ContractAddress, to: ContractAddress, amount: u128);
+    fn withdrawTokens(ref self: TContractState, contract_address: ContractAddress, amount: u128);
+    fn get_name(self: @TContractState) -&gt; felt252;
+    fn get_symbol(self: @TContractState) -&gt; felt252;
+    fn get_decimal(self: @ContractState) -&gt; u128;
+    fn get_total_supply(self: @ContractState) -&gt; u128;
+    fn get_balance_of_user(self: @TContractState, user: ContractAddress) -&gt; u128;
+    fn get_owner(self: @ContractState) -&gt; ContractAddress;
+}
+
+#[starknet::contract]
+mod ERC20Token {
+    use super::IToken;
+    use starknet::{ContractAddress, get_caller_address, get_contract_address};
+    use starknet::storage::Map;
+
+    #[storage]
+    struct Storage {
+        name: felt252,
+        symbol: felt252,
+        decimal: u128,
+        total_supply: u128,
+        owner: ContractAddress,
+        balance_of: Map::&lt;ContractAddress, u128&gt;,
+        allowance: Map::&lt;(ContractAddress, ContractAddress), u128&gt;,
+    }
+
+    #[constructor]
+    fn constructor(ref self: ContractState) {
+        self.name.write('ERC20Token');
+        self.symbol.write('ETK');
+        self.decimal.write(18);
+        self.owner.write(get_caller_address());
+    }
+
+    #[event]
+    #[derive(Drop, starknet::Event)]
+    enum Event {
+        TransferFrom: TransferFrom,
+        Transfer: Transfer,
+        Mint: Mint,
+        Withdraw: Withdraw,
+        Approval: Approval,
+    }
+
+    #[derive(Drop, starknet::Event)]
+    struct TransferFrom {
+        #[key]
+        from: ContractAddress,
+        to: ContractAddress,
+        amount: u128,
+    }
+
+    #[derive(Drop, starknet::Event)]
+    struct Transfer {
+        #[key]
+        to: ContractAddress,
+        amount: u128,
+    }
+
+    #[derive(Drop, starknet::Event)]
+    struct Mint {
+        #[key]
+        to: ContractAddress,
+        amount: u128,
+    }
+
+    #[derive(Drop, starknet::Event)]
+    struct Withdraw {
+        #[key]
+        contract_address: ContractAddress,
+        user: ContractAddress,
+        amount: u128,
+    }
+
+    #[derive(Drop, starknet::Event)]
+    struct Approval {
+        #[key]
+        user: ContractAddress,
+        to: ContractAddress,
+        amount: u128,
+    }
+
+    #[abi(embed_v0)]
+    impl ITokenImpl of super::IToken&lt;ContractState&gt; {
+        fn mint(ref self: ContractState, address: ContractAddress) {
+            let caller: ContractAddress = get_caller_address();
+            assert(!caller.is_zero(), 'Caller cannot be address zero');
+            let supply: u128 = self.total_supply.read();
+            let balance: u128 = self.balance_of.read(get_caller_address());
+            self.total_supply.write(supply + 1000);
+            self.balance_of.write(get_caller_address(), balance + 1000);
+            self.emit(Mint { to: get_caller_address(), amount: 1000 });
+        }
+        fn transfer(ref self: ContractState, address: ContractAddress, amount: u128) {
+            let sender_balance: u128 = self.balance_of.read(get_caller_address());
+            let reciever_balance: u128 = self.balance_of.read(address);
+            assert(sender_balance &gt;= amount, 'Not Enough Tokens');
+            self.balance_of.write(get_caller_address(), sender_balance - amount);
+            self.balance_of.write(address, reciever_balance + amount);
+            self.emit(Transfer { to: address, amount: amount });
+        }
+        fn approval(ref self: ContractState, from: ContractAddress, to: ContractAddress, amount: u128) {
+            self.allowance.write((from, to), self.allowance.read((from, to)) + amount);
+            self.emit(Approval { user: from, to: to, amount: amount });
+        }
+        fn allowance(self: @ContractState, from: ContractAddress, to: ContractAddress) -&gt; u128 {
+            self.allowance.read((from, to))
+        }
+        fn transfer_from(ref self: ContractState, from: ContractAddress, to: ContractAddress, amount: u128) {
+            assert(self.allowance.read((from, to)) &gt;= amount, 'Insufficient Allowance');
+            self.allowance.write((from, to), self.allowance.read((from, to)) - amount);
+            assert(self.balance_of.read(from) &gt;= amount, 'Not Enough Tokens');
+            self.balance_of.write(from, self.balance_of.read(from) - amount);
+            self.balance_of.write(to, self.balance_of.read(to) + amount);
+            self.emit(TransferFrom { from: from, to: to, amount: amount });
+        }
+        fn withdrawTokens(ref self: ContractState, contract_address: ContractAddress, amount: u128) {
+            let contract_balance = self.balance_of.read(get_contract_address());
+            let caller_balance = self.balance_of.read(get_caller_address());
+            assert(contract_balance &gt;= amount, 'Contract balance Insufficient');
+            self.balance_of.write(get_caller_address(), caller_balance + amount);
+            self.balance_of.write(get_contract_address(), contract_balance - amount);
+            self.emit(Withdraw { contract_address: contract_address, user: get_caller_address(), amount });
+        }
+        fn get_name(self: @ContractState) -&gt; felt252 {
+            self.name.read()
+        }
+        fn get_symbol(self: @ContractState) -&gt; felt252 {
+            self.symbol.read()
+        }
+        fn get_decimal(self: @ContractState) -&gt; u128 {
+            self.decimal.read()
+        }
+        fn get_total_supply(self: @ContractState) -&gt; u128 {
+            self.total_supply.read()
+        }
+        fn get_balance_of_user(self: @ContractState, user: ContractAddress) -&gt; u128 {
+            self.balance_of.read(user)
+        }
+        fn get_owner(self: @ContractState) -&gt; ContractAddress {
+            self.owner.read()
+        }
+</code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="introduction-to-cairo-academys-ai-agent-examples"><a class="header" href="#introduction-to-cairo-academys-ai-agent-examples">Introduction to Cairo Academy's AI Agent Examples</a></h1>
 <p>Welcome to the Cairo Academy's collection of AI Agent examples, designed for educational exploration of AI concepts within the StarkNet ecosystem. This resource aims to provide developers with accessible examples to learn how to integrate AI functionalities on StarkNet.</p>
 <h2 id="purpose-1"><a class="header" href="#purpose-1">Purpose</a></h2>
@@ -386,16 +553,81 @@
                 <img src="https://avatars.githubusercontent.com/u/91972571?v=4&s=100" alt="Mayowa's Image">
                 <br/>
                 <p>Mayowa Obisesan</p>
-                </a>
-            </td>
-            <td align="center" width="100px" height="100px">
-                <a href="https://github.com/Verifieddanny">
-                <img src="https://avatars.githubusercontent.com/u/103733496?v=4&s=100" alt="Mayowa's Image">
-                <br/>
-                <p>Daniel Nwachukwu</p>
-                </a>
-            </td>
-        </tr>
+                      </a>
+                    </td>
+                    <td align="center" width="100px" height="100px">
+                      <a href="https://github.com/Verifieddanny">
+                        <img
+                          src="https://avatars.githubusercontent.com/u/103733496?v=4&s=100"
+                          alt="Daniel's Image"
+                        />
+                        <br />
+                        <p>Daniel Nwachukwu</p>
+                      </a>
+                    </td>
+                    <td align="center" width="100px" height="100px">
+                      <a href="https://github.com/hakymulla">
+                        <img
+                          src="https://avatars.githubusercontent.com/u/25408889?v=4&s=100"
+                          alt="Kazeem's Image"
+                        />
+                        <br />
+                        <p>Kazeem Hakeem</p>
+                      </a>
+                    </td>
+                    <td>
+                      <a href="https://github.com/Hoossayn">
+                        <img
+                          src="https://avatars.githubusercontent.com/u/35276272?v=4&s=100"
+                          alt="Hakeem's Image"
+                        />
+                        <br />
+                        <p>Hakeem Husseni</p>
+                      </a>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <a href="https://github.com/Lukman-01">
+                        <img
+                          src="https://avatars.githubusercontent.com/u/105321679?v=4&s=100"
+                          alt="Lukman's Image"
+                        />
+                        <br />
+                        <p>Abdulyekeen Lukman</p>
+                      </a>
+                    </td>
+                    <td>
+                      <a href="https://github.com/chiscookeke11">
+                        <img
+                          src="https://avatars.githubusercontent.com/u/137373308?v=4&s=100"
+                          alt="Lukman's Image"
+                        />
+                        <br />
+                        <p>Okeke Chinedu Emmanuel</p>
+                      </a>
+                    </td>
+                    <td>
+                      <a href="https://github.com/Yunusabdul38">
+                        <img
+                          src="https://avatars.githubusercontent.com/u/101453089?v=4&s=100"
+                          alt="Lukman's Image"
+                        />
+                        <br />
+                        <p>Yunus Abdulmajid</p>
+                      </a>
+                    </td>
+                    <td>
+                      <a href="https://github.com/Zeegaths">
+                        <img
+                          src="https://avatars.githubusercontent.com/u/107637548?v=4&s=100"
+                          alt="Lukman's Image"
+                        />
+                        <br />
+                        <p>Mary Wangui</p>
+                      </a>
+                    </td>
+                  </tr>
     </tbody>
 </table>
 <h2 id="contributing-1"><a class="header" href="#contributing-1">Contributing</a></h2>
@@ -404,11 +636,6 @@
 <p>Connect with us on our community forum to stay up-to-date on the latest developments and collaborate with other Cairo developers.
 <a href="https://t.me/+uQKuqWrTlhs5ZWI0">Telegram</a>.</p>
 <p><strong>Thank you for being part of the Cairo Academy journey!</strong></p>
-<h2 id="contributing-templates"><a class="header" href="#contributing-templates">Contributing Templates</a></h2>
-<p>We encourage the community to contribute new templates and improve existing ones. If you have a template that you think would be valuable to others, please submit a pull request.</p>
-<h2 id="join-the-starknet-ecosystem"><a class="header" href="#join-the-starknet-ecosystem">Join the Starknet Ecosystem</a></h2>
-<p>Cairo Academy's templates are designed to help you quickly become a productive member of the Starknet ecosystem. Start building today and contribute to the future of decentralized applications.</p>
-<p><strong>Let's build with templates!</strong></p>
 
                     </main>
 
@@ -427,6 +654,22 @@
 
         </div>
 
+        <!-- Livereload script (if served using the cli tool) -->
+        <script>
+            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
+            const socket = new WebSocket(wsAddress);
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
 
 
 

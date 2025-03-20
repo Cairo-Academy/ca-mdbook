@@ -4,6 +4,8 @@
 
 - [Architecture](./architecture.md)
 - [Starknet Smart Contracts](./contracts.md)
+  # Templates
+  - [ERC20 Token Contract Templates](./contract/erc20.md)
 - [Starknet AI Agents](./aiagents.md)
 - [Dojo Games](./dojo.md)
 - [Cairo Programs](./programs.md)
