@@ -113,6 +113,16 @@ We are grateful to the following contributors for improving and expanding Cairo 
                         <p>Pedro Coelho</p>
                       </a>
                     </td>
+                    <td>
+                      <a href="https://github.com/Oluwatos94">
+                        <img
+                          src="https://avatars.githubusercontent.com/u/111003311?v=4&s=100"
+                          alt="Tosin's Image"
+                        />
+                        <br />
+                        <p>Tosin Akinbowa</p>
+                      </a>
+                    </td>
                   </tr>
     </tbody>
 </table>
