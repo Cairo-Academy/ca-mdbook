@@ -85,10 +85,32 @@ We are grateful to the following contributors for improving and expanding Cairo 
                       <a href="https://github.com/Zeegaths">
                         <img
                           src="https://avatars.githubusercontent.com/u/107637548?v=4&s=100"
-                          alt="Lukman's Image"
+                          alt="Mary's Image"
                         />
                         <br />
                         <p>Mary Wangui</p>
+                      </a>
+                    </td>
+                    <td>
+                      <a href="https://github.com/Nanle100">
+                        <img
+                          src="https://avatars.githubusercontent.com/u/162046789?v=4&s=100"
+                          alt="Nanle's Image"
+                        />
+                        <br />
+                        <p>Nathaniel Nanle</p>
+                      </a>
+                    </td>
+                  </tr>
+                  <tr>
+                  <td>
+                      <a href="https://github.com/PedroCo3lho">
+                        <img
+                          src="https://avatars.githubusercontent.com/u/130417542?v=4&s=100"
+                          alt="Pedro's Image"
+                        />
+                        <br />
+                        <p>Pedro Coelho</p>
                       </a>
                     </td>
                   </tr>
