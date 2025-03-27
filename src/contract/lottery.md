@@ -18,7 +18,7 @@ ticket_count : Number of tickets to purchase
 - **End the lottery and select winners:**. This takes parametrs:
 random_seed : Additional entropy source to enhance randomness
 
-- **Claim prizes for the caller if they won** :
+- **Claim prizes for the caller if they won** 
 
 We have some view functions. These are functions that read data from the blockcahin.
 - **Get lottery information** : This get the lottery information 
