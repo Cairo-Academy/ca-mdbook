@@ -123,6 +123,16 @@ We are grateful to the following contributors for improving and expanding Cairo 
                         <p>Tosin Akinbowa</p>
                       </a>
                     </td>
+                    <td>
+                      <a href="https://github.com/mimiprosper">
+                        <img
+                          src="https://avatars.githubusercontent.com/u/12185633?v=4&s=100"
+                          alt="Emmanuel's Image"
+                        />
+                        <br />
+                        <p>Emmanuel Okeke</p>
+                      </a>
+                    </td>
                   </tr>
     </tbody>
 </table>
