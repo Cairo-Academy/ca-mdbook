@@ -265,6 +265,16 @@
                         <p>Pedro Coelho</p>
                       </a>
                     </td>
+                    <td>
+                      <a href="https://github.com/Oluwatos94">
+                        <img
+                          src="https://avatars.githubusercontent.com/u/111003311?v=4&s=100"
+                          alt="Tosin's Image"
+                        />
+                        <br />
+                        <p>Tosin Akinbowa</p>
+                      </a>
+                    </td>
                   </tr>
     </tbody>
 </table>
@@ -298,6 +308,22 @@
 
         </div>
 
+        <!-- Livereload script (if served using the cli tool) -->
+        <script>
+            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
+            const socket = new WebSocket(wsAddress);
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
 
 
 

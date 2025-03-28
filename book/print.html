@@ -417,6 +417,808 @@ mod ERC20Token {
             self.owner.read()
         }
 </code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="cairo-academy-understanding-a-basic-lottery-contract"><a class="header" href="#cairo-academy-understanding-a-basic-lottery-contract">Cairo Academy: Understanding a Basic Lottery Contract</a></h1>
+<p>This chapter delves into the basics of a lottery contract implemented in Cairo. This contract demonstrates the core functionalities of a basic lottery contract, providing a practical example for learning how to build a basic lottery contract on StarkNet.</p>
+<h2 id="purpose-and-functionality-1"><a class="header" href="#purpose-and-functionality-1">Purpose and Functionality</a></h2>
+<p>The provided Cairo code defines a basic lottery contract. It implements essential functionalities such as:</p>
+<ul>
+<li>
+<p><strong>Start Lottery:</strong> This starts the operation of a lottery round. This takes in parameters:
+ticket_price : Price of a single lottery ticket in wei
+max_tickets : Maximum number of tickets for this lottery round
+prize_distribution : Array containing percentage distribution of prizes (must sum to 100)
+duration : Duration of the lottery in seconds</p>
+</li>
+<li>
+<p><strong>Buy lottery tickets:</strong> Buy lottery tickets. This takes parameters:
+ticket_count : Number of tickets to purchase</p>
+</li>
+<li>
+<p><strong>End the lottery and select winners:</strong>. This takes parametrs:
+random_seed : Additional entropy source to enhance randomness</p>
+</li>
+<li>
+<p><strong>Claim prizes for the caller if they won</strong></p>
+</li>
+</ul>
+<p>We have some view functions. These are functions that read data from the blockcahin.</p>
+<ul>
+<li><strong>Get lottery information</strong> : This get the lottery information</li>
+<li><strong>Get ticket holder</strong> : This gets the information about the lottery ticket holder</li>
+<li><strong>Get Winner</strong> : This gets the winner information</li>
+<li><strong>Get user tickets</strong> : This gets information about the user tickets</li>
+<li><strong>Is the lottery active</strong> This return a bool (true or flase) the active state of the lottery ticket</li>
+</ul>
+<p>This contract serves as a foundational example for understanding the mechanics of Lottery Contract within the StarkNet ecosystem.</p>
+<pre><code>use starknet::ContractAddress;
+use array::ArrayTrait;
+use option::OptionTrait;
+
+#[starknet::interface]
+pub trait ILotteryContract&lt;TContractState&gt; {
+    fn start_lottery(
+        ref self: TContractState,
+        ticket_price: u256,
+        max_tickets: u32,
+        prize_distribution: Array&lt;u8&gt;,
+        duration: u64
+    );
+    fn buy_tickets(ref self: TContractState, ticket_count: u32);
+    fn end_lottery(ref self: TContractState, random_seed: felt252);
+    fn claim_prize(ref self: TContractState);
+    fn get_lottery_info(self: @TContractState) -&gt; LotteryInfo;
+    fn get_ticket_holders(self: @TContractState) -&gt; Array&lt;ContractAddress&gt;;
+    fn get_winners(self: @TContractState) -&gt; Array&lt;Winner&gt;;
+    fn get_user_tickets(self: @TContractState, user: ContractAddress) -&gt; u32;
+    fn is_lottery_active(self: @TContractState) -&gt; bool;
+}
+
+#[derive(Copy, Drop, Serde, starknet::Store)]
+pub struct LotteryInfo {
+    lottery_id: u32,
+    ticket_price: u256,
+    max_tickets: u32,
+    tickets_sold: u32,
+    prize_pool: u256,
+    start_time: u64,
+    end_time: u64,
+    lottery_status: u8, 
+}
+
+#[derive(Copy, Drop, Serde)]
+pub struct Winner {
+    address: ContractAddress,
+    prize_amount: u256,
+    claimed: bool
+}
+
+mod Errors {
+    pub const LOTTERY_ALREADY_ACTIVE: felt252 = 'Lottery already active';
+    pub const INVALID_TICKET_PRICE: felt252 = 'Invalid ticket price';
+    pub const INVALID_MAX_TICKETS: felt252 = 'Invalid max tickets';
+    pub const INVALID_DURATION: felt252 = 'Invalid duration';
+    pub const INVALID_DISTRIBUTION: felt252 = 'Invalid prize distribution';
+    pub const LOTTERY_NOT_ACTIVE: felt252 = 'Lottery not active';
+    pub const LOTTERY_NOT_ENDED: felt252 = 'Lottery still active';
+    pub const LOTTERY_ALREADY_ENDED: felt252 = 'Lottery already ended';
+    pub const MAX_TICKETS_REACHED: felt252 = 'Max tickets reached';
+    pub const INSUFFICIENT_PAYMENT: felt252 = 'Insufficient payment';
+    pub const NOT_OWNER: felt252 = 'Not the contract owner';
+    pub const NO_PRIZES_TO_CLAIM: felt252 = 'No prizes to claim';
+    pub const PRIZE_ALREADY_CLAIMED: felt252 = 'Prize already claimed';
+}
+
+#[starknet::contract]
+pub mod LotteryContract {
+    use super::{
+        ILotteryContract, LotteryInfo, Winner, Errors,
+        ArrayTrait, ContractAddress, OptionTrait
+    };
+    use core::num::traits::Zero;
+    use starknet::{
+        get_caller_address, get_block_timestamp, get_block_number, get_tx_info,
+        get_contract_address
+    };
+    use openzeppelin_token::erc20::interface::{IERC20Dispatcher, IERC20DispatcherTrait};
+    use core::hash::{LegacyHash, HashStateTrait};
+    use core::pedersen::PedersenTrait;
+    use core::traits::Into;
+    use core::array::SpanTrait;
+
+    #[storage]
+    struct Storage {
+        owner: ContractAddress,
+        payment_token: IERC20Dispatcher,
+        lottery_id: u32,
+        active_lottery: LotteryInfo,
+        ticket_holders: LegacyMap::&lt;u32, ContractAddress&gt;, 
+        user_tickets: LegacyMap::&lt;(u32, ContractAddress), u32&gt;, count
+        winners: LegacyMap::&lt;(u32, u32), Winner&gt;, 
+        winner_count: LegacyMap::&lt;u32, u32&gt;, 
+        prize_distribution: LegacyMap::&lt;(u32, u32), u8&gt;, 
+        prize_distribution_count: LegacyMap::&lt;u32, u32&gt;, 
+    }
+
+    #[event]
+    #[derive(Drop, starknet::Event)]
+    enum Event {
+        LotteryStarted: LotteryStarted,
+        TicketsPurchased: TicketsPurchased,
+        LotteryEnded: LotteryEnded,
+        PrizeClaimed: PrizeClaimed,
+    }
+
+    #[derive(Drop, starknet::Event)]
+    struct LotteryStarted {
+        lottery_id: u32,
+        ticket_price: u256,
+        max_tickets: u32,
+        duration: u64,
+    }
+
+    #[derive(Drop, starknet::Event)]
+    struct TicketsPurchased {
+        lottery_id: u32,
+        buyer: ContractAddress,
+        ticket_count: u32,
+        total_cost: u256,
+    }
+
+    #[derive(Drop, starknet::Event)]
+    struct LotteryEnded {
+        lottery_id: u32,
+        total_tickets_sold: u32,
+        prize_pool: u256,
+        timestamp: u64,
+    }
+
+    #[derive(Drop, starknet::Event)]
+    struct PrizeClaimed {
+        lottery_id: u32,
+        winner: ContractAddress,
+        prize_amount: u256,
+    }
+
+    #[constructor]
+    fn constructor(
+        ref self: ContractState,
+        payment_token_address: ContractAddress,
+    ) {
+        self.owner.write(get_caller_address());
+        self.payment_token.write(IERC20Dispatcher { contract_address: payment_token_address });
+        self.lottery_id.write(0);
+    }
+
+    #[abi(embed_v0)]
+    impl LotteryContractImpl of super::ILotteryContract&lt;ContractState&gt; {
+        fn start_lottery(
+            ref self: ContractState, 
+            ticket_price: u256, 
+            max_tickets: u32,
+            prize_distribution: Array&lt;u8&gt;,
+            duration: u64
+        ) {
+            self.assert_only_owner();
+            
+            assert(!self.is_lottery_active(@self), Errors::LOTTERY_ALREADY_ACTIVE);
+            
+            assert(ticket_price &gt; 0, Errors::INVALID_TICKET_PRICE);
+            assert(max_tickets &gt; 0, Errors::INVALID_MAX_TICKETS);
+            assert(duration &gt; 0, Errors::INVALID_DURATION);
+            
+            let mut total_percentage: u8 = 0;
+            let mut i: u32 = 0;
+            let distribution_len = prize_distribution.len();
+            assert(distribution_len &gt; 0, Errors::INVALID_DISTRIBUTION);
+
+            let distribution_span = prize_distribution.span();
+            loop {
+                if i &gt;= distribution_len {
+                    break;
+                }
+                let percentage = *distribution_span.at(i);
+                total_percentage += percentage;
+                self.prize_distribution.write((self.lottery_id.read() + 1, i), percentage);
+                i += 1;
+            }
+            
+            assert(total_percentage == 100, Errors::INVALID_DISTRIBUTION);
+            self.prize_distribution_count.write(self.lottery_id.read() + 1, distribution_len);
+            
+            let new_lottery_id = self.lottery_id.read() + 1;
+            let start_time = get_block_timestamp();
+            let end_time = start_time + duration;
+            
+            self.active_lottery.write(LotteryInfo {
+                lottery_id: new_lottery_id,
+                ticket_price,
+                max_tickets,
+                tickets_sold: 0,
+                prize_pool: 0,
+                start_time,
+                end_time,
+                lottery_status: 1,
+            });
+            
+            self.lottery_id.write(new_lottery_id);
+            
+            self.emit(LotteryStarted {
+                lottery_id: new_lottery_id,
+                ticket_price,
+                max_tickets,
+                duration,
+            });
+        }
+
+        fn buy_tickets(ref self: ContractState, ticket_count: u32) {
+            assert(self.is_lottery_active(@self), Errors::LOTTERY_NOT_ACTIVE);
+            
+            let caller = get_caller_address();
+            let active_lottery = self.active_lottery.read();
+            
+            assert(active_lottery.tickets_sold + ticket_count &lt;= active_lottery.max_tickets, Errors::MAX_TICKETS_REACHED);
+            
+            let total_cost = active_lottery.ticket_price * ticket_count.into();
+            
+            self.payment_token.read().transfer_from(
+                caller, 
+                get_contract_address(), 
+                total_cost
+            );
+            
+            let current_tickets_sold = active_lottery.tickets_sold;
+        
+            let mut i: u32 = 0;
+            loop {
+                if i &gt;= ticket_count {
+                    break;
+                }
+                self.ticket_holders.write(current_tickets_sold + i, caller);
+                i += 1;
+            }
+            
+            let user_current_tickets = self.user_tickets.read((active_lottery.lottery_id, caller));
+            self.user_tickets.write((active_lottery.lottery_id, caller), user_current_tickets + ticket_count);
+            
+            self.active_lottery.write(LotteryInfo {
+                lottery_id: active_lottery.lottery_id,
+                ticket_price: active_lottery.ticket_price,
+                max_tickets: active_lottery.max_tickets,
+                tickets_sold: active_lottery.tickets_sold + ticket_count,
+                prize_pool: active_lottery.prize_pool + total_cost,
+                start_time: active_lottery.start_time,
+                end_time: active_lottery.end_time,
+                lottery_status: active_lottery.lottery_status,
+            });
+            
+            self.emit(TicketsPurchased {
+                lottery_id: active_lottery.lottery_id,
+                buyer: caller,
+                ticket_count,
+                total_cost,
+            });
+        }
+
+        fn end_lottery(ref self: ContractState, random_seed: felt252) {
+            self.assert_only_owner();
+            
+            assert(self.is_lottery_active(@self), Errors::LOTTERY_NOT_ACTIVE);
+            
+            let active_lottery = self.active_lottery.read();
+        
+            assert(
+                get_block_timestamp() &gt;= active_lottery.end_time || 
+                active_lottery.tickets_sold == active_lottery.max_tickets,
+                Errors::LOTTERY_NOT_ENDED
+            );
+            
+            if active_lottery.tickets_sold == 0 {
+                self.active_lottery.write(LotteryInfo {
+                    lottery_id: active_lottery.lottery_id,
+                    ticket_price: active_lottery.ticket_price,
+                    max_tickets: active_lottery.max_tickets,
+                    tickets_sold: active_lottery.tickets_sold,
+                    prize_pool: active_lottery.prize_pool,
+                    start_time: active_lottery.start_time,
+                    end_time: active_lottery.end_time,
+                    lottery_status: 2, 
+                });
+                return;
+            }
+
+            let random_value = self.generate_random_value(random_seed);
+            
+            let prize_pool = active_lottery.prize_pool;
+            let mut winner_count: u32 = 0;
+            let distribution_count = self.prize_distribution_count.read(active_lottery.lottery_id);
+            
+            let mut i: u32 = 0;
+            loop {
+                if i &gt;= distribution_count {
+                    break;
+                }
+                
+                let percentage = self.prize_distribution.read((active_lottery.lottery_id, i));
+                let prize_amount = (prize_pool * percentage.into()) / 100_u256;
+                
+                if prize_amount &gt; 0 {
+                    let winner_ticket = self.select_random_ticket(
+                        active_lottery.tickets_sold, 
+                        random_value, 
+                        i
+                    );
+                    let winner_address = self.ticket_holders.read(winner_ticket);
+                    
+                    self.winners.write(
+                        (active_lottery.lottery_id, i),
+                        Winner { 
+                            address: winner_address, 
+                            prize_amount,
+                            claimed: false 
+                        }
+                    );
+                    
+                    winner_count += 1;
+                }
+                
+                i += 1;
+            }
+            
+            self.winner_count.write(active_lottery.lottery_id, winner_count);
+            
+            self.active_lottery.write(LotteryInfo {
+                lottery_id: active_lottery.lottery_id,
+                ticket_price: active_lottery.ticket_price,
+                max_tickets: active_lottery.max_tickets,
+                tickets_sold: active_lottery.tickets_sold,
+                prize_pool: active_lottery.prize_pool,
+                start_time: active_lottery.start_time,
+                end_time: active_lottery.end_time,
+                lottery_status: 2, 
+            });
+            
+            self.emit(LotteryEnded {
+                lottery_id: active_lottery.lottery_id,
+                total_tickets_sold: active_lottery.tickets_sold,
+                prize_pool: active_lottery.prize_pool,
+                timestamp: get_block_timestamp(),
+            });
+        }
+
+        fn claim_prize(ref self: ContractState) {
+            let active_lottery = self.active_lottery.read();
+            let caller = get_caller_address();
+            
+            assert(active_lottery.lottery_status &gt;= 2, Errors::LOTTERY_NOT_ENDED);
+            
+            let lottery_id = active_lottery.lottery_id;
+            let winner_count = self.winner_count.read(lottery_id);
+            
+            let mut prize_found = false;
+            let mut total_prize: u256 = 0;
+            let mut i: u32 = 0;
+            
+            loop {
+                if i &gt;= winner_count {
+                    break;
+                }
+                
+                let winner = self.winners.read((lottery_id, i));
+                if winner.address == caller &amp;&amp; !winner.claimed {
+                    prize_found = true;
+                    total_prize += winner.prize_amount;
+                    
+                    self.winners.write(
+                        (lottery_id, i),
+                        Winner { 
+                            address: winner.address, 
+                            prize_amount: winner.prize_amount,
+                            claimed: true 
+                        }
+                    );
+                }
+                
+                i += 1;
+            }
+            
+            assert(prize_found, Errors::NO_PRIZES_TO_CLAIM);
+            assert(total_prize &gt; 0, Errors::NO_PRIZES_TO_CLAIM);
+            
+            self.payment_token.read().transfer(caller, total_prize);
+            
+            self.emit(PrizeClaimed {
+                lottery_id,
+                winner: caller,
+                prize_amount: total_prize,
+            });
+        }
+
+        fn get_lottery_info(self: @ContractState) -&gt; LotteryInfo {
+            self.active_lottery.read()
+        }
+
+        fn get_ticket_holders(self: @ContractState) -&gt; Array&lt;ContractAddress&gt; {
+            let active_lottery = self.active_lottery.read();
+            let mut holders = ArrayTrait::new();
+            let mut i: u32 = 0;
+            
+            loop {
+                if i &gt;= active_lottery.tickets_sold {
+                    break;
+                }
+                
+                holders.append(self.ticket_holders.read(i));
+                i += 1;
+            }
+            
+            holders
+        }
+
+        fn get_winners(self: @ContractState) -&gt; Array&lt;Winner&gt; {
+            let active_lottery = self.active_lottery.read();
+            let lottery_id = active_lottery.lottery_id;
+            let winner_count = self.winner_count.read(lottery_id);
+            let mut winners = ArrayTrait::new();
+            let mut i: u32 = 0;
+            
+            loop {
+                if i &gt;= winner_count {
+                    break;
+                }
+                
+                winners.append(self.winners.read((lottery_id, i)));
+                i += 1;
+            }
+            
+            winners
+        }
+
+        fn get_user_tickets(self: @ContractState, user: ContractAddress) -&gt; u32 {
+            let active_lottery = self.active_lottery.read();
+            self.user_tickets.read((active_lottery.lottery_id, user))
+        }
+
+        fn is_lottery_active(self: @ContractState) -&gt; bool {
+            let active_lottery = self.active_lottery.read();
+            active_lottery.lottery_status == 1
+        }
+    }
+
+    #[generate_trait]
+    impl PrivateFunctions of PrivateFunctionsTrait {
+        fn assert_only_owner(self: @ContractState) {
+            let caller = get_caller_address();
+            let owner = self.owner.read();
+            assert(caller == owner, Errors::NOT_OWNER);
+        }
+
+        fn generate_random_value(self: @ContractState, seed: felt252) -&gt; felt252 {
+            let block_number = get_block_number();
+            let block_timestamp = get_block_timestamp();
+            let tx_info = get_tx_info().unbox();
+            let tx_hash = tx_info.transaction_hash;
+            
+            let mut hash_state = PedersenTrait::new(0);
+            hash_state = hash_state.update(seed);
+            hash_state = hash_state.update(block_number.into());
+            hash_state = hash_state.update(block_timestamp.into());
+            hash_state = hash_state.update(tx_hash);
+            
+            hash_state.finalize()
+        }
+
+        fn select_random_ticket(
+            self: @ContractState,
+            total_tickets: u32,
+            random_value: felt252,
+            offset: u32
+        ) -&gt; u32 {
+    
+            let mut hash_state = PedersenTrait::new(0);
+            hash_state = hash_state.update(random_value);
+            hash_state = hash_state.update(offset.into());
+            let new_random = hash_state.finalize();
+            
+            (new_random.try_into().unwrap() % total_tickets.into()).try_into().unwrap()
+        }
+    }
+}
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="cairo-academy-understanding-a-basic-dao-contract"><a class="header" href="#cairo-academy-understanding-a-basic-dao-contract">Cairo Academy: Understanding a Basic DAO Contract</a></h1>
+<p>This chapter explores a fundamental DAO (Decentralized Autonomous Organization) contract implemented in Cairo. This contract demonstrates core DAO functionalities, providing a practical example for learning how to build decentralized governance systems on StarkNet.</p>
+<h2 id="purpose-and-functionality-2"><a class="header" href="#purpose-and-functionality-2">Purpose and Functionality</a></h2>
+<p>The provided Cairo code defines a basic DAO contract with the following capabilities:</p>
+<ul>
+<li><strong>Proposal Management:</strong> Create, vote on, and execute governance proposals</li>
+<li><strong>Membership Control:</strong> Add and remove members with voting power</li>
+<li><strong>Voting System:</strong> Track votes for and against proposals</li>
+<li><strong>Governance Rules:</strong> Enforce voting periods and execution conditions</li>
+</ul>
+<h2 id="key-components"><a class="header" href="#key-components">Key Components</a></h2>
+<h3 id="data-structures"><a class="header" href="#data-structures">Data Structures</a></h3>
+<pre><code class="language-cairo">#[derive(Copy, Drop, Hash)]
+struct ProposalId {
+    id: u64
+}
+
+#[derive(Copy, Drop, Serde, starknet::Store)]
+struct Proposal {
+    proposer: ContractAddress,
+    description: felt252,
+    for_votes: u256,
+    against_votes: u256,
+    start_block: u64,
+    end_block: u64,
+    executed: bool
+}
+
+#[derive(Copy, Drop, Serde, starknet::Store)]
+struct Member {
+    address: ContractAddress,
+    voting_power: u256
+}
+</code></pre>
+<h3 id="core-functionalities"><a class="header" href="#core-functionalities">Core Functionalities</a></h3>
+<ol>
+<li>
+<p><strong>Proposal Creation:</strong></p>
+<ul>
+<li>Only members can create proposals</li>
+<li>Each proposal has a 100-block voting period</li>
+<li>Proposals store vote counts and execution status</li>
+</ul>
+</li>
+<li>
+<p><strong>Voting Mechanism:</strong></p>
+<ul>
+<li>Members vote with their voting power</li>
+<li>Votes can be for or against proposals</li>
+<li>Voting is only allowed during the active period</li>
+</ul>
+</li>
+<li>
+<p><strong>Proposal Execution:</strong></p>
+<ul>
+<li>Can only execute after voting period ends</li>
+<li>Requires more for-votes than against-votes</li>
+<li>Prevents double execution</li>
+</ul>
+</li>
+<li>
+<p><strong>Membership Management:</strong></p>
+<ul>
+<li>Admin-controlled member additions/removals</li>
+<li>Members have associated voting power</li>
+</ul>
+</li>
+</ol>
+<h3 id="interface-definition"><a class="header" href="#interface-definition">Interface Definition</a></h3>
+<pre><code class="language-cairo">#[starknet::interface]
+pub trait IDAO&lt;TContractState&gt; {
+    fn create_proposal(ref self: TContractState, description: felt252);
+    fn vote(ref self: TContractState, proposal_id: ProposalId, support: bool);
+    fn execute_proposal(ref self: TContractState, proposal_id: ProposalId);
+    fn add_member(ref self: TContractState, member: ContractAddress, voting_power: u256);
+    fn remove_member(ref self: TContractState, member: ContractAddress);
+    fn get_proposal(self: @TContractState, proposal_id: ProposalId) -&gt; Proposal;
+    fn get_member(self: @TContractState, member: ContractAddress) -&gt; Member;
+}
+</code></pre>
+<h3 id="event-system"><a class="header" href="#event-system">Event System</a></h3>
+<pre><code class="language-cairo">#[event]
+enum Event {
+    ProposalCreated: ProposalCreatedEvent,
+    Voted: VotedEvent,
+    ProposalExecuted: ProposalExecutedEvent,
+    MemberAdded: MemberAddedEvent,
+    MemberRemoved: MemberRemovedEvent
+}
+</code></pre>
+<h3 id="security-features"><a class="header" href="#security-features">Security Features</a></h3>
+<ul>
+<li>Member verification for proposal creation</li>
+<li>Voting period enforcement</li>
+<li>Execution condition checks</li>
+<li>Admin-only member management</li>
+</ul>
+<h3 id="usage-example"><a class="header" href="#usage-example">Usage Example</a></h3>
+<ul>
+<li>Admin adds members with <code>add_member</code></li>
+<li>Members create proposals with <code>create_proposal</code></li>
+<li>Other members vote with vote</li>
+<li>After voting period, anyone can execute_proposal if it passed</li>
+</ul>
+<h3 id="full-implementation"><a class="header" href="#full-implementation">Full Implementation</a></h3>
+<pre><code class="language-cairo">use core::num::traits::Zero;
+use starknet::ContractAddress;
+
+#[derive(Copy, Drop, Hash)]
+struct ProposalId {
+    id: u64
+}
+
+#[derive(Copy, Drop, Serde, starknet::Store)]
+struct Proposal {
+    proposer: ContractAddress,
+    description: felt252,
+    for_votes: u256,
+    against_votes: u256,
+    start_block: u64,
+    end_block: u64,
+    executed: bool
+}
+
+#[derive(Copy, Drop, Serde, starknet::Store)]
+struct Member {
+    address: ContractAddress,
+    voting_power: u256
+}
+
+#[starknet::interface]
+pub trait IDAO&lt;TContractState&gt; {
+    fn create_proposal(ref self: TContractState, description: felt252);
+    fn vote(ref self: TContractState, proposal_id: ProposalId, support: bool);
+    fn execute_proposal(ref self: TContractState, proposal_id: ProposalId);
+    fn add_member(ref self: TContractState, member: ContractAddress, voting_power: u256);
+    fn remove_member(ref self: TContractState, member: ContractAddress);
+    fn get_proposal(self: @TContractState, proposal_id: ProposalId) -&gt; Proposal;
+    fn get_member(self: @TContractState, member: ContractAddress) -&gt; Member;
+}
+
+#[starknet::contract]
+mod dao {
+    use core::num::traits::Zero;
+    use starknet::{ContractAddress, get_caller_address, get_block_number};
+    use super::{IDAO, ProposalId, Proposal, Member};
+
+    #[storage]
+    struct Storage {
+        proposals: LegacyMap&lt;ProposalId, Proposal&gt;,
+        members: LegacyMap&lt;ContractAddress, Member&gt;,
+        next_proposal_id: u64
+    }
+
+    #[event]
+    enum Event {
+        ProposalCreated: ProposalCreatedEvent,
+        Voted: VotedEvent,
+        ProposalExecuted: ProposalExecutedEvent,
+        MemberAdded: MemberAddedEvent,
+        MemberRemoved: MemberRemovedEvent
+    }
+
+    #[derive(Drop, Serde)]
+    struct ProposalCreatedEvent {
+        proposal_id: ProposalId,
+        proposer: ContractAddress,
+        description: felt252,
+        start_block: u64,
+        end_block: u64
+    }
+
+    #[derive(Drop, Serde)]
+    struct VotedEvent {
+        proposal_id: ProposalId,
+        voter: ContractAddress,
+        support: bool
+    }
+
+    #[derive(Drop, Serde)]
+    struct ProposalExecutedEvent {
+        proposal_id: ProposalId
+    }
+
+    #[derive(Drop, Serde)]
+    struct MemberAddedEvent {
+        member: ContractAddress,
+        voting_power: u256
+    }
+
+    #[derive(Drop, Serde)]
+    struct MemberRemovedEvent {
+        member: ContractAddress
+    }
+
+    #[abi(embed_v0)]
+    impl IDAOImpl of IDAO&lt;ContractState&gt; {
+        fn create_proposal(ref self: ContractState, description: felt252) {
+            let caller: ContractAddress = get_caller_address();
+            let member: Member = self.members.read(caller);
+
+            assert!(member.voting_power &gt; Zero::zero(), "Caller is not a member");
+
+            let proposal_id = ProposalId { id: self.next_proposal_id.read() };
+            let start_block = get_block_number();
+            let end_block = start_block + 100;
+
+            self.proposals.write(proposal_id, Proposal {
+                proposer: caller,
+                description,
+                for_votes: Zero::zero(),
+                against_votes: Zero::zero(),
+                start_block,
+                end_block,
+                executed: false
+            });
+
+            self.next_proposal_id.write(self.next_proposal_id.read() + 1);
+
+            self.emit(ProposalCreatedEvent {
+                proposal_id,
+                proposer: caller,
+                description,
+                start_block,
+                end_block
+            });
+        }
+
+        fn vote(ref self: ContractState, proposal_id: ProposalId, support: bool) {
+            let caller: ContractAddress = get_caller_address();
+            let member: Member = self.members.read(caller);
+            let mut proposal: Proposal = self.proposals.read(proposal_id);
+
+            assert!(get_block_number() &lt; proposal.end_block, "Voting period has ended");
+            assert!(!proposal.executed, "Proposal already executed");
+
+            if support {
+                proposal.for_votes += member.voting_power;
+            } else {
+                proposal.against_votes += member.voting_power;
+            }
+
+            self.proposals.write(proposal_id, proposal);
+
+            self.emit(VotedEvent {
+                proposal_id,
+                voter: caller,
+                support
+            });
+        }
+
+        fn execute_proposal(ref self: ContractState, proposal_id: ProposalId) {
+            let proposal: Proposal = self.proposals.read(proposal_id);
+
+            assert!(get_block_number() &gt; proposal.end_block, "Voting period has not ended");
+            assert!(!proposal.executed, "Proposal already executed");
+            assert!(proposal.for_votes &gt; proposal.against_votes, "Proposal did not pass");
+
+            // Execute the proposal (e.g., transfer funds, update state, etc.)
+            // Placeholder for proposal execution logic
+
+            self.proposals.write(proposal_id, Proposal { executed: true, ..proposal });
+
+            self.emit(ProposalExecutedEvent { proposal_id });
+        }
+
+        fn add_member(ref self: ContractState, member: ContractAddress, voting_power: u256) {
+            let caller: ContractAddress = get_caller_address();
+            assert!(caller == self.admin.read(), "Only admin can add members");
+
+            self.members.write(member, Member { address: member, voting_power });
+
+            self.emit(MemberAddedEvent { member, voting_power });
+        }
+
+        fn remove_member(ref self: ContractState, member: ContractAddress) {
+            let caller: ContractAddress = get_caller_address();
+            assert!(caller == self.admin.read(), "Only admin can remove members");
+
+            self.members.write(member, Member { address: member, voting_power: Zero::zero() });
+
+            self.emit(MemberRemovedEvent { member });
+        }
+
+        fn get_proposal(self: @ContractState, proposal_id: ProposalId) -&gt; Proposal {
+            self.proposals.read(proposal_id)
+        }
+
+        fn get_member(self: @ContractState, member: ContractAddress) -&gt; Member {
+            self.members.read(member)
+        }
+    }
+}
+</code></pre>
+<p>This contract serves as a foundation for building more complex DAO systems on StarkNet, demonstrating key concepts like decentralized governance and member voting.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="introduction-to-cairo-academys-ai-agent-examples"><a class="header" href="#introduction-to-cairo-academys-ai-agent-examples">Introduction to Cairo Academy's AI Agent Examples</a></h1>
 <p>Welcome to the Cairo Academy's collection of AI Agent examples, designed for educational exploration of AI concepts within the StarkNet ecosystem. This resource aims to provide developers with accessible examples to learn how to integrate AI functionalities on StarkNet.</p>
 <h2 id="purpose-1"><a class="header" href="#purpose-1">Purpose</a></h2>
@@ -649,6 +1451,16 @@ mod ERC20Token {
                         <p>Pedro Coelho</p>
                       </a>
                     </td>
+                    <td>
+                      <a href="https://github.com/Oluwatos94">
+                        <img
+                          src="https://avatars.githubusercontent.com/u/111003311?v=4&s=100"
+                          alt="Tosin's Image"
+                        />
+                        <br />
+                        <p>Tosin Akinbowa</p>
+                      </a>
+                    </td>
                   </tr>
     </tbody>
 </table>
@@ -676,6 +1488,22 @@ mod ERC20Token {
 
         </div>
 
+        <!-- Livereload script (if served using the cli tool) -->
+        <script>
+            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
+            const socket = new WebSocket(wsAddress);
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
 
 
 
