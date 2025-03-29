@@ -268,7 +268,7 @@ pub mod StakingContract {
                 y
             }
         }
- 
+ //
         fn only_owner(self: @ContractState) {
             let caller = get_caller_address();
             assert(caller == self.owner.read(), super::Errors::NOT_OWNER);
