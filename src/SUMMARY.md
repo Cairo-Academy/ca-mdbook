@@ -9,6 +9,7 @@
   - [DAO Contract Template](./contract/dao.md)
   - [ESCROW Contract Template](./contract/escrow.md)
   - [NFT Auction Contract](./contract/nftauction.md)
+  - [Marketplace Contract](./contract/marketplace.md)
 - [Starknet AI Agents](./aiagents.md)
 - [Dojo Games](./dojo.md)
 - [Cairo Programs](./programs.md)
