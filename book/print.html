@@ -1551,6 +1551,586 @@ mod escrow {
 }
 </code></pre>
 <p>This contract serves as a foundation for building secure token exchange systems on StarkNet, demonstrating key concepts like atomic swaps and time-locked transactions.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="cairo-academy-understanding-a-basic-nft-auction-contract"><a class="header" href="#cairo-academy-understanding-a-basic-nft-auction-contract">Cairo Academy: Understanding a Basic NFT Auction Contract</a></h1>
+<p>This chapter delves into the basics of an NFT Auction Contract implemented in Cairo. This contract demonstrates the core functionalities of a NFT Auction Contract, providing a practical example for learning how to build a basic NFT Auction Contract on StarkNet.</p>
+<h2 id="purpose-and-functionality-4"><a class="header" href="#purpose-and-functionality-4">Purpose and Functionality</a></h2>
+<p>The provided Cairo code defines a NFT Auction Contract. It implements essential functionalities of ERC20 such as:</p>
+<ul>
+<li><strong>Get Name:</strong> This function returns the name of the token</li>
+<li><strong>Get Symbol:</strong> This function returns the symbol or ticker of the token</li>
+<li><strong>Get Decimal:</strong> This function returns the number of decimal the token uses</li>
+<li><strong>Get Total Supply</strong> This function returns the total number of tokens in existence</li>
+<li><strong>Get Balance:</strong> This function returns the number of tokens owned by a specified account. This takes a parameter: account : This stores the token</li>
+<li><strong>Allowance:</strong> This function returns the amount of tokens that a spender is allowed to spend on behalf of an owner. This takes parameters: owner : This is the account owner
+spender : Authorized person to spend on behalf of the owner</li>
+<li><strong>Tranfer:</strong> This function transfers a specified amount of tokens from the caller's account to the recipient. This takes parameter: recipient: This is the reciever of the token and the account: This stores the token</li>
+<li><strong>Transfer From:</strong> This function transfers amount of tokens from sender to recipient using the allowance mechanism. The caller must have an allowance for the sender's tokens of at least amount. This takes parameters: sender, recipient and amount</li>
+<li><strong>Approve:</strong> This function allows the caller to set the amount that a spender is authorized to spend on their behalf.</li>
+<li><strong>Increase Allowance:</strong> This function increases the allowance of spender by added_value.</li>
+<li><strong>Decrease Allowance:</strong> This function decreases the allowance of spender by subtracted_value</li>
+</ul>
+<pre><code>use starknet::ContractAddress;
+</code></pre>
+<pre><code>#[starknet::interface]
+pub trait IERC20&lt;TContractState&gt; {
+    fn get_name(self: @TContractState) -&gt; felt252;
+    fn get_symbol(self: @TContractState) -&gt; felt252;
+    fn get_decimals(self: @TContractState) -&gt; u8;
+    fn get_total_supply(self: @TContractState) -&gt; felt252;
+    fn balance_of(self: @TContractState, account: ContractAddress) -&gt; felt252;
+    fn allowance(
+        self: @TContractState, owner: ContractAddress, spender: ContractAddress,
+    ) -&gt; felt252;
+    fn transfer(ref self: TContractState, recipient: ContractAddress, amount: felt252);
+    fn transfer_from(
+        ref self: TContractState,
+        sender: ContractAddress,
+        recipient: ContractAddress,
+        amount: felt252,
+    );
+    fn approve(ref self: TContractState, spender: ContractAddress, amount: felt252);
+    fn increase_allowance(ref self: TContractState, spender: ContractAddress, added_value: felt252);
+    fn decrease_allowance(
+        ref self: TContractState, spender: ContractAddress, subtracted_value: felt252,
+    );
+}
+</code></pre>
+<p>This NFT Auction Contract implements essential functionalities of IERC721 such as:</p>
+<ul>
+<li><strong>Get Name:</strong> This function returns the name of the NFT (eg Cairo Academy Token)</li>
+<li><strong>Get Symbol:</strong> This function returns the symbol of the NFT token (e.g., "CAT")</li>
+<li><strong>Get Token URI:</strong> This function returns the Uniform Resource Identifier (URI) for a specific token ID. This takes parameter:
+token_id : This is specific token identification</li>
+<li><strong>Get Balance:</strong> This function returns the number of NFTs owned by a specific account. This takes parameter:
+account : This holds the NFT value</li>
+<li><strong>Get Approval:</strong> This function returns the address that has been approved to transfer a specific token ID. This takes parameter:
+token_id</li>
+<li><strong>Is Approved for All:</strong> This function checks if an operator has been approved to manage all of the tokens for a given owner. This takes parameter: owner and operator</li>
+<li><strong>Approve:</strong> This function allows the owner of a token to approve another address (to) to transfer the token (token_id). This takes parameter: token_id and an address</li>
+<li><strong>Set Is Approved for All:</strong> This function enables or disables approval for an operator to manage all of the caller’s assets. This takes parameter: operator and a bool (true/false)</li>
+<li><strong>Transfer from:</strong> This function transfers the ownership of a specific token (token_id) from one address (from) to another address (to). The caller must be approved to make this transfer. This takes parameter: token_id, address (from) and address (to)</li>
+<li><strong>Mint:</strong> This function creates a new token (token_id) and assigns it to a specific address (to). This takes parameter: token_id and an address</li>
+</ul>
+<pre><code>#[starknet::interface]
+trait IERC721&lt;TContractState&gt; {
+    fn get_name(self: @TContractState) -&gt; felt252;
+    fn get_symbol(self: @TContractState) -&gt; felt252;
+    fn get_token_uri(self: @TContractState, token_id: u256) -&gt; felt252;
+    fn balance_of(self: @TContractState, account: ContractAddress) -&gt; u256;
+    fn owner_of(self: @TContractState, token_id: u256) -&gt; ContractAddress;
+    fn get_approved(self: @TContractState, token_id: u256) -&gt; ContractAddress;
+    fn is_approved_for_all(
+        self: @TContractState, owner: ContractAddress, operator: ContractAddress,
+    ) -&gt; bool;
+    fn approve(ref self: TContractState, to: ContractAddress, token_id: u256);
+    fn set_approval_for_all(ref self: TContractState, operator: ContractAddress, approved: bool);
+    fn transfer_from(
+        ref self: TContractState, from: ContractAddress, to: ContractAddress, token_id: u256,
+    );
+    fn mint(ref self: TContractState, to: ContractAddress, token_id: u256);
+}
+</code></pre>
+<p>This NFT Auction Contract also implements <strong>Buy</strong> and <strong>Get Price</strong> functions. This functions buys and gets price of the NFTs</p>
+<pre><code>pub trait INFTAuction&lt;TContractState&gt; {
+    fn buy(ref self: TContractState, token_id: u256);
+    fn get_price(self: @TContractState) -&gt; u64;
+}
+</code></pre>
+<h2 id="implementation"><a class="header" href="#implementation">Implementation</a></h2>
+<pre><code>#[starknet::contract]
+pub mod NFTAuction {
+    use super::{IERC20Dispatcher, IERC20DispatcherTrait, IERC721Dispatcher, IERC721DispatcherTrait};
+    use starknet::{ContractAddress, get_caller_address, get_block_timestamp};
+    use starknet::storage::{StoragePointerReadAccess, StoragePointerWriteAccess};
+ 
+    #[storage]
+    struct Storage {
+        erc20_token: ContractAddress,
+        erc721_token: ContractAddress,
+        starting_price: u64,
+        seller: ContractAddress,
+        duration: u64,
+        discount_rate: u64,
+        start_at: u64,
+        expires_at: u64,
+        purchase_count: u128,
+        total_supply: u128,
+    }
+ 
+    mod Errors {
+        pub const AUCTION_ENDED: felt252 = 'auction has ended';
+        pub const LOW_STARTING_PRICE: felt252 = 'low starting price';
+        pub const INSUFFICIENT_BALANCE: felt252 = 'insufficient balance';
+    }
+ 
+    #[constructor]
+    fn constructor(
+        ref self: ContractState,
+        erc20_token: ContractAddress,
+        erc721_token: ContractAddress,
+        starting_price: u64,
+        seller: ContractAddress,
+        duration: u64,
+        discount_rate: u64,
+        total_supply: u128,
+    ) {
+        assert(starting_price &gt;= discount_rate * duration, Errors::LOW_STARTING_PRICE);
+ 
+        self.erc20_token.write(erc20_token);
+        self.erc721_token.write(erc721_token);
+        self.starting_price.write(starting_price);
+        self.seller.write(seller);
+        self.duration.write(duration);
+        self.discount_rate.write(discount_rate);
+        self.start_at.write(get_block_timestamp());
+        self.expires_at.write(get_block_timestamp() + duration * 1000);
+        self.total_supply.write(total_supply);
+    }
+ 
+    #[abi(embed_v0)]
+    impl NFTDutchAuction of super::INFTAuction&lt;ContractState&gt; {
+        fn get_price(self: @ContractState) -&gt; u64 {
+            let time_elapsed = (get_block_timestamp() - self.start_at.read())
+                / 1000; // Ignore milliseconds
+            let discount = self.discount_rate.read() * time_elapsed;
+            self.starting_price.read() - discount
+        }
+ 
+        fn buy(ref self: ContractState, token_id: u256) {
+            // Check duration
+            assert(get_block_timestamp() &lt; self.expires_at.read(), Errors::AUCTION_ENDED);
+            // Check total supply
+            assert(self.purchase_count.read() &lt; self.total_supply.read(), Errors::AUCTION_ENDED);
+ 
+            let erc20_dispatcher = IERC20Dispatcher { contract_address: self.erc20_token.read() };
+            let erc721_dispatcher = IERC721Dispatcher {
+                contract_address: self.erc721_token.read(),
+            };
+ 
+            let caller = get_caller_address();
+            // Get NFT price
+            let price: u256 = self.get_price().into();
+            let buyer_balance: u256 = erc20_dispatcher.balance_of(caller).into();
+            // Ensure buyer has enough token for payment
+            assert(buyer_balance &gt;= price, Errors::INSUFFICIENT_BALANCE);
+            // Transfer payment token from buyer to seller
+            erc20_dispatcher.transfer_from(caller, self.seller.read(), price.try_into().unwrap());
+            // Mint token to buyer's address
+            erc721_dispatcher.mint(caller, token_id);
+            // Increase purchase count
+            self.purchase_count.write(self.purchase_count.read() + 1);
+        }
+    }
+}
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="cairo-academy-understanding-a-marketplace-contract"><a class="header" href="#cairo-academy-understanding-a-marketplace-contract">Cairo Academy: Understanding a Marketplace Contract</a></h1>
+<p>This chapter delves into the basics of a Marketplace contract implemented in Cairo. This contract demonstrates the core functionalities of a basic Marketplace contract, providing a practical example for learning how to build a basic Marketplace contract on StarkNet.</p>
+<h2 id="purpose-and-functionality-5"><a class="header" href="#purpose-and-functionality-5">Purpose and Functionality</a></h2>
+<p>The provided Cairo code defines a basic lottery contract. It implements essential Marketplace, ERC20 and IERC721, IERC1155 functionalities</p>
+<pre><code>use starknet::ContractAddress;
+</code></pre>
+<p><strong>Marketplace functionalities</strong></p>
+<ul>
+<li><strong>list_asset:</strong> This creates new listing with nft ownership verification. This has parameters:
+asset_contract, token_id, start_time, duration, quantity, payment_token, price_per_token, asset_type</li>
+<li><strong>remove_listing:</strong> This removes listing by replacing with empty listing. This has parameters:
+token_id</li>
+<li><strong>purchase:</strong> Direct purchase at listed price. This has parameters:
+listing_id, recipient, quantity, payment_token, total_price</li>
+<li><strong>accept_bid:</strong>  Seller accepts a specific offer. This has parameters:
+listing_id, bidder, payment_token, price_per_token</li>
+<li><strong>place_bid:</strong>  Places a bid/offer on an existing listing. This has parameters:
+listing_id, quantity, payment_token, price_per_token, expiration</li>
+<li><strong>modify_listing:</strong> Modify existing listing parameters. This has parameters:
+listing_id, quantity, reserve_price, buy_now_price, payment_token, start_time, duration</li>
+<li><strong>get_listing_count:</strong> Returns total number of listings created.</li>
+</ul>
+<pre><code>#[starknet::interface]
+trait IMarketplace&lt;TContractState&gt; {
+    fn list_asset(
+        ref self: TContractState,
+        asset_contract: ContractAddress,
+        token_id: u256,
+        start_time: u256,
+        duration: u256,
+        quantity: u256,
+        payment_token: ContractAddress,
+        price_per_token: u256,
+        asset_type: u256,
+    );  
+    fn remove_listing(ref self: TContractState, listing_id: u256);
+    fn purchase(
+        ref self: TContractState,
+        listing_id: u256,
+        recipient: ContractAddress,
+        quantity: u256,
+        payment_token: ContractAddress,
+        total_price: u256,
+    );
+    fn accept_bid(
+        ref self: TContractState,
+        listing_id: u256,
+        bidder: ContractAddress,
+        payment_token: ContractAddress,
+        price_per_token: u256
+    );
+    fn place_bid(
+        ref self: TContractState,
+        listing_id: u256,
+        quantity: u256,
+        payment_token: ContractAddress,
+        price_per_token: u256,
+        expiration: u256
+    );
+    fn modify_listing(
+        ref self: TContractState,
+        listing_id: u256,
+        quantity: u256,
+        reserve_price: u256,
+        buy_now_price: u256,
+        payment_token: ContractAddress,
+        start_time: u256,
+        duration: u256,
+    );
+    fn get_listing_count(self: @TContractState) -&gt; u256;
+}
+</code></pre>
+<p><strong>ERC20 functionalities</strong></p>
+<p>The IERC20 interface defines the core functions for an ERC20 token contract</p>
+<ul>
+<li><strong>balance_of:</strong> This function returns the token balance of a specific account. This has parameters:
+account: The account parameter is the address of the account whose balance is being queried, and the function returns a u256 representing the amount of tokens owned by that account</li>
+<li><strong>allowance:</strong> This function returns the amount of tokens that one account (spender) is authorized to spend on behalf of another account (owner). This has parameters: owner and spender</li>
+<li><strong>transfer:</strong> This function transfers a specified amount of tokens from the caller's account to the recipient account. This has parameters: spender, recipient and amount</li>
+</ul>
+<pre><code>#[starknet::interface]
+trait IERC20&lt;TContractState&gt; {
+    fn balance_of(self: @TContractState, account: ContractAddress) -&gt; u256;
+    fn allowance(self: @TContractState, owner: ContractAddress, spender: ContractAddress) -&gt; u256;
+    fn transfer(ref self: TContractState, recipient: ContractAddress, amount: u256);
+    fn transfer_from(
+        ref self: TContractState, sender: ContractAddress, recipient: ContractAddress, amount: u256
+    );
+}
+</code></pre>
+<p><strong>IERC721 functionalities</strong></p>
+<p>The IERC721 interface defines the basic functions that an ERC721-compliant contract should implement.ERC721 is a standard for representing non-fungible tokens (NFTs)</p>
+<ul>
+<li><strong>owner_of:</strong> This function returns the address of the owner of the NFT represented by token_id. This has parameters: token_id, parameter is a unique identifier for the NFT, and the function returns the ContractAddress of the current owner</li>
+<li><strong>get_approved:</strong> This function returns the address that has been approved to manage or transfer the specified NFT (token_id). This takes parameter: token_id</li>
+<li><strong>is_approved_for_all:</strong> This function checks whether an operator address has been authorized to manage all NFTs owned by an owner address. This takes parameter: owner and operator.</li>
+<li><strong>transfer_from:</strong> This function transfers the ownership of the NFT represented by token_id from the 'from' address to the 'to' address. The function allows a transfer to occur.
+This has parameters : token_id, two addresses, 'from' and 'to'</li>
+</ul>
+<pre><code>#[starknet::interface]
+trait IERC721&lt;TContractState&gt; {
+    fn owner_of(self: @TContractState, token_id: u256) -&gt; ContractAddress;
+    fn get_approved(self: @TContractState, token_id: u256) -&gt; ContractAddress;
+    fn is_approved_for_all(
+        self: @TContractState, owner: ContractAddress, operator: ContractAddress
+    ) -&gt; bool;
+    fn transfer_from(
+        ref self: TContractState, from: ContractAddress, to: ContractAddress, token_id: u256
+    );
+}
+</code></pre>
+<p><strong>IERC1155 functionalities</strong></p>
+<p>The IERC1155 interface defines the core functions for an ERC1155 token contract. ERC1155 is a token standard that allows a single contract to manage multiple token types, which can be a mix of fungible and non-fungible tokens.</p>
+<ul>
+<li><strong>balance_of:</strong> This function returns the balance of a specific token id for a given account. This takes parameter: 'account', the address of the account whose balance is being queried, and the 'id' parameter is the identifier of the token,</li>
+<li><strong>is_approved_for_all:</strong> This function checks if an operator is approved to manage all tokens for a given account. This takes parameter: The 'account', the address of the token owner, and the 'operator', the address being checked for approval. The function returns a boolean value: true if the operator is approved for all tokens, and false otherwise.</li>
+<li><strong>safe_transfer_from:</strong> This function transfers a specified amount of tokens of type id from the 'from' address to the 'to' address. This takes parameter: Two address 'from', the address from which the tokens are being released and 'to', the address from which the tokens are being sent to. The id is the token identifier, amount is the number of tokens to transfer, and data is additional data to be passed to the recipient.</li>
+</ul>
+<pre><code>#[starknet::interface]
+trait IERC1155&lt;TContractState&gt; {
+    fn balance_of(self: @TContractState, account: ContractAddress, id: u256) -&gt; u256;
+    fn is_approved_for_all(
+        self: @TContractState, account: ContractAddress, operator: ContractAddress
+    ) -&gt; bool;
+    fn safe_transfer_from(
+        ref self: TContractState,
+        from: ContractAddress,
+        to: ContractAddress,
+        id: u256,
+        amount: u256,
+        data: Span&lt;felt252&gt;
+    );
+}
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="cairo-academy-understanding-a-stake-contract"><a class="header" href="#cairo-academy-understanding-a-stake-contract">Cairo Academy: Understanding a Stake Contract</a></h1>
+<p>This chapter delves into the basics of a staking contract implemented in Cairo. This contract demonstrates the core functionalities of a basic Stake contract, providing a practical example for learning how to build a basic staking contract on StarkNet.</p>
+<h2 id="purpose-and-functionality-6"><a class="header" href="#purpose-and-functionality-6">Purpose and Functionality</a></h2>
+<p>The provided Cairo code defines a basic Stake contract. It implements essential Staking Contract functionalities</p>
+<ul>
+<li><strong>set_reward_amount</strong> This function sets the reward amount. This takes a parameter:
+amount</li>
+<li><strong>set_reward_duration</strong> This function sets the period (time) for the reward to be accessed. This takes parameter: duration</li>
+<li><strong>stake</strong> This function allows the staker to stake his digital assets. This takes parameter: amount</li>
+<li><strong>withdraw</strong>  This function allows for stakes to be taken (withdrawn). This takes parameter: amount</li>
+<li><strong>get_rewards</strong> This function computes rewards</li>
+<li><strong>claim_rewards</strong> This function makes claiming of rewards possible.</li>
+</ul>
+<pre><code>use starknet::ContractAddress;
+ 
+#[starknet::interface]
+pub trait IStakingContract&lt;TContractState&gt; {
+    fn set_reward_amount(ref self: TContractState, amount: u256);
+    fn set_reward_duration(ref self: TContractState, duration: u256);
+    fn stake(ref self: TContractState, amount: u256);
+    fn withdraw(ref self: TContractState, amount: u256);
+    fn get_rewards(self: @TContractState, account: ContractAddress) -&gt; u256;
+    fn claim_rewards(ref self: TContractState);
+}
+ 
+mod Errors {
+    pub const NULL_REWARDS: felt252 = 'Reward amount must be &gt; 0';
+    pub const NOT_ENOUGH_REWARDS: felt252 = 'Reward amount must be &gt; balance';
+    pub const NULL_AMOUNT: felt252 = 'Amount must be &gt; 0';
+    pub const NULL_DURATION: felt252 = 'Duration must be &gt; 0';
+    pub const UNFINISHED_DURATION: felt252 = 'Reward duration not finished';
+    pub const NOT_OWNER: felt252 = 'Caller is not the owner';
+    pub const NOT_ENOUGH_BALANCE: felt252 = 'Balance too low';
+}
+ 
+#[starknet::contract]
+pub mod StakingContract {
+    use core::starknet::event::EventEmitter;
+    use core::num::traits::Zero;
+    use starknet::{ContractAddress, get_caller_address, get_block_timestamp, get_contract_address};
+    use openzeppelin_token::erc20::interface::{IERC20Dispatcher, IERC20DispatcherTrait};
+    use starknet::storage::{
+        Map, StorageMapReadAccess, StorageMapWriteAccess, StoragePointerReadAccess,
+        StoragePointerWriteAccess,
+    };
+ 
+    #[storage]
+    struct Storage {
+        pub staking_token: IERC20Dispatcher,
+        pub reward_token: IERC20Dispatcher,
+        pub owner: ContractAddress,
+        pub reward_rate: u256,
+        pub duration: u256,
+        pub current_reward_per_staked_token: u256,
+        pub finish_at: u256,
+        pub last_updated_at: u256,
+        pub last_user_reward_per_staked_token: Map::&lt;ContractAddress, u256&gt;,
+        pub unclaimed_rewards: Map::&lt;ContractAddress, u256&gt;,
+        pub total_distributed_rewards: u256,
+        pub total_supply: u256,
+        pub balance_of: Map::&lt;ContractAddress, u256&gt;,
+    }
+ 
+    #[event]
+    #[derive(Copy, Drop, Debug, PartialEq, starknet::Event)]
+    pub enum Event {
+        Deposit: Deposit,
+        Withdrawal: Withdrawal,
+        RewardsFinished: RewardsFinished,
+    }
+ 
+    #[derive(Copy, Drop, Debug, PartialEq, starknet::Event)]
+    pub struct Deposit {
+        pub user: ContractAddress,
+        pub amount: u256,
+    }
+ 
+    #[derive(Copy, Drop, Debug, PartialEq, starknet::Event)]
+    pub struct Withdrawal {
+        pub user: ContractAddress,
+        pub amount: u256,
+    }
+ 
+    #[derive(Copy, Drop, Debug, PartialEq, starknet::Event)]
+    pub struct RewardsFinished {
+        pub msg: felt252,
+    }
+ 
+    #[constructor]
+    fn constructor(
+        ref self: ContractState,
+        staking_token_address: ContractAddress,
+        reward_token_address: ContractAddress,
+    ) {
+        self.staking_token.write(IERC20Dispatcher { contract_address: staking_token_address });
+        self.reward_token.write(IERC20Dispatcher { contract_address: reward_token_address });
+ 
+        self.owner.write(get_caller_address());
+    }
+ 
+    #[abi(embed_v0)]
+    impl StakingContract of super::IStakingContract&lt;ContractState&gt; {
+        fn set_reward_duration(ref self: ContractState, duration: u256) {
+            self.only_owner();
+ 
+            assert(duration &gt; 0, super::Errors::NULL_DURATION);
+ 
+            assert(
+                self.finish_at.read() &lt; get_block_timestamp().into(),
+                super::Errors::UNFINISHED_DURATION,
+            );
+ 
+            self.duration.write(duration);
+        }
+ 
+        fn set_reward_amount(ref self: ContractState, amount: u256) {
+            self.only_owner();
+            self.update_rewards(Zero::zero());
+ 
+            assert(amount &gt; 0, super::Errors::NULL_REWARDS);
+            assert(self.duration.read() &gt; 0, super::Errors::NULL_DURATION);
+ 
+            let block_timestamp: u256 = get_block_timestamp().into();
+ 
+            let rate = if self.finish_at.read() &lt; block_timestamp {
+                amount / self.duration.read()
+            } else {
+                let remaining_rewards = self.reward_rate.read()
+                    * (self.finish_at.read() - block_timestamp);
+                (remaining_rewards + amount) / self.duration.read()
+            };
+ 
+            assert(
+                self.reward_token.read().balance_of(get_contract_address()) &gt;= rate
+                    * self.duration.read(),
+                super::Errors::NOT_ENOUGH_REWARDS,
+            );
+ 
+            self.reward_rate.write(rate);
+ 
+            self.finish_at.write(block_timestamp + self.duration.read());
+            self.last_updated_at.write(block_timestamp);
+ 
+            self.total_distributed_rewards.write(0);
+        }
+ 
+        fn stake(ref self: ContractState, amount: u256) {
+            assert(amount &gt; 0, super::Errors::NULL_AMOUNT);
+ 
+            let user = get_caller_address();
+            self.update_rewards(user);
+ 
+            self.balance_of.write(user, self.balance_of.read(user) + amount);
+            self.total_supply.write(self.total_supply.read() + amount);
+            self.staking_token.read().transfer_from(user, get_contract_address(), amount);
+ 
+            self.emit(Deposit { user, amount });
+        }
+ 
+        fn withdraw(ref self: ContractState, amount: u256) {
+            assert(amount &gt; 0, super::Errors::NULL_AMOUNT);
+ 
+            let user = get_caller_address();
+ 
+            assert(
+                self.staking_token.read().balance_of(user) &gt;= amount,
+                super::Errors::NOT_ENOUGH_BALANCE,
+            );
+ 
+            self.update_rewards(user);
+ 
+            self.balance_of.write(user, self.balance_of.read(user) - amount);
+            self.total_supply.write(self.total_supply.read() - amount);
+            self.staking_token.read().transfer(user, amount);
+ 
+            self.emit(Withdrawal { user, amount });
+        }
+ 
+        fn get_rewards(self: @ContractState, account: ContractAddress) -&gt; u256 {
+            self.unclaimed_rewards.read(account) + self.compute_new_rewards(account)
+        }
+ 
+        fn claim_rewards(ref self: ContractState) {
+            let user = get_caller_address();
+            self.update_rewards(user);
+ 
+            let rewards = self.unclaimed_rewards.read(user);
+ 
+            if rewards &gt; 0 {
+                self.unclaimed_rewards.write(user, 0);
+                self.reward_token.read().transfer(user, rewards);
+            }
+        }
+    }
+ 
+    #[generate_trait]
+    impl PrivateFunctions of PrivateFunctionsTrait {
+        fn update_rewards(ref self: ContractState, account: ContractAddress) {
+            self
+                .current_reward_per_staked_token
+                .write(self.compute_current_reward_per_staked_token());
+ 
+            self.last_updated_at.write(self.last_time_applicable());
+ 
+            if account.is_non_zero() {
+                self.distribute_user_rewards(account);
+ 
+                self
+                    .last_user_reward_per_staked_token
+                    .write(account, self.current_reward_per_staked_token.read());
+ 
+                self.send_rewards_finished_event();
+            }
+        }
+ 
+        fn distribute_user_rewards(ref self: ContractState, account: ContractAddress) {
+            let user_rewards = self.get_rewards(account);
+            self.unclaimed_rewards.write(account, user_rewards);
+ 
+            self
+                .total_distributed_rewards
+                .write(self.total_distributed_rewards.read() + user_rewards);
+        }
+ 
+        fn send_rewards_finished_event(ref self: ContractState) {
+            if self.last_updated_at.read() == self.finish_at.read() {
+                let total_rewards = self.reward_rate.read() * self.duration.read();
+ 
+                if total_rewards != 0 &amp;&amp; self.total_distributed_rewards.read() == total_rewards {
+                    self.emit(RewardsFinished { msg: 'Rewards all distributed' });
+                } else {
+                    self.emit(RewardsFinished { msg: 'Rewards not active yet' });
+                }
+            }
+        }
+ 
+        fn compute_current_reward_per_staked_token(self: @ContractState) -&gt; u256 {
+            if self.total_supply.read() == 0 {
+                self.current_reward_per_staked_token.read()
+            } else {
+                self.current_reward_per_staked_token.read()
+                    + self.reward_rate.read()
+                        * (self.last_time_applicable() - self.last_updated_at.read())
+                        / self.total_supply.read()
+            }
+        }
+ 
+        fn compute_new_rewards(self: @ContractState, account: ContractAddress) -&gt; u256 {
+            self.balance_of.read(account)
+                * (self.current_reward_per_staked_token.read()
+                    - self.last_user_reward_per_staked_token.read(account))
+        }
+ 
+        #[inline(always)]
+        fn last_time_applicable(self: @ContractState) -&gt; u256 {
+            Self::min(self.finish_at.read(), get_block_timestamp().into())
+        }
+ 
+        #[inline(always)]
+        fn min(x: u256, y: u256) -&gt; u256 {
+            if (x &lt;= y) {
+                x
+            } else {
+                y
+            }
+        }
+ 
+        fn only_owner(self: @ContractState) {
+            let caller = get_caller_address();
+            assert(caller == self.owner.read(), super::Errors::NOT_OWNER);
+        }
+    }
+}
+</code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="introduction-to-cairo-academys-ai-agent-examples"><a class="header" href="#introduction-to-cairo-academys-ai-agent-examples">Introduction to Cairo Academy's AI Agent Examples</a></h1>
 <p>Welcome to the Cairo Academy's collection of AI Agent examples, designed for educational exploration of AI concepts within the StarkNet ecosystem. This resource aims to provide developers with accessible examples to learn how to integrate AI functionalities on StarkNet.</p>
 <h2 id="purpose-1"><a class="header" href="#purpose-1">Purpose</a></h2>
