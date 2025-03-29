@@ -2,7 +2,7 @@
 
 This chapter delves into the basics of a Stake contract implemented in Cairo. This contract demonstrates the core functionalities of a basic Stake contract, providing a practical example for learning how to build a basic Stake contract on StarkNet.
 
-## Purpose and Functionality.
+## Purpose and Functionality
 
 The provided Cairo code defines a basic Stake contract. It implements essential Staking Contract functionalities
 
