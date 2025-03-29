@@ -64,7 +64,7 @@ pub mod StakingContract {
         pub total_supply: u256,
         pub balance_of: Map::<ContractAddress, u256>,
     }
- //
+ 
     #[event]
     #[derive(Copy, Drop, Debug, PartialEq, starknet::Event)]
     pub enum Event {
