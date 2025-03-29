@@ -1,14 +1,14 @@
 # Cairo Academy: Understanding a Stake Contract
 
-This chapter delves into the basics of a Stake contract implemented in Cairo. This contract demonstrates the core functionalities of a basic Stake contract, providing a practical example for learning how to build a basic Stake contract on StarkNet.
+This chapter delves into the basics of a staking contract implemented in Cairo. This contract demonstrates the core functionalities of a basic Stake contract, providing a practical example for learning how to build a basic staking contract on StarkNet.
 
 ## Purpose and Functionality
 
 The provided Cairo code defines a basic Stake contract. It implements essential Staking Contract functionalities
 
-- **set_reward_amount** This function sets the reward amount. This takes parameter: 
+- **set_reward_amount** This function sets the reward amount. This takes a parameter: 
 amount
-- **set_reward_duration** This function sets the period (time) for reward to be accessed. This takes parameter: duration
+- **set_reward_duration** This function sets the period (time) for the reward to be accessed. This takes parameter: duration
 - **stake** This function allows the staker to stake his digital assets. This takes parameter: amount
 - **withdraw**  This function allows for stakes to be taken (withdrawn). This takes parameter: amount
 - **get_rewards** This function computes rewards
