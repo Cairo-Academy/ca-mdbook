@@ -6,7 +6,7 @@ This chapter delves into the basics of a staking contract implemented in Cairo. 
 
 The provided Cairo code defines a basic Stake contract. It implements essential Staking Contract functionalities
 
-- **set_reward_amount** This function sets the reward amount. This takes a parameter: 
+- **set_reward_amount** This function sets the reward amount. This takes a parameter:
 amount
 - **set_reward_duration** This function sets the period (time) for the reward to be accessed. This takes parameter: duration
 - **stake** This function allows the staker to stake his digital assets. This takes parameter: amount
@@ -14,7 +14,7 @@ amount
 - **get_rewards** This function computes rewards
 - **claim_rewards** This function makes claiming of rewards possible.
 
-```
+``` rust
 use starknet::ContractAddress;
  
 #[starknet::interface]

@@ -15,7 +15,7 @@ The provided Cairo code defines a basic DAO contract with the following capabili
 
 ### Data Structures
 
-```cairo
+``` rust
 #[derive(Copy, Drop, Hash)]
 struct ProposalId {
     id: u64
@@ -62,7 +62,7 @@ struct Member {
 
 ### Interface Definition
 
-```cairo 
+``` rust
 #[starknet::interface]
 pub trait IDAO<TContractState> {
     fn create_proposal(ref self: TContractState, description: felt252);
@@ -77,7 +77,7 @@ pub trait IDAO<TContractState> {
 
 ### Event System
 
-```cairo
+``` rust
 #[event]
 enum Event {
     ProposalCreated: ProposalCreatedEvent,
@@ -96,6 +96,7 @@ enum Event {
 - Admin-only member management
 
 ### Usage Example
+
 - Admin adds members with `add_member`
 - Members create proposals with `create_proposal`
 - Other members vote with vote
@@ -103,7 +104,7 @@ enum Event {
 
 ### Full Implementation
 
-```cairo
+``` rust
 use core::num::traits::Zero;
 use starknet::ContractAddress;
 

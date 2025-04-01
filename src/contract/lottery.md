@@ -18,18 +18,19 @@ ticket_count : Number of tickets to purchase
 - **End the lottery and select winners:**. This takes parametrs:
 random_seed : Additional entropy source to enhance randomness
 
-- **Claim prizes for the caller if they won** 
+- **Claim prizes for the caller if they won**
 
 We have some view functions. These are functions that read data from the blockcahin.
-- **Get lottery information** : This get the lottery information 
+
+- **Get lottery information** : This get the lottery information
 - **Get ticket holder** : This gets the information about the lottery ticket holder
 - **Get Winner** : This gets the winner information
 - **Get user tickets** : This gets information about the user tickets
 - **Is the lottery active** This return a bool (true or flase) the active state of the lottery ticket
 
-This contract serves as a foundational example for understanding the mechanics of Lottery Contract within the StarkNet ecosystem. 
+This contract serves as a foundational example for understanding the mechanics of Lottery Contract within the StarkNet ecosystem.
 
-```
+``` rust
 use starknet::ContractAddress;
 use array::ArrayTrait;
 use option::OptionTrait;
