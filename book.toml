@@ -5,4 +5,6 @@ multilingual = false
 src = "src"
 title = "Cairo Academy Book"
 [output.html]
+git-repository-url = "https://github.com/Cairo-Academy/ca-mdbook.github.io"
+edit-url-template = "https://github.com/Cairo-Academy/ca-mdbook.github.io/edit/main/{path}"
 site-url = "/book/"
