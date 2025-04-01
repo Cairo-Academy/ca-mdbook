@@ -11,12 +11,11 @@ The provided Cairo code defines an escrow contract with the following capabiliti
 - **Secure Execution:** Recipient can execute the trade when ready
 - **Status Examination:** View escrow details at any time
 
-
 ## Key Components
 
 ### Data Structures
 
-```cairo
+``` rust
 #[derive(Copy, Drop, Hash)]
 struct EscrowId {
     sender: ContractAddress,
@@ -57,7 +56,7 @@ pub struct EscrowDetails {
 
 ### Interface Definition
 
-```cairo 
+``` rust
 ##[starknet::interface]
 pub trait IEscrow<TContractState> {
     fn examine(
@@ -81,7 +80,7 @@ pub trait IEscrow<TContractState> {
 
 ### Event System
 
-```cairo
+``` rust
 #[event]
 enum Event {
     EscrowCreated: EscrowCreatedEvent,
@@ -98,9 +97,11 @@ enum Event {
 - Only original sender can refund
 - Atomic swap ensures both sides complete or none do
 
-## Usage Example 
+## Usage Example
+
 1. **Creating an Escrow:**
-```cairo
+
+``` rust
 // Alice wants to trade 100 TOKA for 200 TOKB with Bob
 escrow.enter(
     bob_address,
@@ -113,21 +114,21 @@ escrow.enter(
 
 2. **Executing the Trade:**
 
-```cairo
+``` rust
 // When Bob is ready, he executes the escrow
 escrow.execute(alice_address, token_a_address);
 ```
 
 3. **Refunding:**
 
-```cairo
+``` rust
 // If Bob doesn't complete within 7 days, Alice can refund
 escrow.exit(alice_address, bob_address, token_a_address);
 ```
 
 ### Full Implementation
 
-```cairo
+``` rust
 use core::num::traits::Zero;
 use starknet::ContractAddress;
 

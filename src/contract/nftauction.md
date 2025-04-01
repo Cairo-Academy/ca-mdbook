@@ -1,15 +1,15 @@
 # Cairo Academy: Understanding a Basic NFT Auction Contract
 
-This chapter delves into the basics of an NFT Auction Contract implemented in Cairo. This contract demonstrates the core functionalities of a NFT Auction Contract, providing a practical example for learning how to build a basic NFT Auction Contract on StarkNet. 
+This chapter delves into the basics of an NFT Auction Contract implemented in Cairo. This contract demonstrates the core functionalities of a NFT Auction Contract, providing a practical example for learning how to build a basic NFT Auction Contract on StarkNet.
 
 ## Purpose and Functionality
 
 The provided Cairo code defines a NFT Auction Contract. It implements essential functionalities of ERC20 such as:
 
 - **Get Name:** This function returns the name of the token
-- **Get Symbol:** This function returns the symbol or ticker of the token 
-- **Get Decimal:** This function returns the number of decimal the token uses 
-- **Get Total Supply** This function returns the total number of tokens in existence 
+- **Get Symbol:** This function returns the symbol or ticker of the token
+- **Get Decimal:** This function returns the number of decimal the token uses
+- **Get Total Supply** This function returns the total number of tokens in existence
 - **Get Balance:** This function returns the number of tokens owned by a specified account. This takes a parameter: account : This stores the token
 - **Allowance:** This function returns the amount of tokens that a spender is allowed to spend on behalf of an owner. This takes parameters: owner : This is the account owner
 spender : Authorized person to spend on behalf of the owner
@@ -19,11 +19,11 @@ spender : Authorized person to spend on behalf of the owner
 - **Increase Allowance:** This function increases the allowance of spender by added_value.
 - **Decrease Allowance:** This function decreases the allowance of spender by subtracted_value
 
-```
+``` rust
 use starknet::ContractAddress;
 ```
 
-```
+``` rust
 #[starknet::interface]
 pub trait IERC20<TContractState> {
     fn get_name(self: @TContractState) -> felt252;
@@ -48,6 +48,7 @@ pub trait IERC20<TContractState> {
     );
 }
 ```
+
 This NFT Auction Contract implements essential functionalities of IERC721 such as:
 
 - **Get Name:** This function returns the name of the NFT (eg Cairo Academy Token)
@@ -64,7 +65,7 @@ token_id
 - **Transfer from:** This function transfers the ownership of a specific token (token_id) from one address (from) to another address (to). The caller must be approved to make this transfer. This takes parameter: token_id, address (from) and address (to)
 - **Mint:** This function creates a new token (token_id) and assigns it to a specific address (to). This takes parameter: token_id and an address
 
-```
+``` rust
 #[starknet::interface]
 trait IERC721<TContractState> {
     fn get_name(self: @TContractState) -> felt252;
@@ -84,17 +85,19 @@ trait IERC721<TContractState> {
     fn mint(ref self: TContractState, to: ContractAddress, token_id: u256);
 }
 ```
+
 This NFT Auction Contract also implements **Buy** and **Get Price** functions. This functions buys and gets price of the NFTs
 
-```
+``` rust
 pub trait INFTAuction<TContractState> {
     fn buy(ref self: TContractState, token_id: u256);
     fn get_price(self: @TContractState) -> u64;
 }
 ```
+
 ## Implementation
 
-```
+``` rust
 #[starknet::contract]
 pub mod NFTAuction {
     use super::{IERC20Dispatcher, IERC20DispatcherTrait, IERC721Dispatcher, IERC721DispatcherTrait};

@@ -6,7 +6,7 @@ This chapter delves into the basics of a Marketplace contract implemented in Cai
 
 The provided Cairo code defines a basic lottery contract. It implements essential Marketplace, ERC20 and IERC721, IERC1155 functionalities
 
-```
+``` rust
 use starknet::ContractAddress;
 ```
 
@@ -26,7 +26,7 @@ listing_id, quantity, payment_token, price_per_token, expiration
 listing_id, quantity, reserve_price, buy_now_price, payment_token, start_time, duration
 - **get_listing_count:** Returns total number of listings created.
 
-```
+``` rust
 #[starknet::interface]
 trait IMarketplace<TContractState> {
     fn list_asset(
@@ -78,17 +78,16 @@ trait IMarketplace<TContractState> {
 }
 ```
 
-
 **ERC20 functionalities**
 
-The IERC20 interface defines the core functions for an ERC20 token contract 
+The IERC20 interface defines the core functions for an ERC20 token contract
 
 - **balance_of:** This function returns the token balance of a specific account. This has parameters:
 account: The account parameter is the address of the account whose balance is being queried, and the function returns a u256 representing the amount of tokens owned by that account
 - **allowance:** This function returns the amount of tokens that one account (spender) is authorized to spend on behalf of another account (owner). This has parameters: owner and spender
 - **transfer:** This function transfers a specified amount of tokens from the caller's account to the recipient account. This has parameters: spender, recipient and amount
 
-```
+``` rust
 #[starknet::interface]
 trait IERC20<TContractState> {
     fn balance_of(self: @TContractState, account: ContractAddress) -> u256;
@@ -100,18 +99,17 @@ trait IERC20<TContractState> {
 }
 ```
 
-
 **IERC721 functionalities**
 
-The IERC721 interface defines the basic functions that an ERC721-compliant contract should implement.ERC721 is a standard for representing non-fungible tokens (NFTs) 
+The IERC721 interface defines the basic functions that an ERC721-compliant contract should implement.ERC721 is a standard for representing non-fungible tokens (NFTs)
 
 - **owner_of:** This function returns the address of the owner of the NFT represented by token_id. This has parameters: token_id, parameter is a unique identifier for the NFT, and the function returns the ContractAddress of the current owner
-- **get_approved:** This function returns the address that has been approved to manage or transfer the specified NFT (token_id). This takes parameter: token_id 
+- **get_approved:** This function returns the address that has been approved to manage or transfer the specified NFT (token_id). This takes parameter: token_id
 - **is_approved_for_all:** This function checks whether an operator address has been authorized to manage all NFTs owned by an owner address. This takes parameter: owner and operator.
-- **transfer_from:** This function transfers the ownership of the NFT represented by token_id from the 'from' address to the 'to' address. The function allows a transfer to occur. 
+- **transfer_from:** This function transfers the ownership of the NFT represented by token_id from the 'from' address to the 'to' address. The function allows a transfer to occur.
 This has parameters : token_id, two addresses, 'from' and 'to'
 
-```
+``` rust
 #[starknet::interface]
 trait IERC721<TContractState> {
     fn owner_of(self: @TContractState, token_id: u256) -> ContractAddress;
@@ -125,7 +123,6 @@ trait IERC721<TContractState> {
 }
 ```
 
-
 **IERC1155 functionalities**
 
 The IERC1155 interface defines the core functions for an ERC1155 token contract. ERC1155 is a token standard that allows a single contract to manage multiple token types, which can be a mix of fungible and non-fungible tokens.
@@ -134,7 +131,7 @@ The IERC1155 interface defines the core functions for an ERC1155 token contract.
 - **is_approved_for_all:** This function checks if an operator is approved to manage all tokens for a given account. This takes parameter: The 'account', the address of the token owner, and the 'operator', the address being checked for approval. The function returns a boolean value: true if the operator is approved for all tokens, and false otherwise.
 - **safe_transfer_from:** This function transfers a specified amount of tokens of type id from the 'from' address to the 'to' address. This takes parameter: Two address 'from', the address from which the tokens are being released and 'to', the address from which the tokens are being sent to. The id is the token identifier, amount is the number of tokens to transfer, and data is additional data to be passed to the recipient.
 
-```
+``` rust
 #[starknet::interface]
 trait IERC1155<TContractState> {
     fn balance_of(self: @TContractState, account: ContractAddress, id: u256) -> u256;

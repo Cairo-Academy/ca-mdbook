@@ -15,7 +15,7 @@ The provided Cairo code defines a basic ERC20 token contract. It implements esse
 
 This contract serves as a foundational example for understanding the mechanics of ERC20 tokens within the StarkNet ecosystem.
 
-```cairo
+``` rust
 use starknet::ContractAddress;
 use starknet::storage::Map;
 use starknet::{get_caller_address, get_contract_address};
