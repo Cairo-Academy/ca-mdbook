@@ -1,0 +1,2490 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Cairo Academy Book</title>
+        <meta name="robots" content="noindex">
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Cairo Academy Book</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/Cairo-Academy/ca-mdbook.github.io" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="welcome-to-cairo-academy-jumpstart-your-starknet-development"><a class="header" href="#welcome-to-cairo-academy-jumpstart-your-starknet-development">Welcome to Cairo Academy: Jumpstart Your Starknet Development</a></h1>
+<p><strong>Leverage Predefined Templates to Build on Starknet Faster</strong></p>
+<p>Cairo Academy simplifies your journey into Starknet development by providing a collection of ready-to-use templates. These templates are designed to accelerate your learning and development process, allowing you to focus on building innovative decentralized applications.</p>
+<h2 id="why-templates"><a class="header" href="#why-templates">Why Templates?</a></h2>
+<ul>
+<li><strong>Rapid Prototyping:</strong> Skip the initial setup and dive straight into building your application.</li>
+<li><strong>Best Practices:</strong> Learn from well-structured code and established design patterns.</li>
+<li><strong>Reduced Learning Curve:</strong> Get a head start by utilizing pre-built components and functionalities.</li>
+<li><strong>Consistency:</strong> Maintain code quality and uniformity across your projects.</li>
+<li><strong>Community Contributions:</strong> Benefit from templates created and improved by the Starknet community.</li>
+</ul>
+<h2 id="what-youll-find"><a class="header" href="#what-youll-find">What You'll Find</a></h2>
+<p>Cairo Academy offers a variety of templates catering to different use cases:</p>
+<ul>
+<li><strong>Basic Smart Contract Template:</strong> A foundational template for deploying simple smart contracts on Starknet.</li>
+<li><strong>Token Contract Template:</strong> A template for creating fungible or non-fungible tokens.</li>
+<li><strong>DAO Template:</strong> A starting point for building decentralized autonomous organizations.</li>
+<li><strong>Game Template:</strong> A template for developing on-chain games with Cairo.</li>
+<li><strong>DeFi Template:</strong> A template for building decentralized finance applications.</li>
+<li><strong>And more:</strong> We are constantly expanding our template library to cover a wide range of applications.</li>
+</ul>
+<h2 id="how-to-use-the-templates"><a class="header" href="#how-to-use-the-templates">How to Use the Templates</a></h2>
+<ol>
+<li><strong>Browse Templates:</strong> Explore the available templates and choose one that fits your project requirements.</li>
+<li><strong>Customize:</strong> Modify the template code to fit your specific application logic.</li>
+<li><strong>Deploy:</strong> Compile and deploy your customized smart contract on Starknet.</li>
+<li><strong>Iterate:</strong> Build upon the template and add new features.</li>
+</ol>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="cairo-academy-architecture-and-vision"><a class="header" href="#cairo-academy-architecture-and-vision">Cairo Academy: Architecture and Vision</a></h1>
+<p><strong>Welcome to the Cairo Academy Architecture documentation!</strong></p>
+<p>This document outlines the vision, mission, and scope of Cairo Academy, a platform dedicated to simplifying and accelerating StarkNet dApp development. Our goal is to empower developers to create and deploy fully functional decentralized applications (dApps) on StarkNet rapidly.</p>
+<h2 id="vision"><a class="header" href="#vision">Vision</a></h2>
+<p>To be the definitive resource for StarkNet development, enabling rapid dApp creation and deployment, and fostering a vibrant ecosystem of Cairo developers.</p>
+<h2 id="mission"><a class="header" href="#mission">Mission</a></h2>
+<p>To provide comprehensive educational resources, streamlined development tools, and intuitive templates that empower developers to build and deploy innovative dApps on StarkNet quickly and efficiently.</p>
+<h2 id="scope"><a class="header" href="#scope">Scope</a></h2>
+<p>Cairo Academy encompasses the following key areas:</p>
+<ol>
+<li><strong>Educational Resources:</strong>
+<ul>
+<li>Interactive learning modules and practical examples.</li>
+<li>A dedicated Cairo Academy platform for structured learning.</li>
+</ul>
+</li>
+<li><strong>Development Tools and Templates:</strong>
+<ul>
+<li>A gaming repository (Dojo and Cartridge game templates) to facilitate game development on StarkNet.</li>
+<li>An AI Agent repository to facilitate AI Agent projects on StarkNet.</li>
+<li>Pre-built, customizable dApp templates for various use cases.</li>
+<li>Tools for rapid dApp scaffolding and deployment.</li>
+<li>A library of useful Cairo contracts.</li>
+</ul>
+</li>
+<li><strong>Deployment Automation:</strong>
+<ul>
+<li>One-click deployment solutions for StarkNet testnet and mainnet.</li>
+<li>Continuous integration and continuous deployment (CI/CD) pipelines.</li>
+<li>Streamlined deployment workflows that minimize manual effort.</li>
+</ul>
+</li>
+<li><strong>Community Building:</strong>
+<ul>
+<li>A vibrant community forum for developers to connect, collaborate, and share knowledge.</li>
+<li>Regular workshops, webinars, and hackathons.</li>
+<li>Mentorship programs to support aspiring Cairo developers.</li>
+</ul>
+</li>
+<li><strong>Architecture Overview:</strong>
+<ul>
+<li><strong>Modular Design:</strong> Cairo Academy is designed with a modular architecture, allowing for easy expansion and integration of new features and tools.</li>
+<li><strong>Template-Driven Development:</strong> We emphasize the use of templates to accelerate dApp creation.</li>
+<li><strong>Automated Deployment:</strong> We prioritize automated deployment workflows to minimize friction and speed up time-to-market.</li>
+<li><strong>Community-Centric:</strong> We foster a strong community to support developers and drive innovation.</li>
+</ul>
+</li>
+<li><strong>End Goal: Rapid dApp Deployment:</strong>
+<ul>
+<li>Our ultimate goal is to enable developers to create, configure, and deploy fully functional dApps on StarkNet rapidly.</li>
+<li>This will be achieved through the combination of intuitive templates, automated deployment tools, and comprehensive documentation.</li>
+</ul>
+</li>
+</ol>
+<h2 id="repository-contents"><a class="header" href="#repository-contents">Repository Contents</a></h2>
+<ul>
+<li><strong><code>vision_mission_scope.md</code>:</strong> This document.</li>
+<li><strong><code>diagrams/</code>:</strong> Architectural diagrams and flowcharts.</li>
+<li><strong><code>documentation/</code>:</strong> Detailed documentation on the Cairo Academy architecture.</li>
+<li><strong><code>roadmap.md</code>:</strong> The planned development roadmap for Cairo Academy.</li>
+<li><strong><code>mdbook</code>:</strong> <a href="https://cairo-academy.github.io/ca-mdbook/">Website</a></li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="introduction-to-cairo-academys-sample-smart-contracts"><a class="header" href="#introduction-to-cairo-academys-sample-smart-contracts">Introduction to Cairo Academy's Sample Smart Contracts</a></h1>
+<p>Welcome to the Cairo Academy's collection of sample Cairo smart contracts, designed for educational purposes. This resource aims to provide developers with accessible examples to learn Cairo and build on StarkNet.</p>
+<h2 id="purpose"><a class="header" href="#purpose">Purpose</a></h2>
+<p>This chapter introduces the Cairo Academy's sample smart contracts, outlining their purpose, structure, and intended use. These contracts serve as practical examples for developers learning Cairo and exploring the StarkNet ecosystem.</p>
+<h2 id="cairo-academy-an-educational-resource"><a class="header" href="#cairo-academy-an-educational-resource">Cairo Academy: An Educational Resource</a></h2>
+<p>Cairo Academy is dedicated to providing high-quality educational resources for developers interested in learning Cairo and building on StarkNet. We curate and share sample smart contracts, tutorials, and other learning materials to facilitate the mastery of Cairo and encourage contributions to the StarkNet ecosystem.</p>
+<p><strong>Important Note:</strong> Cairo Academy focuses exclusively on educational resources. The provided contracts are not intended for production use.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="cairo-academy-understanding-a-basic-erc20-token-contract"><a class="header" href="#cairo-academy-understanding-a-basic-erc20-token-contract">Cairo Academy: Understanding a Basic ERC20 Token Contract</a></h1>
+<p>This chapter delves into a fundamental ERC20 token contract implemented in Cairo. This contract demonstrates the core functionalities of a standard ERC20 token, providing a practical example for learning how to build fungible tokens on StarkNet.</p>
+<h2 id="purpose-and-functionality"><a class="header" href="#purpose-and-functionality">Purpose and Functionality</a></h2>
+<p>The provided Cairo code defines a basic ERC20 token contract. It implements essential functionalities such as:</p>
+<ul>
+<li><strong>Token Minting:</strong> Creating new tokens and assigning them to an address.</li>
+<li><strong>Token Transfer:</strong> Moving tokens between different addresses.</li>
+<li><strong>Allowance and Approval:</strong> Allowing one address to transfer tokens on behalf of another.</li>
+<li><strong>Balance and Supply Tracking:</strong> Maintaining records of user balances and the total token supply.</li>
+<li><strong>Metadata:</strong> Providing basic token information like name, symbol, and decimals.</li>
+<li><strong>Withdrawal:</strong> Allowing the contract owner to withdraw tokens from the contract.</li>
+</ul>
+<p>This contract serves as a foundational example for understanding the mechanics of ERC20 tokens within the StarkNet ecosystem.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>use starknet::ContractAddress;
+use starknet::storage::Map;
+use starknet::{get_caller_address, get_contract_address};
+
+#[starknet::interface]
+trait IToken&lt;TContractState&gt; {
+    fn mint(ref self: TContractState, address: ContractAddress);
+    fn transfer(ref self: TContractState, address: ContractAddress, amount: u128);
+    fn approval(ref self: TContractState, from: ContractAddress, to: ContractAddress, amount: u128);
+    fn allowance(self: @TContractState, from: ContractAddress, to: ContractAddress) -&gt; u128;
+    fn transfer_from(ref self: TContractState, from: ContractAddress, to: ContractAddress, amount: u128);
+    fn withdrawTokens(ref self: TContractState, contract_address: ContractAddress, amount: u128);
+    fn get_name(self: @TContractState) -&gt; felt252;
+    fn get_symbol(self: @TContractState) -&gt; felt252;
+    fn get_decimal(self: @ContractState) -&gt; u128;
+    fn get_total_supply(self: @ContractState) -&gt; u128;
+    fn get_balance_of_user(self: @TContractState, user: ContractAddress) -&gt; u128;
+    fn get_owner(self: @ContractState) -&gt; ContractAddress;
+}
+
+#[starknet::contract]
+mod ERC20Token {
+    use super::IToken;
+    use starknet::{ContractAddress, get_caller_address, get_contract_address};
+    use starknet::storage::Map;
+
+    #[storage]
+    struct Storage {
+        name: felt252,
+        symbol: felt252,
+        decimal: u128,
+        total_supply: u128,
+        owner: ContractAddress,
+        balance_of: Map::&lt;ContractAddress, u128&gt;,
+        allowance: Map::&lt;(ContractAddress, ContractAddress), u128&gt;,
+    }
+
+    #[constructor]
+    fn constructor(ref self: ContractState) {
+        self.name.write('ERC20Token');
+        self.symbol.write('ETK');
+        self.decimal.write(18);
+        self.owner.write(get_caller_address());
+    }
+
+    #[event]
+    #[derive(Drop, starknet::Event)]
+    enum Event {
+        TransferFrom: TransferFrom,
+        Transfer: Transfer,
+        Mint: Mint,
+        Withdraw: Withdraw,
+        Approval: Approval,
+    }
+
+    #[derive(Drop, starknet::Event)]
+    struct TransferFrom {
+        #[key]
+        from: ContractAddress,
+        to: ContractAddress,
+        amount: u128,
+    }
+
+    #[derive(Drop, starknet::Event)]
+    struct Transfer {
+        #[key]
+        to: ContractAddress,
+        amount: u128,
+    }
+
+    #[derive(Drop, starknet::Event)]
+    struct Mint {
+        #[key]
+        to: ContractAddress,
+        amount: u128,
+    }
+
+    #[derive(Drop, starknet::Event)]
+    struct Withdraw {
+        #[key]
+        contract_address: ContractAddress,
+        user: ContractAddress,
+        amount: u128,
+    }
+
+    #[derive(Drop, starknet::Event)]
+    struct Approval {
+        #[key]
+        user: ContractAddress,
+        to: ContractAddress,
+        amount: u128,
+    }
+
+    #[abi(embed_v0)]
+    impl ITokenImpl of super::IToken&lt;ContractState&gt; {
+        fn mint(ref self: ContractState, address: ContractAddress) {
+            let caller: ContractAddress = get_caller_address();
+            assert(!caller.is_zero(), 'Caller cannot be address zero');
+            let supply: u128 = self.total_supply.read();
+            let balance: u128 = self.balance_of.read(get_caller_address());
+            self.total_supply.write(supply + 1000);
+            self.balance_of.write(get_caller_address(), balance + 1000);
+            self.emit(Mint { to: get_caller_address(), amount: 1000 });
+        }
+        fn transfer(ref self: ContractState, address: ContractAddress, amount: u128) {
+            let sender_balance: u128 = self.balance_of.read(get_caller_address());
+            let reciever_balance: u128 = self.balance_of.read(address);
+            assert(sender_balance &gt;= amount, 'Not Enough Tokens');
+            self.balance_of.write(get_caller_address(), sender_balance - amount);
+            self.balance_of.write(address, reciever_balance + amount);
+            self.emit(Transfer { to: address, amount: amount });
+        }
+        fn approval(ref self: ContractState, from: ContractAddress, to: ContractAddress, amount: u128) {
+            self.allowance.write((from, to), self.allowance.read((from, to)) + amount);
+            self.emit(Approval { user: from, to: to, amount: amount });
+        }
+        fn allowance(self: @ContractState, from: ContractAddress, to: ContractAddress) -&gt; u128 {
+            self.allowance.read((from, to))
+        }
+        fn transfer_from(ref self: ContractState, from: ContractAddress, to: ContractAddress, amount: u128) {
+            assert(self.allowance.read((from, to)) &gt;= amount, 'Insufficient Allowance');
+            self.allowance.write((from, to), self.allowance.read((from, to)) - amount);
+            assert(self.balance_of.read(from) &gt;= amount, 'Not Enough Tokens');
+            self.balance_of.write(from, self.balance_of.read(from) - amount);
+            self.balance_of.write(to, self.balance_of.read(to) + amount);
+            self.emit(TransferFrom { from: from, to: to, amount: amount });
+        }
+        fn withdrawTokens(ref self: ContractState, contract_address: ContractAddress, amount: u128) {
+            let contract_balance = self.balance_of.read(get_contract_address());
+            let caller_balance = self.balance_of.read(get_caller_address());
+            assert(contract_balance &gt;= amount, 'Contract balance Insufficient');
+            self.balance_of.write(get_caller_address(), caller_balance + amount);
+            self.balance_of.write(get_contract_address(), contract_balance - amount);
+            self.emit(Withdraw { contract_address: contract_address, user: get_caller_address(), amount });
+        }
+        fn get_name(self: @ContractState) -&gt; felt252 {
+            self.name.read()
+        }
+        fn get_symbol(self: @ContractState) -&gt; felt252 {
+            self.symbol.read()
+        }
+        fn get_decimal(self: @ContractState) -&gt; u128 {
+            self.decimal.read()
+        }
+        fn get_total_supply(self: @ContractState) -&gt; u128 {
+            self.total_supply.read()
+        }
+        fn get_balance_of_user(self: @ContractState, user: ContractAddress) -&gt; u128 {
+            self.balance_of.read(user)
+        }
+        fn get_owner(self: @ContractState) -&gt; ContractAddress {
+            self.owner.read()
+        }
+<span class="boring">}</span></code></pre></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="cairo-academy-understanding-a-basic-lottery-contract"><a class="header" href="#cairo-academy-understanding-a-basic-lottery-contract">Cairo Academy: Understanding a Basic Lottery Contract</a></h1>
+<p>This chapter delves into the basics of a lottery contract implemented in Cairo. This contract demonstrates the core functionalities of a basic lottery contract, providing a practical example for learning how to build a basic lottery contract on StarkNet.</p>
+<h2 id="purpose-and-functionality-1"><a class="header" href="#purpose-and-functionality-1">Purpose and Functionality</a></h2>
+<p>The provided Cairo code defines a basic lottery contract. It implements essential functionalities such as:</p>
+<ul>
+<li>
+<p><strong>Start Lottery:</strong> This starts the operation of a lottery round. This takes in parameters:
+ticket_price : Price of a single lottery ticket in wei
+max_tickets : Maximum number of tickets for this lottery round
+prize_distribution : Array containing percentage distribution of prizes (must sum to 100)
+duration : Duration of the lottery in seconds</p>
+</li>
+<li>
+<p><strong>Buy lottery tickets:</strong> Buy lottery tickets. This takes parameters:
+ticket_count : Number of tickets to purchase</p>
+</li>
+<li>
+<p><strong>End the lottery and select winners:</strong>. This takes parametrs:
+random_seed : Additional entropy source to enhance randomness</p>
+</li>
+<li>
+<p><strong>Claim prizes for the caller if they won</strong></p>
+</li>
+</ul>
+<p>We have some view functions. These are functions that read data from the blockcahin.</p>
+<ul>
+<li><strong>Get lottery information</strong> : This get the lottery information</li>
+<li><strong>Get ticket holder</strong> : This gets the information about the lottery ticket holder</li>
+<li><strong>Get Winner</strong> : This gets the winner information</li>
+<li><strong>Get user tickets</strong> : This gets information about the user tickets</li>
+<li><strong>Is the lottery active</strong> This return a bool (true or flase) the active state of the lottery ticket</li>
+</ul>
+<p>This contract serves as a foundational example for understanding the mechanics of Lottery Contract within the StarkNet ecosystem.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>use starknet::ContractAddress;
+use array::ArrayTrait;
+use option::OptionTrait;
+
+#[starknet::interface]
+pub trait ILotteryContract&lt;TContractState&gt; {
+    fn start_lottery(
+        ref self: TContractState,
+        ticket_price: u256,
+        max_tickets: u32,
+        prize_distribution: Array&lt;u8&gt;,
+        duration: u64
+    );
+    fn buy_tickets(ref self: TContractState, ticket_count: u32);
+    fn end_lottery(ref self: TContractState, random_seed: felt252);
+    fn claim_prize(ref self: TContractState);
+    fn get_lottery_info(self: @TContractState) -&gt; LotteryInfo;
+    fn get_ticket_holders(self: @TContractState) -&gt; Array&lt;ContractAddress&gt;;
+    fn get_winners(self: @TContractState) -&gt; Array&lt;Winner&gt;;
+    fn get_user_tickets(self: @TContractState, user: ContractAddress) -&gt; u32;
+    fn is_lottery_active(self: @TContractState) -&gt; bool;
+}
+
+#[derive(Copy, Drop, Serde, starknet::Store)]
+pub struct LotteryInfo {
+    lottery_id: u32,
+    ticket_price: u256,
+    max_tickets: u32,
+    tickets_sold: u32,
+    prize_pool: u256,
+    start_time: u64,
+    end_time: u64,
+    lottery_status: u8, 
+}
+
+#[derive(Copy, Drop, Serde)]
+pub struct Winner {
+    address: ContractAddress,
+    prize_amount: u256,
+    claimed: bool
+}
+
+mod Errors {
+    pub const LOTTERY_ALREADY_ACTIVE: felt252 = 'Lottery already active';
+    pub const INVALID_TICKET_PRICE: felt252 = 'Invalid ticket price';
+    pub const INVALID_MAX_TICKETS: felt252 = 'Invalid max tickets';
+    pub const INVALID_DURATION: felt252 = 'Invalid duration';
+    pub const INVALID_DISTRIBUTION: felt252 = 'Invalid prize distribution';
+    pub const LOTTERY_NOT_ACTIVE: felt252 = 'Lottery not active';
+    pub const LOTTERY_NOT_ENDED: felt252 = 'Lottery still active';
+    pub const LOTTERY_ALREADY_ENDED: felt252 = 'Lottery already ended';
+    pub const MAX_TICKETS_REACHED: felt252 = 'Max tickets reached';
+    pub const INSUFFICIENT_PAYMENT: felt252 = 'Insufficient payment';
+    pub const NOT_OWNER: felt252 = 'Not the contract owner';
+    pub const NO_PRIZES_TO_CLAIM: felt252 = 'No prizes to claim';
+    pub const PRIZE_ALREADY_CLAIMED: felt252 = 'Prize already claimed';
+}
+
+#[starknet::contract]
+pub mod LotteryContract {
+    use super::{
+        ILotteryContract, LotteryInfo, Winner, Errors,
+        ArrayTrait, ContractAddress, OptionTrait
+    };
+    use core::num::traits::Zero;
+    use starknet::{
+        get_caller_address, get_block_timestamp, get_block_number, get_tx_info,
+        get_contract_address
+    };
+    use openzeppelin_token::erc20::interface::{IERC20Dispatcher, IERC20DispatcherTrait};
+    use core::hash::{LegacyHash, HashStateTrait};
+    use core::pedersen::PedersenTrait;
+    use core::traits::Into;
+    use core::array::SpanTrait;
+
+    #[storage]
+    struct Storage {
+        owner: ContractAddress,
+        payment_token: IERC20Dispatcher,
+        lottery_id: u32,
+        active_lottery: LotteryInfo,
+        ticket_holders: LegacyMap::&lt;u32, ContractAddress&gt;, 
+        user_tickets: LegacyMap::&lt;(u32, ContractAddress), u32&gt;, count
+        winners: LegacyMap::&lt;(u32, u32), Winner&gt;, 
+        winner_count: LegacyMap::&lt;u32, u32&gt;, 
+        prize_distribution: LegacyMap::&lt;(u32, u32), u8&gt;, 
+        prize_distribution_count: LegacyMap::&lt;u32, u32&gt;, 
+    }
+
+    #[event]
+    #[derive(Drop, starknet::Event)]
+    enum Event {
+        LotteryStarted: LotteryStarted,
+        TicketsPurchased: TicketsPurchased,
+        LotteryEnded: LotteryEnded,
+        PrizeClaimed: PrizeClaimed,
+    }
+
+    #[derive(Drop, starknet::Event)]
+    struct LotteryStarted {
+        lottery_id: u32,
+        ticket_price: u256,
+        max_tickets: u32,
+        duration: u64,
+    }
+
+    #[derive(Drop, starknet::Event)]
+    struct TicketsPurchased {
+        lottery_id: u32,
+        buyer: ContractAddress,
+        ticket_count: u32,
+        total_cost: u256,
+    }
+
+    #[derive(Drop, starknet::Event)]
+    struct LotteryEnded {
+        lottery_id: u32,
+        total_tickets_sold: u32,
+        prize_pool: u256,
+        timestamp: u64,
+    }
+
+    #[derive(Drop, starknet::Event)]
+    struct PrizeClaimed {
+        lottery_id: u32,
+        winner: ContractAddress,
+        prize_amount: u256,
+    }
+
+    #[constructor]
+    fn constructor(
+        ref self: ContractState,
+        payment_token_address: ContractAddress,
+    ) {
+        self.owner.write(get_caller_address());
+        self.payment_token.write(IERC20Dispatcher { contract_address: payment_token_address });
+        self.lottery_id.write(0);
+    }
+
+    #[abi(embed_v0)]
+    impl LotteryContractImpl of super::ILotteryContract&lt;ContractState&gt; {
+        fn start_lottery(
+            ref self: ContractState, 
+            ticket_price: u256, 
+            max_tickets: u32,
+            prize_distribution: Array&lt;u8&gt;,
+            duration: u64
+        ) {
+            self.assert_only_owner();
+            
+            assert(!self.is_lottery_active(@self), Errors::LOTTERY_ALREADY_ACTIVE);
+            
+            assert(ticket_price &gt; 0, Errors::INVALID_TICKET_PRICE);
+            assert(max_tickets &gt; 0, Errors::INVALID_MAX_TICKETS);
+            assert(duration &gt; 0, Errors::INVALID_DURATION);
+            
+            let mut total_percentage: u8 = 0;
+            let mut i: u32 = 0;
+            let distribution_len = prize_distribution.len();
+            assert(distribution_len &gt; 0, Errors::INVALID_DISTRIBUTION);
+
+            let distribution_span = prize_distribution.span();
+            loop {
+                if i &gt;= distribution_len {
+                    break;
+                }
+                let percentage = *distribution_span.at(i);
+                total_percentage += percentage;
+                self.prize_distribution.write((self.lottery_id.read() + 1, i), percentage);
+                i += 1;
+            }
+            
+            assert(total_percentage == 100, Errors::INVALID_DISTRIBUTION);
+            self.prize_distribution_count.write(self.lottery_id.read() + 1, distribution_len);
+            
+            let new_lottery_id = self.lottery_id.read() + 1;
+            let start_time = get_block_timestamp();
+            let end_time = start_time + duration;
+            
+            self.active_lottery.write(LotteryInfo {
+                lottery_id: new_lottery_id,
+                ticket_price,
+                max_tickets,
+                tickets_sold: 0,
+                prize_pool: 0,
+                start_time,
+                end_time,
+                lottery_status: 1,
+            });
+            
+            self.lottery_id.write(new_lottery_id);
+            
+            self.emit(LotteryStarted {
+                lottery_id: new_lottery_id,
+                ticket_price,
+                max_tickets,
+                duration,
+            });
+        }
+
+        fn buy_tickets(ref self: ContractState, ticket_count: u32) {
+            assert(self.is_lottery_active(@self), Errors::LOTTERY_NOT_ACTIVE);
+            
+            let caller = get_caller_address();
+            let active_lottery = self.active_lottery.read();
+            
+            assert(active_lottery.tickets_sold + ticket_count &lt;= active_lottery.max_tickets, Errors::MAX_TICKETS_REACHED);
+            
+            let total_cost = active_lottery.ticket_price * ticket_count.into();
+            
+            self.payment_token.read().transfer_from(
+                caller, 
+                get_contract_address(), 
+                total_cost
+            );
+            
+            let current_tickets_sold = active_lottery.tickets_sold;
+        
+            let mut i: u32 = 0;
+            loop {
+                if i &gt;= ticket_count {
+                    break;
+                }
+                self.ticket_holders.write(current_tickets_sold + i, caller);
+                i += 1;
+            }
+            
+            let user_current_tickets = self.user_tickets.read((active_lottery.lottery_id, caller));
+            self.user_tickets.write((active_lottery.lottery_id, caller), user_current_tickets + ticket_count);
+            
+            self.active_lottery.write(LotteryInfo {
+                lottery_id: active_lottery.lottery_id,
+                ticket_price: active_lottery.ticket_price,
+                max_tickets: active_lottery.max_tickets,
+                tickets_sold: active_lottery.tickets_sold + ticket_count,
+                prize_pool: active_lottery.prize_pool + total_cost,
+                start_time: active_lottery.start_time,
+                end_time: active_lottery.end_time,
+                lottery_status: active_lottery.lottery_status,
+            });
+            
+            self.emit(TicketsPurchased {
+                lottery_id: active_lottery.lottery_id,
+                buyer: caller,
+                ticket_count,
+                total_cost,
+            });
+        }
+
+        fn end_lottery(ref self: ContractState, random_seed: felt252) {
+            self.assert_only_owner();
+            
+            assert(self.is_lottery_active(@self), Errors::LOTTERY_NOT_ACTIVE);
+            
+            let active_lottery = self.active_lottery.read();
+        
+            assert(
+                get_block_timestamp() &gt;= active_lottery.end_time || 
+                active_lottery.tickets_sold == active_lottery.max_tickets,
+                Errors::LOTTERY_NOT_ENDED
+            );
+            
+            if active_lottery.tickets_sold == 0 {
+                self.active_lottery.write(LotteryInfo {
+                    lottery_id: active_lottery.lottery_id,
+                    ticket_price: active_lottery.ticket_price,
+                    max_tickets: active_lottery.max_tickets,
+                    tickets_sold: active_lottery.tickets_sold,
+                    prize_pool: active_lottery.prize_pool,
+                    start_time: active_lottery.start_time,
+                    end_time: active_lottery.end_time,
+                    lottery_status: 2, 
+                });
+                return;
+            }
+
+            let random_value = self.generate_random_value(random_seed);
+            
+            let prize_pool = active_lottery.prize_pool;
+            let mut winner_count: u32 = 0;
+            let distribution_count = self.prize_distribution_count.read(active_lottery.lottery_id);
+            
+            let mut i: u32 = 0;
+            loop {
+                if i &gt;= distribution_count {
+                    break;
+                }
+                
+                let percentage = self.prize_distribution.read((active_lottery.lottery_id, i));
+                let prize_amount = (prize_pool * percentage.into()) / 100_u256;
+                
+                if prize_amount &gt; 0 {
+                    let winner_ticket = self.select_random_ticket(
+                        active_lottery.tickets_sold, 
+                        random_value, 
+                        i
+                    );
+                    let winner_address = self.ticket_holders.read(winner_ticket);
+                    
+                    self.winners.write(
+                        (active_lottery.lottery_id, i),
+                        Winner { 
+                            address: winner_address, 
+                            prize_amount,
+                            claimed: false 
+                        }
+                    );
+                    
+                    winner_count += 1;
+                }
+                
+                i += 1;
+            }
+            
+            self.winner_count.write(active_lottery.lottery_id, winner_count);
+            
+            self.active_lottery.write(LotteryInfo {
+                lottery_id: active_lottery.lottery_id,
+                ticket_price: active_lottery.ticket_price,
+                max_tickets: active_lottery.max_tickets,
+                tickets_sold: active_lottery.tickets_sold,
+                prize_pool: active_lottery.prize_pool,
+                start_time: active_lottery.start_time,
+                end_time: active_lottery.end_time,
+                lottery_status: 2, 
+            });
+            
+            self.emit(LotteryEnded {
+                lottery_id: active_lottery.lottery_id,
+                total_tickets_sold: active_lottery.tickets_sold,
+                prize_pool: active_lottery.prize_pool,
+                timestamp: get_block_timestamp(),
+            });
+        }
+
+        fn claim_prize(ref self: ContractState) {
+            let active_lottery = self.active_lottery.read();
+            let caller = get_caller_address();
+            
+            assert(active_lottery.lottery_status &gt;= 2, Errors::LOTTERY_NOT_ENDED);
+            
+            let lottery_id = active_lottery.lottery_id;
+            let winner_count = self.winner_count.read(lottery_id);
+            
+            let mut prize_found = false;
+            let mut total_prize: u256 = 0;
+            let mut i: u32 = 0;
+            
+            loop {
+                if i &gt;= winner_count {
+                    break;
+                }
+                
+                let winner = self.winners.read((lottery_id, i));
+                if winner.address == caller &amp;&amp; !winner.claimed {
+                    prize_found = true;
+                    total_prize += winner.prize_amount;
+                    
+                    self.winners.write(
+                        (lottery_id, i),
+                        Winner { 
+                            address: winner.address, 
+                            prize_amount: winner.prize_amount,
+                            claimed: true 
+                        }
+                    );
+                }
+                
+                i += 1;
+            }
+            
+            assert(prize_found, Errors::NO_PRIZES_TO_CLAIM);
+            assert(total_prize &gt; 0, Errors::NO_PRIZES_TO_CLAIM);
+            
+            self.payment_token.read().transfer(caller, total_prize);
+            
+            self.emit(PrizeClaimed {
+                lottery_id,
+                winner: caller,
+                prize_amount: total_prize,
+            });
+        }
+
+        fn get_lottery_info(self: @ContractState) -&gt; LotteryInfo {
+            self.active_lottery.read()
+        }
+
+        fn get_ticket_holders(self: @ContractState) -&gt; Array&lt;ContractAddress&gt; {
+            let active_lottery = self.active_lottery.read();
+            let mut holders = ArrayTrait::new();
+            let mut i: u32 = 0;
+            
+            loop {
+                if i &gt;= active_lottery.tickets_sold {
+                    break;
+                }
+                
+                holders.append(self.ticket_holders.read(i));
+                i += 1;
+            }
+            
+            holders
+        }
+
+        fn get_winners(self: @ContractState) -&gt; Array&lt;Winner&gt; {
+            let active_lottery = self.active_lottery.read();
+            let lottery_id = active_lottery.lottery_id;
+            let winner_count = self.winner_count.read(lottery_id);
+            let mut winners = ArrayTrait::new();
+            let mut i: u32 = 0;
+            
+            loop {
+                if i &gt;= winner_count {
+                    break;
+                }
+                
+                winners.append(self.winners.read((lottery_id, i)));
+                i += 1;
+            }
+            
+            winners
+        }
+
+        fn get_user_tickets(self: @ContractState, user: ContractAddress) -&gt; u32 {
+            let active_lottery = self.active_lottery.read();
+            self.user_tickets.read((active_lottery.lottery_id, user))
+        }
+
+        fn is_lottery_active(self: @ContractState) -&gt; bool {
+            let active_lottery = self.active_lottery.read();
+            active_lottery.lottery_status == 1
+        }
+    }
+
+    #[generate_trait]
+    impl PrivateFunctions of PrivateFunctionsTrait {
+        fn assert_only_owner(self: @ContractState) {
+            let caller = get_caller_address();
+            let owner = self.owner.read();
+            assert(caller == owner, Errors::NOT_OWNER);
+        }
+
+        fn generate_random_value(self: @ContractState, seed: felt252) -&gt; felt252 {
+            let block_number = get_block_number();
+            let block_timestamp = get_block_timestamp();
+            let tx_info = get_tx_info().unbox();
+            let tx_hash = tx_info.transaction_hash;
+            
+            let mut hash_state = PedersenTrait::new(0);
+            hash_state = hash_state.update(seed);
+            hash_state = hash_state.update(block_number.into());
+            hash_state = hash_state.update(block_timestamp.into());
+            hash_state = hash_state.update(tx_hash);
+            
+            hash_state.finalize()
+        }
+
+        fn select_random_ticket(
+            self: @ContractState,
+            total_tickets: u32,
+            random_value: felt252,
+            offset: u32
+        ) -&gt; u32 {
+    
+            let mut hash_state = PedersenTrait::new(0);
+            hash_state = hash_state.update(random_value);
+            hash_state = hash_state.update(offset.into());
+            let new_random = hash_state.finalize();
+            
+            (new_random.try_into().unwrap() % total_tickets.into()).try_into().unwrap()
+        }
+    }
+}
+<span class="boring">}</span></code></pre></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="cairo-academy-understanding-a-basic-dao-contract"><a class="header" href="#cairo-academy-understanding-a-basic-dao-contract">Cairo Academy: Understanding a Basic DAO Contract</a></h1>
+<p>This chapter explores a fundamental DAO (Decentralized Autonomous Organization) contract implemented in Cairo. This contract demonstrates core DAO functionalities, providing a practical example for learning how to build decentralized governance systems on StarkNet.</p>
+<h2 id="purpose-and-functionality-2"><a class="header" href="#purpose-and-functionality-2">Purpose and Functionality</a></h2>
+<p>The provided Cairo code defines a basic DAO contract with the following capabilities:</p>
+<ul>
+<li><strong>Proposal Management:</strong> Create, vote on, and execute governance proposals</li>
+<li><strong>Membership Control:</strong> Add and remove members with voting power</li>
+<li><strong>Voting System:</strong> Track votes for and against proposals</li>
+<li><strong>Governance Rules:</strong> Enforce voting periods and execution conditions</li>
+</ul>
+<h2 id="key-components"><a class="header" href="#key-components">Key Components</a></h2>
+<h3 id="data-structures"><a class="header" href="#data-structures">Data Structures</a></h3>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[derive(Copy, Drop, Hash)]
+struct ProposalId {
+    id: u64
+}
+
+#[derive(Copy, Drop, Serde, starknet::Store)]
+struct Proposal {
+    proposer: ContractAddress,
+    description: felt252,
+    for_votes: u256,
+    against_votes: u256,
+    start_block: u64,
+    end_block: u64,
+    executed: bool
+}
+
+#[derive(Copy, Drop, Serde, starknet::Store)]
+struct Member {
+    address: ContractAddress,
+    voting_power: u256
+}
+<span class="boring">}</span></code></pre></pre>
+<h3 id="core-functionalities"><a class="header" href="#core-functionalities">Core Functionalities</a></h3>
+<ol>
+<li>
+<p><strong>Proposal Creation:</strong></p>
+<ul>
+<li>Only members can create proposals</li>
+<li>Each proposal has a 100-block voting period</li>
+<li>Proposals store vote counts and execution status</li>
+</ul>
+</li>
+<li>
+<p><strong>Voting Mechanism:</strong></p>
+<ul>
+<li>Members vote with their voting power</li>
+<li>Votes can be for or against proposals</li>
+<li>Voting is only allowed during the active period</li>
+</ul>
+</li>
+<li>
+<p><strong>Proposal Execution:</strong></p>
+<ul>
+<li>Can only execute after voting period ends</li>
+<li>Requires more for-votes than against-votes</li>
+<li>Prevents double execution</li>
+</ul>
+</li>
+<li>
+<p><strong>Membership Management:</strong></p>
+<ul>
+<li>Admin-controlled member additions/removals</li>
+<li>Members have associated voting power</li>
+</ul>
+</li>
+</ol>
+<h3 id="interface-definition"><a class="header" href="#interface-definition">Interface Definition</a></h3>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[starknet::interface]
+pub trait IDAO&lt;TContractState&gt; {
+    fn create_proposal(ref self: TContractState, description: felt252);
+    fn vote(ref self: TContractState, proposal_id: ProposalId, support: bool);
+    fn execute_proposal(ref self: TContractState, proposal_id: ProposalId);
+    fn add_member(ref self: TContractState, member: ContractAddress, voting_power: u256);
+    fn remove_member(ref self: TContractState, member: ContractAddress);
+    fn get_proposal(self: @TContractState, proposal_id: ProposalId) -&gt; Proposal;
+    fn get_member(self: @TContractState, member: ContractAddress) -&gt; Member;
+}
+<span class="boring">}</span></code></pre></pre>
+<h3 id="event-system"><a class="header" href="#event-system">Event System</a></h3>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[event]
+enum Event {
+    ProposalCreated: ProposalCreatedEvent,
+    Voted: VotedEvent,
+    ProposalExecuted: ProposalExecutedEvent,
+    MemberAdded: MemberAddedEvent,
+    MemberRemoved: MemberRemovedEvent
+}
+<span class="boring">}</span></code></pre></pre>
+<h3 id="security-features"><a class="header" href="#security-features">Security Features</a></h3>
+<ul>
+<li>Member verification for proposal creation</li>
+<li>Voting period enforcement</li>
+<li>Execution condition checks</li>
+<li>Admin-only member management</li>
+</ul>
+<h3 id="usage-example"><a class="header" href="#usage-example">Usage Example</a></h3>
+<ul>
+<li>Admin adds members with <code>add_member</code></li>
+<li>Members create proposals with <code>create_proposal</code></li>
+<li>Other members vote with vote</li>
+<li>After voting period, anyone can execute_proposal if it passed</li>
+</ul>
+<h3 id="full-implementation"><a class="header" href="#full-implementation">Full Implementation</a></h3>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>use core::num::traits::Zero;
+use starknet::ContractAddress;
+
+#[derive(Copy, Drop, Hash)]
+struct ProposalId {
+    id: u64
+}
+
+#[derive(Copy, Drop, Serde, starknet::Store)]
+struct Proposal {
+    proposer: ContractAddress,
+    description: felt252,
+    for_votes: u256,
+    against_votes: u256,
+    start_block: u64,
+    end_block: u64,
+    executed: bool
+}
+
+#[derive(Copy, Drop, Serde, starknet::Store)]
+struct Member {
+    address: ContractAddress,
+    voting_power: u256
+}
+
+#[starknet::interface]
+pub trait IDAO&lt;TContractState&gt; {
+    fn create_proposal(ref self: TContractState, description: felt252);
+    fn vote(ref self: TContractState, proposal_id: ProposalId, support: bool);
+    fn execute_proposal(ref self: TContractState, proposal_id: ProposalId);
+    fn add_member(ref self: TContractState, member: ContractAddress, voting_power: u256);
+    fn remove_member(ref self: TContractState, member: ContractAddress);
+    fn get_proposal(self: @TContractState, proposal_id: ProposalId) -&gt; Proposal;
+    fn get_member(self: @TContractState, member: ContractAddress) -&gt; Member;
+}
+
+#[starknet::contract]
+mod dao {
+    use core::num::traits::Zero;
+    use starknet::{ContractAddress, get_caller_address, get_block_number};
+    use super::{IDAO, ProposalId, Proposal, Member};
+
+    #[storage]
+    struct Storage {
+        proposals: LegacyMap&lt;ProposalId, Proposal&gt;,
+        members: LegacyMap&lt;ContractAddress, Member&gt;,
+        next_proposal_id: u64
+    }
+
+    #[event]
+    enum Event {
+        ProposalCreated: ProposalCreatedEvent,
+        Voted: VotedEvent,
+        ProposalExecuted: ProposalExecutedEvent,
+        MemberAdded: MemberAddedEvent,
+        MemberRemoved: MemberRemovedEvent
+    }
+
+    #[derive(Drop, Serde)]
+    struct ProposalCreatedEvent {
+        proposal_id: ProposalId,
+        proposer: ContractAddress,
+        description: felt252,
+        start_block: u64,
+        end_block: u64
+    }
+
+    #[derive(Drop, Serde)]
+    struct VotedEvent {
+        proposal_id: ProposalId,
+        voter: ContractAddress,
+        support: bool
+    }
+
+    #[derive(Drop, Serde)]
+    struct ProposalExecutedEvent {
+        proposal_id: ProposalId
+    }
+
+    #[derive(Drop, Serde)]
+    struct MemberAddedEvent {
+        member: ContractAddress,
+        voting_power: u256
+    }
+
+    #[derive(Drop, Serde)]
+    struct MemberRemovedEvent {
+        member: ContractAddress
+    }
+
+    #[abi(embed_v0)]
+    impl IDAOImpl of IDAO&lt;ContractState&gt; {
+        fn create_proposal(ref self: ContractState, description: felt252) {
+            let caller: ContractAddress = get_caller_address();
+            let member: Member = self.members.read(caller);
+
+            assert!(member.voting_power &gt; Zero::zero(), "Caller is not a member");
+
+            let proposal_id = ProposalId { id: self.next_proposal_id.read() };
+            let start_block = get_block_number();
+            let end_block = start_block + 100;
+
+            self.proposals.write(proposal_id, Proposal {
+                proposer: caller,
+                description,
+                for_votes: Zero::zero(),
+                against_votes: Zero::zero(),
+                start_block,
+                end_block,
+                executed: false
+            });
+
+            self.next_proposal_id.write(self.next_proposal_id.read() + 1);
+
+            self.emit(ProposalCreatedEvent {
+                proposal_id,
+                proposer: caller,
+                description,
+                start_block,
+                end_block
+            });
+        }
+
+        fn vote(ref self: ContractState, proposal_id: ProposalId, support: bool) {
+            let caller: ContractAddress = get_caller_address();
+            let member: Member = self.members.read(caller);
+            let mut proposal: Proposal = self.proposals.read(proposal_id);
+
+            assert!(get_block_number() &lt; proposal.end_block, "Voting period has ended");
+            assert!(!proposal.executed, "Proposal already executed");
+
+            if support {
+                proposal.for_votes += member.voting_power;
+            } else {
+                proposal.against_votes += member.voting_power;
+            }
+
+            self.proposals.write(proposal_id, proposal);
+
+            self.emit(VotedEvent {
+                proposal_id,
+                voter: caller,
+                support
+            });
+        }
+
+        fn execute_proposal(ref self: ContractState, proposal_id: ProposalId) {
+            let proposal: Proposal = self.proposals.read(proposal_id);
+
+            assert!(get_block_number() &gt; proposal.end_block, "Voting period has not ended");
+            assert!(!proposal.executed, "Proposal already executed");
+            assert!(proposal.for_votes &gt; proposal.against_votes, "Proposal did not pass");
+
+            // Execute the proposal (e.g., transfer funds, update state, etc.)
+            // Placeholder for proposal execution logic
+
+            self.proposals.write(proposal_id, Proposal { executed: true, ..proposal });
+
+            self.emit(ProposalExecutedEvent { proposal_id });
+        }
+
+        fn add_member(ref self: ContractState, member: ContractAddress, voting_power: u256) {
+            let caller: ContractAddress = get_caller_address();
+            assert!(caller == self.admin.read(), "Only admin can add members");
+
+            self.members.write(member, Member { address: member, voting_power });
+
+            self.emit(MemberAddedEvent { member, voting_power });
+        }
+
+        fn remove_member(ref self: ContractState, member: ContractAddress) {
+            let caller: ContractAddress = get_caller_address();
+            assert!(caller == self.admin.read(), "Only admin can remove members");
+
+            self.members.write(member, Member { address: member, voting_power: Zero::zero() });
+
+            self.emit(MemberRemovedEvent { member });
+        }
+
+        fn get_proposal(self: @ContractState, proposal_id: ProposalId) -&gt; Proposal {
+            self.proposals.read(proposal_id)
+        }
+
+        fn get_member(self: @ContractState, member: ContractAddress) -&gt; Member {
+            self.members.read(member)
+        }
+    }
+}
+<span class="boring">}</span></code></pre></pre>
+<p>This contract serves as a foundation for building more complex DAO systems on StarkNet, demonstrating key concepts like decentralized governance and member voting.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="cairo-academy-understanding-an-escrow-contract"><a class="header" href="#cairo-academy-understanding-an-escrow-contract">Cairo Academy: Understanding an Escrow Contract</a></h1>
+<p>This chapter explores an Escrow contract implemented in Cairo. This contract demonstrates a secure token exchange mechanism between two parties, providing a trustless way to facilitate transactions on StarkNet.</p>
+<h2 id="purpose-and-functionality-3"><a class="header" href="#purpose-and-functionality-3">Purpose and Functionality</a></h2>
+<p>The provided Cairo code defines an escrow contract with the following capabilities:</p>
+<ul>
+<li><strong>Token Escrow:</strong> Lock tokens from sender until conditions are met</li>
+<li><strong>Time-Locked Refunds:</strong> Allow sender to reclaim tokens after timeout</li>
+<li><strong>Secure Execution:</strong> Recipient can execute the trade when ready</li>
+<li><strong>Status Examination:</strong> View escrow details at any time</li>
+</ul>
+<h2 id="key-components-1"><a class="header" href="#key-components-1">Key Components</a></h2>
+<h3 id="data-structures-1"><a class="header" href="#data-structures-1">Data Structures</a></h3>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[derive(Copy, Drop, Hash)]
+struct EscrowId {
+    sender: ContractAddress,
+    recipient: ContractAddress,
+    in_token: ContractAddress
+}
+
+#[derive(Copy, Default, Drop, Serde, starknet::Store)]
+pub struct EscrowDetails {
+    pub in_amount: u256,
+    pub out_token: ContractAddress,
+    pub out_amount: u256,
+    pub created_at: u64, 
+}
+<span class="boring">}</span></code></pre></pre>
+<h3 id="core-functionalities-1"><a class="header" href="#core-functionalities-1">Core Functionalities</a></h3>
+<ol>
+<li>
+<p><strong>Escrow Creation:</strong></p>
+<ul>
+<li>Sender locks input tokens into the contract</li>
+<li>Specifies recipient and expected output tokens</li>
+<li>Records creation timestamp for refund timing</li>
+</ul>
+</li>
+<li>
+<p><strong>Escrow Execution:</strong></p>
+<ul>
+<li>Recipient can execute the trade when ready</li>
+<li>Atomic swap of input and output tokens</li>
+<li>Only the specified recipient can execute</li>
+</ul>
+</li>
+<li>
+<p><strong>Refund Mechanism:</strong></p>
+<ul>
+<li>Sender can reclaim tokens after 7 days</li>
+<li>Prevents indefinite locking of funds</li>
+<li>Only available after timeout period</li>
+</ul>
+</li>
+<li>
+<p><strong>Status Checking:</strong></p>
+<ul>
+<li>Anyone can examine escrow details</li>
+<li>View token amounts and timestamps</li>
+<li>No state modification</li>
+</ul>
+</li>
+</ol>
+<h3 id="interface-definition-1"><a class="header" href="#interface-definition-1">Interface Definition</a></h3>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[starknet::interface]
+pub trait IEscrow&lt;TContractState&gt; {
+    fn examine(
+        self: @TContractState, sender: ContractAddress, recipient: ContractAddress, in_token: ContractAddress
+    ) -&gt; EscrowDetails;
+
+    fn enter(
+        ref self: TContractState,
+        recipient: ContractAddress,
+        in_token: ContractAddress,
+        in_amount: u256,
+        out_token: ContractAddress,
+        out_amount: u256
+    );
+
+    fn exit(ref self: TContractState, sender: ContractAddress, recipient: ContractAddress, in_token: ContractAddress);
+
+    fn execute(ref self: TContractState, sender: ContractAddress, in_token: ContractAddress);
+}
+<span class="boring">}</span></code></pre></pre>
+<h3 id="event-system-1"><a class="header" href="#event-system-1">Event System</a></h3>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[event]
+enum Event {
+    EscrowCreated: EscrowCreatedEvent,
+    EscrowExecuted: EscrowExecutedEvent,
+    EscrowRefunded: EscrowRefundedEvent
+}
+<span class="boring">}</span></code></pre></pre>
+<h3 id="security-features-1"><a class="header" href="#security-features-1">Security Features</a></h3>
+<ul>
+<li>Token transfers use StarkNet's native token standards</li>
+<li>Time-locked refunds prevent indefinite locking</li>
+<li>Only specified recipient can execute</li>
+<li>Only original sender can refund</li>
+<li>Atomic swap ensures both sides complete or none do</li>
+</ul>
+<h2 id="usage-example-1"><a class="header" href="#usage-example-1">Usage Example</a></h2>
+<ol>
+<li><strong>Creating an Escrow:</strong></li>
+</ol>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// Alice wants to trade 100 TOKA for 200 TOKB with Bob
+escrow.enter(
+    bob_address,
+    token_a_address,
+    100,
+    token_b_address,
+    200
+);
+<span class="boring">}</span></code></pre></pre>
+<ol start="2">
+<li><strong>Executing the Trade:</strong></li>
+</ol>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// When Bob is ready, he executes the escrow
+escrow.execute(alice_address, token_a_address);
+<span class="boring">}</span></code></pre></pre>
+<ol start="3">
+<li><strong>Refunding:</strong></li>
+</ol>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// If Bob doesn't complete within 7 days, Alice can refund
+escrow.exit(alice_address, bob_address, token_a_address);
+<span class="boring">}</span></code></pre></pre>
+<h3 id="full-implementation-1"><a class="header" href="#full-implementation-1">Full Implementation</a></h3>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>use core::num::traits::Zero;
+use starknet::ContractAddress;
+
+#[derive(Copy, Drop, Hash)]
+struct EscrowId {
+    sender: ContractAddress,
+    recipient: ContractAddress,
+    in_token: ContractAddress
+}
+
+#[derive(Copy, Default, Drop, Serde, starknet::Store)]
+pub struct EscrowDetails {
+    pub in_amount: u256,
+    pub out_token: ContractAddress,
+    pub out_amount: u256,
+    pub created_at: u64, 
+}
+
+#[starknet::interface]
+pub trait IEscrow&lt;TContractState&gt; {
+    fn examine(
+        self: @TContractState, sender: ContractAddress, recipient: ContractAddress, in_token: ContractAddress
+    ) -&gt; EscrowDetails;
+
+    fn enter(
+        ref self: TContractState,
+        recipient: ContractAddress,
+        in_token: ContractAddress,
+        in_amount: u256,
+        out_token: ContractAddress,
+        out_amount: u256
+    );
+
+    fn exit(ref self: TContractState, sender: ContractAddress, recipient: ContractAddress, in_token: ContractAddress);
+
+    fn execute(ref self: TContractState, sender: ContractAddress, in_token: ContractAddress);
+}
+
+#[starknet::interface]
+trait IERC20&lt;TContractState&gt; {
+    fn transfer(ref self: TContractState, to: ContractAddress, amount: u256);
+    fn transfer_from(
+        ref self: TContractState, from: ContractAddress, to: ContractAddress, amount: u256
+    );
+}
+
+impl ContractAddressDefault of Default&lt;ContractAddress&gt; {
+    fn default() -&gt; ContractAddress {
+        Zero::zero()
+    }
+}
+
+impl EscrowDetailsZero of Zero&lt;EscrowDetails&gt; {
+    fn zero() -&gt; EscrowDetails {
+        EscrowDetails { in_amount: Zero::zero(), out_token: Zero::zero(), out_amount: Zero::zero(), created_at: 0 }
+    }
+
+    fn is_zero(self: @EscrowDetails) -&gt; bool {
+        self.in_amount.is_zero() &amp;&amp; self.out_token.is_zero() &amp;&amp; self.out_amount.is_zero()
+    }
+
+    fn is_non_zero(self: @EscrowDetails) -&gt; bool {
+        !self.is_zero()
+    }
+}
+
+#[starknet::contract]
+mod escrow {
+    use core::num::traits::Zero;
+    use starknet::{ContractAddress, get_caller_address, get_contract_address, get_block_timestamp};
+    use super::{IEscrow, IERC20Dispatcher, IERC20DispatcherTrait};
+    use super::{ContractAddressDefault, EscrowDetails, EscrowId};
+
+    #[storage]
+    struct Storage {
+        escrows: LegacyMap&lt;EscrowId, EscrowDetails&gt;
+    }
+
+    #[event]
+    enum Event {
+        EscrowCreated: EscrowCreatedEvent,
+        EscrowExecuted: EscrowExecutedEvent,
+        EscrowRefunded: EscrowRefundedEvent
+    }
+
+    #[derive(Drop, Serde)]
+    struct EscrowCreatedEvent {
+        sender: ContractAddress,
+        recipient: ContractAddress,
+        in_token: ContractAddress,
+        in_amount: u256,
+        out_token: ContractAddress,
+        out_amount: u256
+    }
+
+    #[derive(Drop, Serde)]
+    struct EscrowExecutedEvent {
+        sender: ContractAddress,
+        recipient: ContractAddress,
+        in_token: ContractAddress,
+        in_amount: u256,
+        out_token: ContractAddress,
+        out_amount: u256
+    }
+
+    #[derive(Drop, Serde)]
+    struct EscrowRefundedEvent {
+        sender: ContractAddress,
+        recipient: ContractAddress,
+        in_token: ContractAddress,
+        in_amount: u256
+    }
+
+    #[abi(embed_v0)]
+    impl IEscrowImpl of IEscrow&lt;ContractState&gt; {
+        fn examine(
+            self: @ContractState, sender: ContractAddress, recipient: ContractAddress, in_token: ContractAddress
+        ) -&gt; EscrowDetails {
+            self.escrows.read(EscrowId { sender, recipient, in_token })
+        }
+
+        fn enter(
+            ref self: ContractState,
+            recipient: ContractAddress,
+            in_token: ContractAddress,
+            in_amount: u256,
+            out_token: ContractAddress,
+            out_amount: u256
+        ) {
+            let caller: ContractAddress = get_caller_address();
+            let escrow_id = EscrowId { sender: caller, recipient, in_token };
+            let escrow_details: EscrowDetails = self.escrows.read(escrow_id);
+
+            assert!(escrow_details.is_zero(), "escrow already exists");
+            assert!(in_amount &gt; Zero::zero(), "amount must be positive");
+            assert!(out_amount &gt; Zero::zero(), "amount must be positive");
+
+            let created_at = get_block_timestamp();
+            self.escrows.write(escrow_id, EscrowDetails { in_amount, out_token, out_amount, created_at });
+
+            IERC20Dispatcher { contract_address: in_token }
+                .transfer_from(caller, get_contract_address(), in_amount);
+
+            self.emit(EscrowCreatedEvent { 
+                sender: caller, 
+                recipient, 
+                in_token, 
+                in_amount, 
+                out_token, 
+                out_amount 
+            });
+        }
+
+        fn exit(ref self: ContractState, sender: ContractAddress, recipient: ContractAddress, in_token: ContractAddress) {
+            let caller: ContractAddress = get_caller_address();
+            let escrow_id = EscrowId { sender: caller, recipient, in_token };
+            let escrow_details = self.escrows.read(escrow_id);
+
+            assert!(escrow_details.is_non_zero(), "escrow does not exist");
+            assert!(caller == sender, "only sender can refund");
+
+            let current_time = get_block_timestamp();
+            assert!(current_time &gt; escrow_details.created_at + 7 * 24 * 60 * 60, "escrow cannot be refunded yet");
+
+            self.escrows.write(escrow_id, Default::default());
+
+            IERC20Dispatcher { contract_address: in_token }.transfer(caller, escrow_details.in_amount);
+
+            self.emit(EscrowRefundedEvent { 
+                sender: caller, 
+                recipient, 
+                in_token, 
+                in_amount: escrow_details.in_amount 
+            });
+        }
+
+        fn execute(ref self: ContractState, sender: ContractAddress, in_token: ContractAddress) {
+            let caller: ContractAddress = get_caller_address();
+            let escrow_id = EscrowId { sender, recipient: caller, in_token };
+            let escrow_details: EscrowDetails = self.escrows.read(escrow_id);
+
+            assert!(escrow_details.is_non_zero(), "escrow does not exist");
+            assert!(caller == escrow_id.recipient, "only recipient can execute");
+
+            self.escrows.write(escrow_id, Default::default());
+
+            // Transfer locked tokens to recipient
+            IERC20Dispatcher { contract_address: escrow_id.in_token }
+                .transfer(caller, escrow_details.in_amount);
+            
+            // Transfer expected tokens from recipient to sender
+            IERC20Dispatcher { contract_address: escrow_details.out_token }
+                .transfer_from(caller, sender, escrow_details.out_amount);
+
+            self.emit(EscrowExecutedEvent { 
+                sender, 
+                recipient: caller, 
+                in_token, 
+                in_amount: escrow_details.in_amount, 
+                out_token: escrow_details.out_token, 
+                out_amount: escrow_details.out_amount 
+            });
+        }
+    }
+}
+<span class="boring">}</span></code></pre></pre>
+<p>This contract serves as a foundation for building secure token exchange systems on StarkNet, demonstrating key concepts like atomic swaps and time-locked transactions.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="cairo-academy-understanding-a-basic-nft-auction-contract"><a class="header" href="#cairo-academy-understanding-a-basic-nft-auction-contract">Cairo Academy: Understanding a Basic NFT Auction Contract</a></h1>
+<p>This chapter delves into the basics of an NFT Auction Contract implemented in Cairo. This contract demonstrates the core functionalities of a NFT Auction Contract, providing a practical example for learning how to build a basic NFT Auction Contract on StarkNet.</p>
+<h2 id="purpose-and-functionality-4"><a class="header" href="#purpose-and-functionality-4">Purpose and Functionality</a></h2>
+<p>The provided Cairo code defines a NFT Auction Contract. It implements essential functionalities of ERC20 such as:</p>
+<ul>
+<li><strong>Get Name:</strong> This function returns the name of the token</li>
+<li><strong>Get Symbol:</strong> This function returns the symbol or ticker of the token</li>
+<li><strong>Get Decimal:</strong> This function returns the number of decimal the token uses</li>
+<li><strong>Get Total Supply</strong> This function returns the total number of tokens in existence</li>
+<li><strong>Get Balance:</strong> This function returns the number of tokens owned by a specified account. This takes a parameter: account : This stores the token</li>
+<li><strong>Allowance:</strong> This function returns the amount of tokens that a spender is allowed to spend on behalf of an owner. This takes parameters: owner : This is the account owner
+spender : Authorized person to spend on behalf of the owner</li>
+<li><strong>Tranfer:</strong> This function transfers a specified amount of tokens from the caller's account to the recipient. This takes parameter: recipient: This is the reciever of the token and the account: This stores the token</li>
+<li><strong>Transfer From:</strong> This function transfers amount of tokens from sender to recipient using the allowance mechanism. The caller must have an allowance for the sender's tokens of at least amount. This takes parameters: sender, recipient and amount</li>
+<li><strong>Approve:</strong> This function allows the caller to set the amount that a spender is authorized to spend on their behalf.</li>
+<li><strong>Increase Allowance:</strong> This function increases the allowance of spender by added_value.</li>
+<li><strong>Decrease Allowance:</strong> This function decreases the allowance of spender by subtracted_value</li>
+</ul>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>use starknet::ContractAddress;
+<span class="boring">}</span></code></pre></pre>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[starknet::interface]
+pub trait IERC20&lt;TContractState&gt; {
+    fn get_name(self: @TContractState) -&gt; felt252;
+    fn get_symbol(self: @TContractState) -&gt; felt252;
+    fn get_decimals(self: @TContractState) -&gt; u8;
+    fn get_total_supply(self: @TContractState) -&gt; felt252;
+    fn balance_of(self: @TContractState, account: ContractAddress) -&gt; felt252;
+    fn allowance(
+        self: @TContractState, owner: ContractAddress, spender: ContractAddress,
+    ) -&gt; felt252;
+    fn transfer(ref self: TContractState, recipient: ContractAddress, amount: felt252);
+    fn transfer_from(
+        ref self: TContractState,
+        sender: ContractAddress,
+        recipient: ContractAddress,
+        amount: felt252,
+    );
+    fn approve(ref self: TContractState, spender: ContractAddress, amount: felt252);
+    fn increase_allowance(ref self: TContractState, spender: ContractAddress, added_value: felt252);
+    fn decrease_allowance(
+        ref self: TContractState, spender: ContractAddress, subtracted_value: felt252,
+    );
+}
+<span class="boring">}</span></code></pre></pre>
+<p>This NFT Auction Contract implements essential functionalities of IERC721 such as:</p>
+<ul>
+<li><strong>Get Name:</strong> This function returns the name of the NFT (eg Cairo Academy Token)</li>
+<li><strong>Get Symbol:</strong> This function returns the symbol of the NFT token (e.g., "CAT")</li>
+<li><strong>Get Token URI:</strong> This function returns the Uniform Resource Identifier (URI) for a specific token ID. This takes parameter:
+token_id : This is specific token identification</li>
+<li><strong>Get Balance:</strong> This function returns the number of NFTs owned by a specific account. This takes parameter:
+account : This holds the NFT value</li>
+<li><strong>Get Approval:</strong> This function returns the address that has been approved to transfer a specific token ID. This takes parameter:
+token_id</li>
+<li><strong>Is Approved for All:</strong> This function checks if an operator has been approved to manage all of the tokens for a given owner. This takes parameter: owner and operator</li>
+<li><strong>Approve:</strong> This function allows the owner of a token to approve another address (to) to transfer the token (token_id). This takes parameter: token_id and an address</li>
+<li><strong>Set Is Approved for All:</strong> This function enables or disables approval for an operator to manage all of the caller’s assets. This takes parameter: operator and a bool (true/false)</li>
+<li><strong>Transfer from:</strong> This function transfers the ownership of a specific token (token_id) from one address (from) to another address (to). The caller must be approved to make this transfer. This takes parameter: token_id, address (from) and address (to)</li>
+<li><strong>Mint:</strong> This function creates a new token (token_id) and assigns it to a specific address (to). This takes parameter: token_id and an address</li>
+</ul>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[starknet::interface]
+trait IERC721&lt;TContractState&gt; {
+    fn get_name(self: @TContractState) -&gt; felt252;
+    fn get_symbol(self: @TContractState) -&gt; felt252;
+    fn get_token_uri(self: @TContractState, token_id: u256) -&gt; felt252;
+    fn balance_of(self: @TContractState, account: ContractAddress) -&gt; u256;
+    fn owner_of(self: @TContractState, token_id: u256) -&gt; ContractAddress;
+    fn get_approved(self: @TContractState, token_id: u256) -&gt; ContractAddress;
+    fn is_approved_for_all(
+        self: @TContractState, owner: ContractAddress, operator: ContractAddress,
+    ) -&gt; bool;
+    fn approve(ref self: TContractState, to: ContractAddress, token_id: u256);
+    fn set_approval_for_all(ref self: TContractState, operator: ContractAddress, approved: bool);
+    fn transfer_from(
+        ref self: TContractState, from: ContractAddress, to: ContractAddress, token_id: u256,
+    );
+    fn mint(ref self: TContractState, to: ContractAddress, token_id: u256);
+}
+<span class="boring">}</span></code></pre></pre>
+<p>This NFT Auction Contract also implements <strong>Buy</strong> and <strong>Get Price</strong> functions. This functions buys and gets price of the NFTs</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>pub trait INFTAuction&lt;TContractState&gt; {
+    fn buy(ref self: TContractState, token_id: u256);
+    fn get_price(self: @TContractState) -&gt; u64;
+}
+<span class="boring">}</span></code></pre></pre>
+<h2 id="implementation"><a class="header" href="#implementation">Implementation</a></h2>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[starknet::contract]
+pub mod NFTAuction {
+    use super::{IERC20Dispatcher, IERC20DispatcherTrait, IERC721Dispatcher, IERC721DispatcherTrait};
+    use starknet::{ContractAddress, get_caller_address, get_block_timestamp};
+    use starknet::storage::{StoragePointerReadAccess, StoragePointerWriteAccess};
+ 
+    #[storage]
+    struct Storage {
+        erc20_token: ContractAddress,
+        erc721_token: ContractAddress,
+        starting_price: u64,
+        seller: ContractAddress,
+        duration: u64,
+        discount_rate: u64,
+        start_at: u64,
+        expires_at: u64,
+        purchase_count: u128,
+        total_supply: u128,
+    }
+ 
+    mod Errors {
+        pub const AUCTION_ENDED: felt252 = 'auction has ended';
+        pub const LOW_STARTING_PRICE: felt252 = 'low starting price';
+        pub const INSUFFICIENT_BALANCE: felt252 = 'insufficient balance';
+    }
+ 
+    #[constructor]
+    fn constructor(
+        ref self: ContractState,
+        erc20_token: ContractAddress,
+        erc721_token: ContractAddress,
+        starting_price: u64,
+        seller: ContractAddress,
+        duration: u64,
+        discount_rate: u64,
+        total_supply: u128,
+    ) {
+        assert(starting_price &gt;= discount_rate * duration, Errors::LOW_STARTING_PRICE);
+ 
+        self.erc20_token.write(erc20_token);
+        self.erc721_token.write(erc721_token);
+        self.starting_price.write(starting_price);
+        self.seller.write(seller);
+        self.duration.write(duration);
+        self.discount_rate.write(discount_rate);
+        self.start_at.write(get_block_timestamp());
+        self.expires_at.write(get_block_timestamp() + duration * 1000);
+        self.total_supply.write(total_supply);
+    }
+ 
+    #[abi(embed_v0)]
+    impl NFTDutchAuction of super::INFTAuction&lt;ContractState&gt; {
+        fn get_price(self: @ContractState) -&gt; u64 {
+            let time_elapsed = (get_block_timestamp() - self.start_at.read())
+                / 1000; // Ignore milliseconds
+            let discount = self.discount_rate.read() * time_elapsed;
+            self.starting_price.read() - discount
+        }
+ 
+        fn buy(ref self: ContractState, token_id: u256) {
+            // Check duration
+            assert(get_block_timestamp() &lt; self.expires_at.read(), Errors::AUCTION_ENDED);
+            // Check total supply
+            assert(self.purchase_count.read() &lt; self.total_supply.read(), Errors::AUCTION_ENDED);
+ 
+            let erc20_dispatcher = IERC20Dispatcher { contract_address: self.erc20_token.read() };
+            let erc721_dispatcher = IERC721Dispatcher {
+                contract_address: self.erc721_token.read(),
+            };
+ 
+            let caller = get_caller_address();
+            // Get NFT price
+            let price: u256 = self.get_price().into();
+            let buyer_balance: u256 = erc20_dispatcher.balance_of(caller).into();
+            // Ensure buyer has enough token for payment
+            assert(buyer_balance &gt;= price, Errors::INSUFFICIENT_BALANCE);
+            // Transfer payment token from buyer to seller
+            erc20_dispatcher.transfer_from(caller, self.seller.read(), price.try_into().unwrap());
+            // Mint token to buyer's address
+            erc721_dispatcher.mint(caller, token_id);
+            // Increase purchase count
+            self.purchase_count.write(self.purchase_count.read() + 1);
+        }
+    }
+}
+<span class="boring">}</span></code></pre></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="cairo-academy-understanding-a-marketplace-contract"><a class="header" href="#cairo-academy-understanding-a-marketplace-contract">Cairo Academy: Understanding a Marketplace Contract</a></h1>
+<p>This chapter delves into the basics of a Marketplace contract implemented in Cairo. This contract demonstrates the core functionalities of a basic Marketplace contract, providing a practical example for learning how to build a basic Marketplace contract on StarkNet.</p>
+<h2 id="purpose-and-functionality-5"><a class="header" href="#purpose-and-functionality-5">Purpose and Functionality</a></h2>
+<p>The provided Cairo code defines a basic lottery contract. It implements essential Marketplace, ERC20 and IERC721, IERC1155 functionalities</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>use starknet::ContractAddress;
+<span class="boring">}</span></code></pre></pre>
+<p><strong>Marketplace functionalities</strong></p>
+<ul>
+<li><strong>list_asset:</strong> This creates new listing with nft ownership verification. This has parameters:
+asset_contract, token_id, start_time, duration, quantity, payment_token, price_per_token, asset_type</li>
+<li><strong>remove_listing:</strong> This removes listing by replacing with empty listing. This has parameters:
+token_id</li>
+<li><strong>purchase:</strong> Direct purchase at listed price. This has parameters:
+listing_id, recipient, quantity, payment_token, total_price</li>
+<li><strong>accept_bid:</strong>  Seller accepts a specific offer. This has parameters:
+listing_id, bidder, payment_token, price_per_token</li>
+<li><strong>place_bid:</strong>  Places a bid/offer on an existing listing. This has parameters:
+listing_id, quantity, payment_token, price_per_token, expiration</li>
+<li><strong>modify_listing:</strong> Modify existing listing parameters. This has parameters:
+listing_id, quantity, reserve_price, buy_now_price, payment_token, start_time, duration</li>
+<li><strong>get_listing_count:</strong> Returns total number of listings created.</li>
+</ul>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[starknet::interface]
+trait IMarketplace&lt;TContractState&gt; {
+    fn list_asset(
+        ref self: TContractState,
+        asset_contract: ContractAddress,
+        token_id: u256,
+        start_time: u256,
+        duration: u256,
+        quantity: u256,
+        payment_token: ContractAddress,
+        price_per_token: u256,
+        asset_type: u256,
+    );  
+    fn remove_listing(ref self: TContractState, listing_id: u256);
+    fn purchase(
+        ref self: TContractState,
+        listing_id: u256,
+        recipient: ContractAddress,
+        quantity: u256,
+        payment_token: ContractAddress,
+        total_price: u256,
+    );
+    fn accept_bid(
+        ref self: TContractState,
+        listing_id: u256,
+        bidder: ContractAddress,
+        payment_token: ContractAddress,
+        price_per_token: u256
+    );
+    fn place_bid(
+        ref self: TContractState,
+        listing_id: u256,
+        quantity: u256,
+        payment_token: ContractAddress,
+        price_per_token: u256,
+        expiration: u256
+    );
+    fn modify_listing(
+        ref self: TContractState,
+        listing_id: u256,
+        quantity: u256,
+        reserve_price: u256,
+        buy_now_price: u256,
+        payment_token: ContractAddress,
+        start_time: u256,
+        duration: u256,
+    );
+    fn get_listing_count(self: @TContractState) -&gt; u256;
+}
+<span class="boring">}</span></code></pre></pre>
+<p><strong>ERC20 functionalities</strong></p>
+<p>The IERC20 interface defines the core functions for an ERC20 token contract</p>
+<ul>
+<li><strong>balance_of:</strong> This function returns the token balance of a specific account. This has parameters:
+account: The account parameter is the address of the account whose balance is being queried, and the function returns a u256 representing the amount of tokens owned by that account</li>
+<li><strong>allowance:</strong> This function returns the amount of tokens that one account (spender) is authorized to spend on behalf of another account (owner). This has parameters: owner and spender</li>
+<li><strong>transfer:</strong> This function transfers a specified amount of tokens from the caller's account to the recipient account. This has parameters: spender, recipient and amount</li>
+</ul>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[starknet::interface]
+trait IERC20&lt;TContractState&gt; {
+    fn balance_of(self: @TContractState, account: ContractAddress) -&gt; u256;
+    fn allowance(self: @TContractState, owner: ContractAddress, spender: ContractAddress) -&gt; u256;
+    fn transfer(ref self: TContractState, recipient: ContractAddress, amount: u256);
+    fn transfer_from(
+        ref self: TContractState, sender: ContractAddress, recipient: ContractAddress, amount: u256
+    );
+}
+<span class="boring">}</span></code></pre></pre>
+<p><strong>IERC721 functionalities</strong></p>
+<p>The IERC721 interface defines the basic functions that an ERC721-compliant contract should implement.ERC721 is a standard for representing non-fungible tokens (NFTs)</p>
+<ul>
+<li><strong>owner_of:</strong> This function returns the address of the owner of the NFT represented by token_id. This has parameters: token_id, parameter is a unique identifier for the NFT, and the function returns the ContractAddress of the current owner</li>
+<li><strong>get_approved:</strong> This function returns the address that has been approved to manage or transfer the specified NFT (token_id). This takes parameter: token_id</li>
+<li><strong>is_approved_for_all:</strong> This function checks whether an operator address has been authorized to manage all NFTs owned by an owner address. This takes parameter: owner and operator.</li>
+<li><strong>transfer_from:</strong> This function transfers the ownership of the NFT represented by token_id from the 'from' address to the 'to' address. The function allows a transfer to occur.
+This has parameters : token_id, two addresses, 'from' and 'to'</li>
+</ul>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[starknet::interface]
+trait IERC721&lt;TContractState&gt; {
+    fn owner_of(self: @TContractState, token_id: u256) -&gt; ContractAddress;
+    fn get_approved(self: @TContractState, token_id: u256) -&gt; ContractAddress;
+    fn is_approved_for_all(
+        self: @TContractState, owner: ContractAddress, operator: ContractAddress
+    ) -&gt; bool;
+    fn transfer_from(
+        ref self: TContractState, from: ContractAddress, to: ContractAddress, token_id: u256
+    );
+}
+<span class="boring">}</span></code></pre></pre>
+<p><strong>IERC1155 functionalities</strong></p>
+<p>The IERC1155 interface defines the core functions for an ERC1155 token contract. ERC1155 is a token standard that allows a single contract to manage multiple token types, which can be a mix of fungible and non-fungible tokens.</p>
+<ul>
+<li><strong>balance_of:</strong> This function returns the balance of a specific token id for a given account. This takes parameter: 'account', the address of the account whose balance is being queried, and the 'id' parameter is the identifier of the token,</li>
+<li><strong>is_approved_for_all:</strong> This function checks if an operator is approved to manage all tokens for a given account. This takes parameter: The 'account', the address of the token owner, and the 'operator', the address being checked for approval. The function returns a boolean value: true if the operator is approved for all tokens, and false otherwise.</li>
+<li><strong>safe_transfer_from:</strong> This function transfers a specified amount of tokens of type id from the 'from' address to the 'to' address. This takes parameter: Two address 'from', the address from which the tokens are being released and 'to', the address from which the tokens are being sent to. The id is the token identifier, amount is the number of tokens to transfer, and data is additional data to be passed to the recipient.</li>
+</ul>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[starknet::interface]
+trait IERC1155&lt;TContractState&gt; {
+    fn balance_of(self: @TContractState, account: ContractAddress, id: u256) -&gt; u256;
+    fn is_approved_for_all(
+        self: @TContractState, account: ContractAddress, operator: ContractAddress
+    ) -&gt; bool;
+    fn safe_transfer_from(
+        ref self: TContractState,
+        from: ContractAddress,
+        to: ContractAddress,
+        id: u256,
+        amount: u256,
+        data: Span&lt;felt252&gt;
+    );
+}
+<span class="boring">}</span></code></pre></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="cairo-academy-understanding-a-stake-contract"><a class="header" href="#cairo-academy-understanding-a-stake-contract">Cairo Academy: Understanding a Stake Contract</a></h1>
+<p>This chapter delves into the basics of a staking contract implemented in Cairo. This contract demonstrates the core functionalities of a basic Stake contract, providing a practical example for learning how to build a basic staking contract on StarkNet.</p>
+<h2 id="purpose-and-functionality-6"><a class="header" href="#purpose-and-functionality-6">Purpose and Functionality</a></h2>
+<p>The provided Cairo code defines a basic Stake contract. It implements essential Staking Contract functionalities</p>
+<ul>
+<li><strong>set_reward_amount</strong> This function sets the reward amount. This takes a parameter:
+amount</li>
+<li><strong>set_reward_duration</strong> This function sets the period (time) for the reward to be accessed. This takes parameter: duration</li>
+<li><strong>stake</strong> This function allows the staker to stake his digital assets. This takes parameter: amount</li>
+<li><strong>withdraw</strong>  This function allows for stakes to be taken (withdrawn). This takes parameter: amount</li>
+<li><strong>get_rewards</strong> This function computes rewards</li>
+<li><strong>claim_rewards</strong> This function makes claiming of rewards possible.</li>
+</ul>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>use starknet::ContractAddress;
+ 
+#[starknet::interface]
+pub trait IStakingContract&lt;TContractState&gt; {
+    fn set_reward_amount(ref self: TContractState, amount: u256);
+    fn set_reward_duration(ref self: TContractState, duration: u256);
+    fn stake(ref self: TContractState, amount: u256);
+    fn withdraw(ref self: TContractState, amount: u256);
+    fn get_rewards(self: @TContractState, account: ContractAddress) -&gt; u256;
+    fn claim_rewards(ref self: TContractState);
+}
+ 
+mod Errors {
+    pub const NULL_REWARDS: felt252 = 'Reward amount must be &gt; 0';
+    pub const NOT_ENOUGH_REWARDS: felt252 = 'Reward amount must be &gt; balance';
+    pub const NULL_AMOUNT: felt252 = 'Amount must be &gt; 0';
+    pub const NULL_DURATION: felt252 = 'Duration must be &gt; 0';
+    pub const UNFINISHED_DURATION: felt252 = 'Reward duration not finished';
+    pub const NOT_OWNER: felt252 = 'Caller is not the owner';
+    pub const NOT_ENOUGH_BALANCE: felt252 = 'Balance too low';
+}
+ 
+#[starknet::contract]
+pub mod StakingContract {
+    use core::starknet::event::EventEmitter;
+    use core::num::traits::Zero;
+    use starknet::{ContractAddress, get_caller_address, get_block_timestamp, get_contract_address};
+    use openzeppelin_token::erc20::interface::{IERC20Dispatcher, IERC20DispatcherTrait};
+    use starknet::storage::{
+        Map, StorageMapReadAccess, StorageMapWriteAccess, StoragePointerReadAccess,
+        StoragePointerWriteAccess,
+    };
+ 
+    #[storage]
+    struct Storage {
+        pub staking_token: IERC20Dispatcher,
+        pub reward_token: IERC20Dispatcher,
+        pub owner: ContractAddress,
+        pub reward_rate: u256,
+        pub duration: u256,
+        pub current_reward_per_staked_token: u256,
+        pub finish_at: u256,
+        pub last_updated_at: u256,
+        pub last_user_reward_per_staked_token: Map::&lt;ContractAddress, u256&gt;,
+        pub unclaimed_rewards: Map::&lt;ContractAddress, u256&gt;,
+        pub total_distributed_rewards: u256,
+        pub total_supply: u256,
+        pub balance_of: Map::&lt;ContractAddress, u256&gt;,
+    }
+ 
+    #[event]
+    #[derive(Copy, Drop, Debug, PartialEq, starknet::Event)]
+    pub enum Event {
+        Deposit: Deposit,
+        Withdrawal: Withdrawal,
+        RewardsFinished: RewardsFinished,
+    }
+ 
+    #[derive(Copy, Drop, Debug, PartialEq, starknet::Event)]
+    pub struct Deposit {
+        pub user: ContractAddress,
+        pub amount: u256,
+    }
+ 
+    #[derive(Copy, Drop, Debug, PartialEq, starknet::Event)]
+    pub struct Withdrawal {
+        pub user: ContractAddress,
+        pub amount: u256,
+    }
+ 
+    #[derive(Copy, Drop, Debug, PartialEq, starknet::Event)]
+    pub struct RewardsFinished {
+        pub msg: felt252,
+    }
+ 
+    #[constructor]
+    fn constructor(
+        ref self: ContractState,
+        staking_token_address: ContractAddress,
+        reward_token_address: ContractAddress,
+    ) {
+        self.staking_token.write(IERC20Dispatcher { contract_address: staking_token_address });
+        self.reward_token.write(IERC20Dispatcher { contract_address: reward_token_address });
+ 
+        self.owner.write(get_caller_address());
+    }
+ 
+    #[abi(embed_v0)]
+    impl StakingContract of super::IStakingContract&lt;ContractState&gt; {
+        fn set_reward_duration(ref self: ContractState, duration: u256) {
+            self.only_owner();
+ 
+            assert(duration &gt; 0, super::Errors::NULL_DURATION);
+ 
+            assert(
+                self.finish_at.read() &lt; get_block_timestamp().into(),
+                super::Errors::UNFINISHED_DURATION,
+            );
+ 
+            self.duration.write(duration);
+        }
+ 
+        fn set_reward_amount(ref self: ContractState, amount: u256) {
+            self.only_owner();
+            self.update_rewards(Zero::zero());
+ 
+            assert(amount &gt; 0, super::Errors::NULL_REWARDS);
+            assert(self.duration.read() &gt; 0, super::Errors::NULL_DURATION);
+ 
+            let block_timestamp: u256 = get_block_timestamp().into();
+ 
+            let rate = if self.finish_at.read() &lt; block_timestamp {
+                amount / self.duration.read()
+            } else {
+                let remaining_rewards = self.reward_rate.read()
+                    * (self.finish_at.read() - block_timestamp);
+                (remaining_rewards + amount) / self.duration.read()
+            };
+ 
+            assert(
+                self.reward_token.read().balance_of(get_contract_address()) &gt;= rate
+                    * self.duration.read(),
+                super::Errors::NOT_ENOUGH_REWARDS,
+            );
+ 
+            self.reward_rate.write(rate);
+ 
+            self.finish_at.write(block_timestamp + self.duration.read());
+            self.last_updated_at.write(block_timestamp);
+ 
+            self.total_distributed_rewards.write(0);
+        }
+ 
+        fn stake(ref self: ContractState, amount: u256) {
+            assert(amount &gt; 0, super::Errors::NULL_AMOUNT);
+ 
+            let user = get_caller_address();
+            self.update_rewards(user);
+ 
+            self.balance_of.write(user, self.balance_of.read(user) + amount);
+            self.total_supply.write(self.total_supply.read() + amount);
+            self.staking_token.read().transfer_from(user, get_contract_address(), amount);
+ 
+            self.emit(Deposit { user, amount });
+        }
+ 
+        fn withdraw(ref self: ContractState, amount: u256) {
+            assert(amount &gt; 0, super::Errors::NULL_AMOUNT);
+ 
+            let user = get_caller_address();
+ 
+            assert(
+                self.staking_token.read().balance_of(user) &gt;= amount,
+                super::Errors::NOT_ENOUGH_BALANCE,
+            );
+ 
+            self.update_rewards(user);
+ 
+            self.balance_of.write(user, self.balance_of.read(user) - amount);
+            self.total_supply.write(self.total_supply.read() - amount);
+            self.staking_token.read().transfer(user, amount);
+ 
+            self.emit(Withdrawal { user, amount });
+        }
+ 
+        fn get_rewards(self: @ContractState, account: ContractAddress) -&gt; u256 {
+            self.unclaimed_rewards.read(account) + self.compute_new_rewards(account)
+        }
+ 
+        fn claim_rewards(ref self: ContractState) {
+            let user = get_caller_address();
+            self.update_rewards(user);
+ 
+            let rewards = self.unclaimed_rewards.read(user);
+ 
+            if rewards &gt; 0 {
+                self.unclaimed_rewards.write(user, 0);
+                self.reward_token.read().transfer(user, rewards);
+            }
+        }
+    }
+ 
+    #[generate_trait]
+    impl PrivateFunctions of PrivateFunctionsTrait {
+        fn update_rewards(ref self: ContractState, account: ContractAddress) {
+            self
+                .current_reward_per_staked_token
+                .write(self.compute_current_reward_per_staked_token());
+ 
+            self.last_updated_at.write(self.last_time_applicable());
+ 
+            if account.is_non_zero() {
+                self.distribute_user_rewards(account);
+ 
+                self
+                    .last_user_reward_per_staked_token
+                    .write(account, self.current_reward_per_staked_token.read());
+ 
+                self.send_rewards_finished_event();
+            }
+        }
+ 
+        fn distribute_user_rewards(ref self: ContractState, account: ContractAddress) {
+            let user_rewards = self.get_rewards(account);
+            self.unclaimed_rewards.write(account, user_rewards);
+ 
+            self
+                .total_distributed_rewards
+                .write(self.total_distributed_rewards.read() + user_rewards);
+        }
+ 
+        fn send_rewards_finished_event(ref self: ContractState) {
+            if self.last_updated_at.read() == self.finish_at.read() {
+                let total_rewards = self.reward_rate.read() * self.duration.read();
+ 
+                if total_rewards != 0 &amp;&amp; self.total_distributed_rewards.read() == total_rewards {
+                    self.emit(RewardsFinished { msg: 'Rewards all distributed' });
+                } else {
+                    self.emit(RewardsFinished { msg: 'Rewards not active yet' });
+                }
+            }
+        }
+ 
+        fn compute_current_reward_per_staked_token(self: @ContractState) -&gt; u256 {
+            if self.total_supply.read() == 0 {
+                self.current_reward_per_staked_token.read()
+            } else {
+                self.current_reward_per_staked_token.read()
+                    + self.reward_rate.read()
+                        * (self.last_time_applicable() - self.last_updated_at.read())
+                        / self.total_supply.read()
+            }
+        }
+ 
+        fn compute_new_rewards(self: @ContractState, account: ContractAddress) -&gt; u256 {
+            self.balance_of.read(account)
+                * (self.current_reward_per_staked_token.read()
+                    - self.last_user_reward_per_staked_token.read(account))
+        }
+ 
+        #[inline(always)]
+        fn last_time_applicable(self: @ContractState) -&gt; u256 {
+            Self::min(self.finish_at.read(), get_block_timestamp().into())
+        }
+ 
+        #[inline(always)]
+        fn min(x: u256, y: u256) -&gt; u256 {
+            if (x &lt;= y) {
+                x
+            } else {
+                y
+            }
+        }
+ 
+        fn only_owner(self: @ContractState) {
+            let caller = get_caller_address();
+            assert(caller == self.owner.read(), super::Errors::NOT_OWNER);
+        }
+    }
+}
+<span class="boring">}</span></code></pre></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="introduction-to-cairo-academys-ai-agent-examples"><a class="header" href="#introduction-to-cairo-academys-ai-agent-examples">Introduction to Cairo Academy's AI Agent Examples</a></h1>
+<p>Welcome to the Cairo Academy's collection of AI Agent examples, designed for educational exploration of AI concepts within the StarkNet ecosystem. This resource aims to provide developers with accessible examples to learn how to integrate AI functionalities on StarkNet.</p>
+<h2 id="purpose-1"><a class="header" href="#purpose-1">Purpose</a></h2>
+<p>This chapter introduces the Cairo Academy's AI Agent examples, outlining their purpose, structure, and intended use. These examples serve as practical demonstrations for developers learning how to implement AI agents on a scalable Layer 2 platform.</p>
+<h2 id="cairo-academy-exploring-ai-on-starknet"><a class="header" href="#cairo-academy-exploring-ai-on-starknet">Cairo Academy: Exploring AI on StarkNet</a></h2>
+<p>Cairo Academy is dedicated to providing high-quality educational resources for developers interested in learning Cairo and exploring the integration of AI within the StarkNet ecosystem. We curate and share sample AI agent examples, tutorials, and other learning materials to facilitate the understanding of AI on StarkNet and encourage experimentation.</p>
+<p><strong>Important Note:</strong> Cairo Academy focuses exclusively on educational resources. The provided AI agent examples are not intended for production use.</p>
+<h2 id="repository-structure-overview"><a class="header" href="#repository-structure-overview">Repository Structure Overview</a></h2>
+<p>This section briefly describes the organization of the AI agent examples within the repository. Detailed explanations of individual examples will follow in subsequent chapters.</p>
+<ul>
+<li><strong>[Specific Agent Example 1 Name]:</strong> [Brief description of the agent's AI concept and functionality.]</li>
+<li><strong>[Specific Agent Example 2 Name]:</strong> [Brief description of the agent's AI concept and functionality.]</li>
+<li><strong>[Specific Agent Example 3 Name]:</strong> [Brief description of the agent's AI concept and functionality.]</li>
+<li>... and so on.</li>
+</ul>
+<p>Subsequent chapters will delve into each AI agent example, providing detailed explanations, code walkthroughs, and usage demonstrations.</p>
+<h2 id="contributing-to-cairo-academys-ai-agent-examples"><a class="header" href="#contributing-to-cairo-academys-ai-agent-examples">Contributing to Cairo Academy's AI Agent Examples</a></h2>
+<p>We encourage contributions to improve the educational value of this repository. If you are interested in contributing, please consider the following guidelines:</p>
+<ul>
+<li>Focus on clarity and educational value, particularly regarding AI concepts.</li>
+<li>Provide detailed comments and explanations within the code, especially for AI-related logic.</li>
+<li>Ensure that any new AI agent examples or modifications align with the educational goals of Cairo Academy, emphasizing the integration of AI on StarkNet.</li>
+<li>Suggestions for improvements to existing examples are also welcome, especially regarding the clarity of AI implementation.</li>
+</ul>
+<p>By contributing, you help enhance the learning experience for others and contribute to the growth of the AI-focused StarkNet community.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="introduction-to-cairo-academy-dojo-gaming-examples"><a class="header" href="#introduction-to-cairo-academy-dojo-gaming-examples">Introduction to Cairo Academy Dojo: Gaming Examples</a></h1>
+<p>Welcome to the Cairo Academy Dojo Gaming Templates, a collection of gaming examples built with the Dojo engine. This chapter introduces the purpose and structure of this resource, designed to help developers learn game development on StarkNet.</p>
+<h2 id="purpose-and-educational-goals"><a class="header" href="#purpose-and-educational-goals">Purpose and Educational Goals</a></h2>
+<p>The Cairo Academy Dojo Gaming aims to:</p>
+<ul>
+<li><strong>Provide Practical Gaming Examples:</strong> Offer a curated set of gaming projects built with dojo engine, showcasing various game mechanics and patterns.</li>
+<li><strong>Facilitate Learning by Doing:</strong> Enable developers to learn game development on StarkNet through hands-on experience and code exploration.</li>
+<li><strong>Demonstrate Dojo and StarkNet Gaming Capabilities:</strong> Showcase the power and flexibility of Dojo and StarkNet for building decentralized games.</li>
+<li><strong>Inspire Game Development Innovation:</strong> Encourage developers to explore new game concepts and contribute to the growing StarkNet gaming ecosystem.</li>
+</ul>
+<h2 id="cairo-academy-dojo-focus-on-gaming"><a class="header" href="#cairo-academy-dojo-focus-on-gaming">Cairo Academy Dojo: Focus on Gaming</a></h2>
+<p>The Cairo Academy Dojo is specifically designed to provide educational resources for game development on StarkNet. It complements other Cairo Academy resources by focusing on the unique challenges and opportunities of building decentralized games.</p>
+<p><strong>Important Note:</strong> The gaming examples in this chapter are primarily for educational purposes and may not be optimized for production deployment.</p>
+<h2 id="repository-structure-gaming-examples"><a class="header" href="#repository-structure-gaming-examples">Repository Structure: Gaming Examples</a></h2>
+<p>This section provides an overview of the gaming examples contained within the Dojo. Detailed explanations and code walkthroughs will follow in subsequent chapters.</p>
+<ul>
+<li><strong><code>simple_dice/</code></strong>: A basic dice game demonstrating random number generation and simple game logic.</li>
+<li><strong><code>tic_tac_toe/</code></strong>: An implementation of the classic Tic-Tac-Toe game, showcasing turn-based gameplay.</li>
+<li><strong><code>onchain_battles/</code></strong>: A more complex example demonstrating on-chain battles and entity management.</li>
+<li><strong><code>[Other Gaming Examples]</code></strong>: As the Dojo expands, additional gaming examples will be added to cover a wider range of game mechanics and concepts.</li>
+</ul>
+<p>Each gaming example includes well-documented Cairo code, clear explanations, and instructions for running and interacting with the game.</p>
+<h2 id="disclaimer-educational-gaming-examples"><a class="header" href="#disclaimer-educational-gaming-examples">Disclaimer: Educational Gaming Examples</a></h2>
+<p><strong>The gaming examples in the Cairo Academy Dojo are provided for educational purposes only. They are not intended for production deployment and may not be optimized for security or performance. Use them at your own risk. Cairo Academy is not responsible for any issues arising from the use of these gaming examples.</strong></p>
+<p>This disclaimer emphasizes the educational nature of the gaming examples and encourages responsible use for learning purposes.</p>
+<h2 id="contributing-to-the-cairo-academy-dojo"><a class="header" href="#contributing-to-the-cairo-academy-dojo">Contributing to the Cairo Academy Dojo</a></h2>
+<p>We encourage contributions to the Cairo Academy Dojo to enhance its educational value and expand the gaming resources available to the StarkNet community. If you are interested in contributing:</p>
+<ul>
+<li>Ensure that your contributions are clear, well-documented, and aligned with the educational goals of the Dojo.</li>
+<li>Focus on providing practical gaming examples that effectively illustrate game development concepts on StarkNet.</li>
+<li>Provide comprehensive comments and explanations to facilitate understanding.</li>
+<li>Suggestions for improvements to existing gaming examples are also highly welcome.</li>
+</ul>
+<p>By contributing, you play a vital role in enriching the learning experience for others and supporting the growth of the StarkNet gaming ecosystem.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="introduction-to-cairo-academys-sample-cairo-programs"><a class="header" href="#introduction-to-cairo-academys-sample-cairo-programs">Introduction to Cairo Academy's Sample Cairo Programs</a></h1>
+<p>Welcome to the Cairo Academy's collection of sample Cairo programs. This chapter introduces the repository and its purpose as an educational resource for learning the Cairo programming language.</p>
+<h2 id="purpose-and-educational-goals-1"><a class="header" href="#purpose-and-educational-goals-1">Purpose and Educational Goals</a></h2>
+<p>This repository serves as a practical learning tool for developers seeking to understand Cairo's core concepts and functionalities. Its primary goals are:</p>
+<ul>
+<li><strong>Educational Resource:</strong> To provide a curated set of Cairo programs that illustrate fundamental concepts and programming patterns.</li>
+<li><strong>Facilitated Learning:</strong> To offer hands-on examples for developers new to Cairo, fostering learning through practical application.</li>
+<li><strong>Demonstration of Cairo Capabilities:</strong> To showcase various aspects of the Cairo language, including arithmetic, logic, memory management, and proof generation.</li>
+</ul>
+<h2 id="cairo-academys-educational-focus"><a class="header" href="#cairo-academys-educational-focus">Cairo Academy's Educational Focus</a></h2>
+<p>Cairo Academy is dedicated to providing high-quality educational materials for developers interested in learning Cairo. This repository complements theoretical resources by offering concrete code examples that demonstrate key concepts.</p>
+<p><strong>Important Note:</strong> The programs within this repository are primarily designed for educational purposes and may not be optimized for production deployment.</p>
+<h2 id="repository-structure-an-overview"><a class="header" href="#repository-structure-an-overview">Repository Structure: An Overview</a></h2>
+<p>This section briefly outlines the organization of the sample Cairo programs within the repository. Detailed explanations of individual programs will follow in subsequent chapters.</p>
+<ul>
+<li><strong><code>basic_arithmetic/</code></strong>: Examples demonstrating fundamental arithmetic operations in Cairo.</li>
+<li><strong><code>logic_operations/</code></strong>: Illustrations of logical operations and control flow constructs.</li>
+<li><strong><code>memory_management/</code></strong>: Showcases of memory manipulation techniques in Cairo.</li>
+<li><strong><code>proof_generation/</code></strong>: Examples of generating proofs using the Cairo language.</li>
+<li><strong><code>[Other Relevant Folders]</code></strong>: As the repository evolves, additional folders will be added to cover a wider range of Cairo concepts.</li>
+</ul>
+<p>Each folder contains well-documented Cairo programs with clear explanations and comments, making them accessible for learning.</p>
+<h2 id="disclaimer-for-educational-use-only"><a class="header" href="#disclaimer-for-educational-use-only">Disclaimer: For Educational Use Only</a></h2>
+<p><strong>The Cairo programs presented in this repository are provided exclusively for educational purposes. They are not intended for production deployment and may not be optimized for security or performance. Use them at your own risk. Cairo Academy is not responsible for any issues arising from the use of these programs.</strong></p>
+<p>This disclaimer emphasizes the educational nature of these programs and encourages responsible use for learning purposes.</p>
+<h2 id="contributing-to-cairo-academy"><a class="header" href="#contributing-to-cairo-academy">Contributing to Cairo Academy</a></h2>
+<p>We encourage contributions to this repository to enhance its educational value and expand the resources available to the Cairo community. If you are interested in contributing:</p>
+<ul>
+<li>Ensure that your contributions are clear, well-documented, and aligned with the educational objectives of Cairo Academy.</li>
+<li>Focus on providing practical examples that effectively illustrate Cairo concepts.</li>
+<li>Provide comprehensive comments and explanations to facilitate understanding.</li>
+<li>Suggestions for improvements to existing examples are also highly welcome.</li>
+</ul>
+<p>By contributing, you play a vital role in enriching the learning experience for others and supporting the growth of the Cairo ecosystem.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="cairo-academy-frontend-templates-for-starknet-applications"><a class="header" href="#cairo-academy-frontend-templates-for-starknet-applications">Cairo Academy: Frontend Templates for StarkNet Applications</a></h1>
+<p>Welcome to the Cairo Academy's collection of frontend templates. This resource provides ready-to-use templates designed to accelerate the development of web applications that interact with StarkNet smart contracts.</p>
+<h2 id="purpose-and-goals"><a class="header" href="#purpose-and-goals">Purpose and Goals</a></h2>
+<p>This repository aims to:</p>
+<ul>
+<li><strong>Facilitate Rapid Development:</strong> Offer pre-built frontend templates to streamline the creation of user interfaces for StarkNet applications.</li>
+<li><strong>Encourage UI Innovation:</strong> Serve as a platform for developers to explore and contribute new UI patterns and designs tailored for decentralized experiences.</li>
+<li><strong>Showcase Modern Web Technologies:</strong> Utilize popular frontend frameworks such as React, Vue, Next.js, and Svelte to demonstrate best practices and modern development techniques.</li>
+<li><strong>Simplify StarkNet Integration:</strong> Provide seamless integration with StarkNet through libraries like StarkNet.js, enabling developers to easily connect their frontends to the StarkNet network.</li>
+</ul>
+<h2 id="key-features"><a class="header" href="#key-features">Key Features</a></h2>
+<ul>
+<li><strong>Ready-to-Use Templates:</strong> Quickly start building your StarkNet application with pre-configured templates.</li>
+<li><strong>Framework Variety:</strong> Support for multiple popular frontend frameworks, allowing developers to choose their preferred technology.</li>
+<li><strong>StarkNet.js Integration:</strong> Built-in integration with StarkNet.js for easy interaction with StarkNet contracts.</li>
+<li><strong>Educational Resource:</strong> Each template serves as a practical example of how to build a frontend for StarkNet, with clear code and documentation.</li>
+</ul>
+<h2 id="intended-audience"><a class="header" href="#intended-audience">Intended Audience</a></h2>
+<p>This repository is intended for:</p>
+<ul>
+<li>Developers who are new to StarkNet and want to quickly build a frontend for their applications.</li>
+<li>Experienced developers who want to explore new UI patterns and designs for decentralized applications.</li>
+<li>Anyone interested in learning how to integrate StarkNet with modern frontend frameworks.</li>
+</ul>
+<h2 id="contributing"><a class="header" href="#contributing">Contributing</a></h2>
+<p>We encourage contributions to this repository. If you have a new template, a UI pattern, or an improvement to an existing template, please feel free to contribute. By contributing, you help grow the StarkNet ecosystem and provide valuable resources for other developers.</p>
+<div style="break-before: page; page-break-before: always;"></div><h2 id="contributors"><a class="header" href="#contributors">Contributors</a></h2>
+<p>We are grateful to the following contributors for improving and expanding Cairo Academy.</p>
+<table>
+    <tbody>
+        <tr>
+            <td align="center" width="100px" height="100px">
+                <a href="https://github.com/faytey">
+                <img src="https://avatars.githubusercontent.com/u/40033608?v=4&s=100" alt="Faytey's Image">
+                <br/>
+                <p>Faith M. Roberts</p>
+                </a>
+            </td>
+            <td align="center" width="100px" height="100px">
+                <a href="https://github.com/MayowaObisesan">
+                <img src="https://avatars.githubusercontent.com/u/91972571?v=4&s=100" alt="Mayowa's Image">
+                <br/>
+                <p>Mayowa Obisesan</p>
+                      </a>
+                    </td>
+                    <td align="center" width="100px" height="100px">
+                      <a href="https://github.com/Verifieddanny">
+                        <img
+                          src="https://avatars.githubusercontent.com/u/103733496?v=4&s=100"
+                          alt="Daniel's Image"
+                        />
+                        <br />
+                        <p>Daniel Nwachukwu</p>
+                      </a>
+                    </td>
+                    <td align="center" width="100px" height="100px">
+                      <a href="https://github.com/hakymulla">
+                        <img
+                          src="https://avatars.githubusercontent.com/u/25408889?v=4&s=100"
+                          alt="Kazeem's Image"
+                        />
+                        <br />
+                        <p>Kazeem Hakeem</p>
+                      </a>
+                    </td>
+                    <td>
+                      <a href="https://github.com/Hoossayn">
+                        <img
+                          src="https://avatars.githubusercontent.com/u/35276272?v=4&s=100"
+                          alt="Hakeem's Image"
+                        />
+                        <br />
+                        <p>Hakeem Husseni</p>
+                      </a>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <a href="https://github.com/Lukman-01">
+                        <img
+                          src="https://avatars.githubusercontent.com/u/105321679?v=4&s=100"
+                          alt="Lukman's Image"
+                        />
+                        <br />
+                        <p>Abdulyekeen Lukman</p>
+                      </a>
+                    </td>
+                    <td>
+                      <a href="https://github.com/chiscookeke11">
+                        <img
+                          src="https://avatars.githubusercontent.com/u/137373308?v=4&s=100"
+                          alt="Lukman's Image"
+                        />
+                        <br />
+                        <p>Okeke Chinedu Emmanuel</p>
+                      </a>
+                    </td>
+                    <td>
+                      <a href="https://github.com/Yunusabdul38">
+                        <img
+                          src="https://avatars.githubusercontent.com/u/101453089?v=4&s=100"
+                          alt="Lukman's Image"
+                        />
+                        <br />
+                        <p>Yunus Abdulmajid</p>
+                      </a>
+                    </td>
+                    <td>
+                      <a href="https://github.com/Zeegaths">
+                        <img
+                          src="https://avatars.githubusercontent.com/u/107637548?v=4&s=100"
+                          alt="Mary's Image"
+                        />
+                        <br />
+                        <p>Mary Wangui</p>
+                      </a>
+                    </td>
+                    <td>
+                      <a href="https://github.com/Nanle100">
+                        <img
+                          src="https://avatars.githubusercontent.com/u/162046789?v=4&s=100"
+                          alt="Nanle's Image"
+                        />
+                        <br />
+                        <p>Nathaniel Nanle</p>
+                      </a>
+                    </td>
+                  </tr>
+                  <tr>
+                  <td>
+                      <a href="https://github.com/PedroCo3lho">
+                        <img
+                          src="https://avatars.githubusercontent.com/u/130417542?v=4&s=100"
+                          alt="Pedro's Image"
+                        />
+                        <br />
+                        <p>Pedro Coelho</p>
+                      </a>
+                    </td>
+                    <td>
+                      <a href="https://github.com/Oluwatos94">
+                        <img
+                          src="https://avatars.githubusercontent.com/u/111003311?v=4&s=100"
+                          alt="Tosin's Image"
+                        />
+                        <br />
+                        <p>Tosin Akinbowa</p>
+                      </a>
+                    </td>
+                    <td>
+                      <a href="https://github.com/mimiprosper">
+                        <img
+                          src="https://avatars.githubusercontent.com/u/12185633?v=4&s=100"
+                          alt="Emmanuel's Image"
+                        />
+                        <br />
+                        <p>Emmanuel Okeke</p>
+                      </a>
+                    </td>
+                  </tr>
+    </tbody>
+</table>
+<h2 id="contributing-1"><a class="header" href="#contributing-1">Contributing</a></h2>
+<p>We welcome contributions from the community! If you have ideas for new features, templates, or improvements, please submit a pull request or open an issue. Visit the github organization <a href="https://github.com/Cairo-Academy">here</a></p>
+<h2 id="join-the-community"><a class="header" href="#join-the-community">Join the Community</a></h2>
+<p>Connect with us on our community forum to stay up-to-date on the latest developments and collaborate with other Cairo developers.
+<a href="https://t.me/+uQKuqWrTlhs5ZWI0">Telegram</a>.</p>
+<p><strong>Thank you for being part of the Cairo Academy journey!</strong></p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+        <script>
+        window.addEventListener('load', function() {
+            window.setTimeout(window.print, 100);
+        });
+        </script>
+
+    </div>
+    </body>
+</html>
