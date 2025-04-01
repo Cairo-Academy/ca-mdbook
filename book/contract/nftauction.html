@@ -126,6 +126,12 @@
                         <a href="../print.html" title="Print this book" aria-label="Print this book">
                             <i id="print-button" class="fa fa-print"></i>
                         </a>
+                        <a href="https://github.com/Cairo-Academy/ca-mdbook.github.io" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+                        <a href="https://github.com/Cairo-Academy/ca-mdbook.github.io/edit/main/src/contract/nftauction.md" title="Suggest an edit" aria-label="Suggest an edit">
+                            <i id="git-edit-button" class="fa fa-edit"></i>
+                        </a>
 
                     </div>
                 </div>
@@ -170,9 +176,13 @@ spender : Authorized person to spend on behalf of the owner</li>
 <li><strong>Increase Allowance:</strong> This function increases the allowance of spender by added_value.</li>
 <li><strong>Decrease Allowance:</strong> This function decreases the allowance of spender by subtracted_value</li>
 </ul>
-<pre><code>use starknet::ContractAddress;
-</code></pre>
-<pre><code>#[starknet::interface]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>use starknet::ContractAddress;
+<span class="boring">}</span></code></pre></pre>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[starknet::interface]
 pub trait IERC20&lt;TContractState&gt; {
     fn get_name(self: @TContractState) -&gt; felt252;
     fn get_symbol(self: @TContractState) -&gt; felt252;
@@ -195,7 +205,7 @@ pub trait IERC20&lt;TContractState&gt; {
         ref self: TContractState, spender: ContractAddress, subtracted_value: felt252,
     );
 }
-</code></pre>
+<span class="boring">}</span></code></pre></pre>
 <p>This NFT Auction Contract implements essential functionalities of IERC721 such as:</p>
 <ul>
 <li><strong>Get Name:</strong> This function returns the name of the NFT (eg Cairo Academy Token)</li>
@@ -212,7 +222,9 @@ token_id</li>
 <li><strong>Transfer from:</strong> This function transfers the ownership of a specific token (token_id) from one address (from) to another address (to). The caller must be approved to make this transfer. This takes parameter: token_id, address (from) and address (to)</li>
 <li><strong>Mint:</strong> This function creates a new token (token_id) and assigns it to a specific address (to). This takes parameter: token_id and an address</li>
 </ul>
-<pre><code>#[starknet::interface]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[starknet::interface]
 trait IERC721&lt;TContractState&gt; {
     fn get_name(self: @TContractState) -&gt; felt252;
     fn get_symbol(self: @TContractState) -&gt; felt252;
@@ -230,15 +242,19 @@ trait IERC721&lt;TContractState&gt; {
     );
     fn mint(ref self: TContractState, to: ContractAddress, token_id: u256);
 }
-</code></pre>
+<span class="boring">}</span></code></pre></pre>
 <p>This NFT Auction Contract also implements <strong>Buy</strong> and <strong>Get Price</strong> functions. This functions buys and gets price of the NFTs</p>
-<pre><code>pub trait INFTAuction&lt;TContractState&gt; {
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>pub trait INFTAuction&lt;TContractState&gt; {
     fn buy(ref self: TContractState, token_id: u256);
     fn get_price(self: @TContractState) -&gt; u64;
 }
-</code></pre>
+<span class="boring">}</span></code></pre></pre>
 <h2 id="implementation"><a class="header" href="#implementation">Implementation</a></h2>
-<pre><code>#[starknet::contract]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[starknet::contract]
 pub mod NFTAuction {
     use super::{IERC20Dispatcher, IERC20DispatcherTrait, IERC721Dispatcher, IERC721DispatcherTrait};
     use starknet::{ContractAddress, get_caller_address, get_block_timestamp};
@@ -323,7 +339,7 @@ pub mod NFTAuction {
         }
     }
 }
-</code></pre>
+<span class="boring">}</span></code></pre></pre>
 
                     </main>
 

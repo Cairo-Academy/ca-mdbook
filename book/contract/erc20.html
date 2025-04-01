@@ -126,6 +126,12 @@
                         <a href="../print.html" title="Print this book" aria-label="Print this book">
                             <i id="print-button" class="fa fa-print"></i>
                         </a>
+                        <a href="https://github.com/Cairo-Academy/ca-mdbook.github.io" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+                        <a href="https://github.com/Cairo-Academy/ca-mdbook.github.io/edit/main/src/contract/erc20.md" title="Suggest an edit" aria-label="Suggest an edit">
+                            <i id="git-edit-button" class="fa fa-edit"></i>
+                        </a>
 
                     </div>
                 </div>
@@ -165,7 +171,9 @@
 <li><strong>Withdrawal:</strong> Allowing the contract owner to withdraw tokens from the contract.</li>
 </ul>
 <p>This contract serves as a foundational example for understanding the mechanics of ERC20 tokens within the StarkNet ecosystem.</p>
-<pre><code class="language-cairo">use starknet::ContractAddress;
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>use starknet::ContractAddress;
 use starknet::storage::Map;
 use starknet::{get_caller_address, get_contract_address};
 
@@ -318,7 +326,7 @@ mod ERC20Token {
         fn get_owner(self: @ContractState) -&gt; ContractAddress {
             self.owner.read()
         }
-</code></pre>
+<span class="boring">}</span></code></pre></pre>
 
                     </main>
 

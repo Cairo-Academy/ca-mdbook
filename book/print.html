@@ -127,6 +127,9 @@
                         <a href="print.html" title="Print this book" aria-label="Print this book">
                             <i id="print-button" class="fa fa-print"></i>
                         </a>
+                        <a href="https://github.com/Cairo-Academy/ca-mdbook.github.io" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
 
                     </div>
                 </div>
@@ -263,7 +266,9 @@
 <li><strong>Withdrawal:</strong> Allowing the contract owner to withdraw tokens from the contract.</li>
 </ul>
 <p>This contract serves as a foundational example for understanding the mechanics of ERC20 tokens within the StarkNet ecosystem.</p>
-<pre><code class="language-cairo">use starknet::ContractAddress;
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>use starknet::ContractAddress;
 use starknet::storage::Map;
 use starknet::{get_caller_address, get_contract_address};
 
@@ -416,7 +421,7 @@ mod ERC20Token {
         fn get_owner(self: @ContractState) -&gt; ContractAddress {
             self.owner.read()
         }
-</code></pre>
+<span class="boring">}</span></code></pre></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="cairo-academy-understanding-a-basic-lottery-contract"><a class="header" href="#cairo-academy-understanding-a-basic-lottery-contract">Cairo Academy: Understanding a Basic Lottery Contract</a></h1>
 <p>This chapter delves into the basics of a lottery contract implemented in Cairo. This contract demonstrates the core functionalities of a basic lottery contract, providing a practical example for learning how to build a basic lottery contract on StarkNet.</p>
 <h2 id="purpose-and-functionality-1"><a class="header" href="#purpose-and-functionality-1">Purpose and Functionality</a></h2>
@@ -450,7 +455,9 @@ random_seed : Additional entropy source to enhance randomness</p>
 <li><strong>Is the lottery active</strong> This return a bool (true or flase) the active state of the lottery ticket</li>
 </ul>
 <p>This contract serves as a foundational example for understanding the mechanics of Lottery Contract within the StarkNet ecosystem.</p>
-<pre><code>use starknet::ContractAddress;
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>use starknet::ContractAddress;
 use array::ArrayTrait;
 use option::OptionTrait;
 
@@ -923,7 +930,7 @@ pub mod LotteryContract {
         }
     }
 }
-</code></pre>
+<span class="boring">}</span></code></pre></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="cairo-academy-understanding-a-basic-dao-contract"><a class="header" href="#cairo-academy-understanding-a-basic-dao-contract">Cairo Academy: Understanding a Basic DAO Contract</a></h1>
 <p>This chapter explores a fundamental DAO (Decentralized Autonomous Organization) contract implemented in Cairo. This contract demonstrates core DAO functionalities, providing a practical example for learning how to build decentralized governance systems on StarkNet.</p>
 <h2 id="purpose-and-functionality-2"><a class="header" href="#purpose-and-functionality-2">Purpose and Functionality</a></h2>
@@ -936,7 +943,9 @@ pub mod LotteryContract {
 </ul>
 <h2 id="key-components"><a class="header" href="#key-components">Key Components</a></h2>
 <h3 id="data-structures"><a class="header" href="#data-structures">Data Structures</a></h3>
-<pre><code class="language-cairo">#[derive(Copy, Drop, Hash)]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[derive(Copy, Drop, Hash)]
 struct ProposalId {
     id: u64
 }
@@ -957,7 +966,7 @@ struct Member {
     address: ContractAddress,
     voting_power: u256
 }
-</code></pre>
+<span class="boring">}</span></code></pre></pre>
 <h3 id="core-functionalities"><a class="header" href="#core-functionalities">Core Functionalities</a></h3>
 <ol>
 <li>
@@ -993,7 +1002,9 @@ struct Member {
 </li>
 </ol>
 <h3 id="interface-definition"><a class="header" href="#interface-definition">Interface Definition</a></h3>
-<pre><code class="language-cairo">#[starknet::interface]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[starknet::interface]
 pub trait IDAO&lt;TContractState&gt; {
     fn create_proposal(ref self: TContractState, description: felt252);
     fn vote(ref self: TContractState, proposal_id: ProposalId, support: bool);
@@ -1003,9 +1014,11 @@ pub trait IDAO&lt;TContractState&gt; {
     fn get_proposal(self: @TContractState, proposal_id: ProposalId) -&gt; Proposal;
     fn get_member(self: @TContractState, member: ContractAddress) -&gt; Member;
 }
-</code></pre>
+<span class="boring">}</span></code></pre></pre>
 <h3 id="event-system"><a class="header" href="#event-system">Event System</a></h3>
-<pre><code class="language-cairo">#[event]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[event]
 enum Event {
     ProposalCreated: ProposalCreatedEvent,
     Voted: VotedEvent,
@@ -1013,7 +1026,7 @@ enum Event {
     MemberAdded: MemberAddedEvent,
     MemberRemoved: MemberRemovedEvent
 }
-</code></pre>
+<span class="boring">}</span></code></pre></pre>
 <h3 id="security-features"><a class="header" href="#security-features">Security Features</a></h3>
 <ul>
 <li>Member verification for proposal creation</li>
@@ -1029,7 +1042,9 @@ enum Event {
 <li>After voting period, anyone can execute_proposal if it passed</li>
 </ul>
 <h3 id="full-implementation"><a class="header" href="#full-implementation">Full Implementation</a></h3>
-<pre><code class="language-cairo">use core::num::traits::Zero;
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>use core::num::traits::Zero;
 use starknet::ContractAddress;
 
 #[derive(Copy, Drop, Hash)]
@@ -1217,7 +1232,7 @@ mod dao {
         }
     }
 }
-</code></pre>
+<span class="boring">}</span></code></pre></pre>
 <p>This contract serves as a foundation for building more complex DAO systems on StarkNet, demonstrating key concepts like decentralized governance and member voting.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="cairo-academy-understanding-an-escrow-contract"><a class="header" href="#cairo-academy-understanding-an-escrow-contract">Cairo Academy: Understanding an Escrow Contract</a></h1>
 <p>This chapter explores an Escrow contract implemented in Cairo. This contract demonstrates a secure token exchange mechanism between two parties, providing a trustless way to facilitate transactions on StarkNet.</p>
@@ -1231,7 +1246,9 @@ mod dao {
 </ul>
 <h2 id="key-components-1"><a class="header" href="#key-components-1">Key Components</a></h2>
 <h3 id="data-structures-1"><a class="header" href="#data-structures-1">Data Structures</a></h3>
-<pre><code class="language-cairo">#[derive(Copy, Drop, Hash)]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[derive(Copy, Drop, Hash)]
 struct EscrowId {
     sender: ContractAddress,
     recipient: ContractAddress,
@@ -1245,7 +1262,7 @@ pub struct EscrowDetails {
     pub out_amount: u256,
     pub created_at: u64, 
 }
-</code></pre>
+<span class="boring">}</span></code></pre></pre>
 <h3 id="core-functionalities-1"><a class="header" href="#core-functionalities-1">Core Functionalities</a></h3>
 <ol>
 <li>
@@ -1282,7 +1299,9 @@ pub struct EscrowDetails {
 </li>
 </ol>
 <h3 id="interface-definition-1"><a class="header" href="#interface-definition-1">Interface Definition</a></h3>
-<pre><code class="language-cairo">##[starknet::interface]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[starknet::interface]
 pub trait IEscrow&lt;TContractState&gt; {
     fn examine(
         self: @TContractState, sender: ContractAddress, recipient: ContractAddress, in_token: ContractAddress
@@ -1301,15 +1320,17 @@ pub trait IEscrow&lt;TContractState&gt; {
 
     fn execute(ref self: TContractState, sender: ContractAddress, in_token: ContractAddress);
 }
-</code></pre>
+<span class="boring">}</span></code></pre></pre>
 <h3 id="event-system-1"><a class="header" href="#event-system-1">Event System</a></h3>
-<pre><code class="language-cairo">#[event]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[event]
 enum Event {
     EscrowCreated: EscrowCreatedEvent,
     EscrowExecuted: EscrowExecutedEvent,
     EscrowRefunded: EscrowRefundedEvent
 }
-</code></pre>
+<span class="boring">}</span></code></pre></pre>
 <h3 id="security-features-1"><a class="header" href="#security-features-1">Security Features</a></h3>
 <ul>
 <li>Token transfers use StarkNet's native token standards</li>
@@ -1322,7 +1343,9 @@ enum Event {
 <ol>
 <li><strong>Creating an Escrow:</strong></li>
 </ol>
-<pre><code class="language-cairo">// Alice wants to trade 100 TOKA for 200 TOKB with Bob
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// Alice wants to trade 100 TOKA for 200 TOKB with Bob
 escrow.enter(
     bob_address,
     token_a_address,
@@ -1330,21 +1353,27 @@ escrow.enter(
     token_b_address,
     200
 );
-</code></pre>
+<span class="boring">}</span></code></pre></pre>
 <ol start="2">
 <li><strong>Executing the Trade:</strong></li>
 </ol>
-<pre><code class="language-cairo">// When Bob is ready, he executes the escrow
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// When Bob is ready, he executes the escrow
 escrow.execute(alice_address, token_a_address);
-</code></pre>
+<span class="boring">}</span></code></pre></pre>
 <ol start="3">
 <li><strong>Refunding:</strong></li>
 </ol>
-<pre><code class="language-cairo">// If Bob doesn't complete within 7 days, Alice can refund
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// If Bob doesn't complete within 7 days, Alice can refund
 escrow.exit(alice_address, bob_address, token_a_address);
-</code></pre>
+<span class="boring">}</span></code></pre></pre>
 <h3 id="full-implementation-1"><a class="header" href="#full-implementation-1">Full Implementation</a></h3>
-<pre><code class="language-cairo">use core::num::traits::Zero;
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>use core::num::traits::Zero;
 use starknet::ContractAddress;
 
 #[derive(Copy, Drop, Hash)]
@@ -1549,7 +1578,7 @@ mod escrow {
         }
     }
 }
-</code></pre>
+<span class="boring">}</span></code></pre></pre>
 <p>This contract serves as a foundation for building secure token exchange systems on StarkNet, demonstrating key concepts like atomic swaps and time-locked transactions.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="cairo-academy-understanding-a-basic-nft-auction-contract"><a class="header" href="#cairo-academy-understanding-a-basic-nft-auction-contract">Cairo Academy: Understanding a Basic NFT Auction Contract</a></h1>
 <p>This chapter delves into the basics of an NFT Auction Contract implemented in Cairo. This contract demonstrates the core functionalities of a NFT Auction Contract, providing a practical example for learning how to build a basic NFT Auction Contract on StarkNet.</p>
@@ -1569,9 +1598,13 @@ spender : Authorized person to spend on behalf of the owner</li>
 <li><strong>Increase Allowance:</strong> This function increases the allowance of spender by added_value.</li>
 <li><strong>Decrease Allowance:</strong> This function decreases the allowance of spender by subtracted_value</li>
 </ul>
-<pre><code>use starknet::ContractAddress;
-</code></pre>
-<pre><code>#[starknet::interface]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>use starknet::ContractAddress;
+<span class="boring">}</span></code></pre></pre>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[starknet::interface]
 pub trait IERC20&lt;TContractState&gt; {
     fn get_name(self: @TContractState) -&gt; felt252;
     fn get_symbol(self: @TContractState) -&gt; felt252;
@@ -1594,7 +1627,7 @@ pub trait IERC20&lt;TContractState&gt; {
         ref self: TContractState, spender: ContractAddress, subtracted_value: felt252,
     );
 }
-</code></pre>
+<span class="boring">}</span></code></pre></pre>
 <p>This NFT Auction Contract implements essential functionalities of IERC721 such as:</p>
 <ul>
 <li><strong>Get Name:</strong> This function returns the name of the NFT (eg Cairo Academy Token)</li>
@@ -1611,7 +1644,9 @@ token_id</li>
 <li><strong>Transfer from:</strong> This function transfers the ownership of a specific token (token_id) from one address (from) to another address (to). The caller must be approved to make this transfer. This takes parameter: token_id, address (from) and address (to)</li>
 <li><strong>Mint:</strong> This function creates a new token (token_id) and assigns it to a specific address (to). This takes parameter: token_id and an address</li>
 </ul>
-<pre><code>#[starknet::interface]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[starknet::interface]
 trait IERC721&lt;TContractState&gt; {
     fn get_name(self: @TContractState) -&gt; felt252;
     fn get_symbol(self: @TContractState) -&gt; felt252;
@@ -1629,15 +1664,19 @@ trait IERC721&lt;TContractState&gt; {
     );
     fn mint(ref self: TContractState, to: ContractAddress, token_id: u256);
 }
-</code></pre>
+<span class="boring">}</span></code></pre></pre>
 <p>This NFT Auction Contract also implements <strong>Buy</strong> and <strong>Get Price</strong> functions. This functions buys and gets price of the NFTs</p>
-<pre><code>pub trait INFTAuction&lt;TContractState&gt; {
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>pub trait INFTAuction&lt;TContractState&gt; {
     fn buy(ref self: TContractState, token_id: u256);
     fn get_price(self: @TContractState) -&gt; u64;
 }
-</code></pre>
+<span class="boring">}</span></code></pre></pre>
 <h2 id="implementation"><a class="header" href="#implementation">Implementation</a></h2>
-<pre><code>#[starknet::contract]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[starknet::contract]
 pub mod NFTAuction {
     use super::{IERC20Dispatcher, IERC20DispatcherTrait, IERC721Dispatcher, IERC721DispatcherTrait};
     use starknet::{ContractAddress, get_caller_address, get_block_timestamp};
@@ -1722,13 +1761,15 @@ pub mod NFTAuction {
         }
     }
 }
-</code></pre>
+<span class="boring">}</span></code></pre></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="cairo-academy-understanding-a-marketplace-contract"><a class="header" href="#cairo-academy-understanding-a-marketplace-contract">Cairo Academy: Understanding a Marketplace Contract</a></h1>
 <p>This chapter delves into the basics of a Marketplace contract implemented in Cairo. This contract demonstrates the core functionalities of a basic Marketplace contract, providing a practical example for learning how to build a basic Marketplace contract on StarkNet.</p>
 <h2 id="purpose-and-functionality-5"><a class="header" href="#purpose-and-functionality-5">Purpose and Functionality</a></h2>
 <p>The provided Cairo code defines a basic lottery contract. It implements essential Marketplace, ERC20 and IERC721, IERC1155 functionalities</p>
-<pre><code>use starknet::ContractAddress;
-</code></pre>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>use starknet::ContractAddress;
+<span class="boring">}</span></code></pre></pre>
 <p><strong>Marketplace functionalities</strong></p>
 <ul>
 <li><strong>list_asset:</strong> This creates new listing with nft ownership verification. This has parameters:
@@ -1745,7 +1786,9 @@ listing_id, quantity, payment_token, price_per_token, expiration</li>
 listing_id, quantity, reserve_price, buy_now_price, payment_token, start_time, duration</li>
 <li><strong>get_listing_count:</strong> Returns total number of listings created.</li>
 </ul>
-<pre><code>#[starknet::interface]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[starknet::interface]
 trait IMarketplace&lt;TContractState&gt; {
     fn list_asset(
         ref self: TContractState,
@@ -1794,7 +1837,7 @@ trait IMarketplace&lt;TContractState&gt; {
     );
     fn get_listing_count(self: @TContractState) -&gt; u256;
 }
-</code></pre>
+<span class="boring">}</span></code></pre></pre>
 <p><strong>ERC20 functionalities</strong></p>
 <p>The IERC20 interface defines the core functions for an ERC20 token contract</p>
 <ul>
@@ -1803,7 +1846,9 @@ account: The account parameter is the address of the account whose balance is be
 <li><strong>allowance:</strong> This function returns the amount of tokens that one account (spender) is authorized to spend on behalf of another account (owner). This has parameters: owner and spender</li>
 <li><strong>transfer:</strong> This function transfers a specified amount of tokens from the caller's account to the recipient account. This has parameters: spender, recipient and amount</li>
 </ul>
-<pre><code>#[starknet::interface]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[starknet::interface]
 trait IERC20&lt;TContractState&gt; {
     fn balance_of(self: @TContractState, account: ContractAddress) -&gt; u256;
     fn allowance(self: @TContractState, owner: ContractAddress, spender: ContractAddress) -&gt; u256;
@@ -1812,7 +1857,7 @@ trait IERC20&lt;TContractState&gt; {
         ref self: TContractState, sender: ContractAddress, recipient: ContractAddress, amount: u256
     );
 }
-</code></pre>
+<span class="boring">}</span></code></pre></pre>
 <p><strong>IERC721 functionalities</strong></p>
 <p>The IERC721 interface defines the basic functions that an ERC721-compliant contract should implement.ERC721 is a standard for representing non-fungible tokens (NFTs)</p>
 <ul>
@@ -1822,7 +1867,9 @@ trait IERC20&lt;TContractState&gt; {
 <li><strong>transfer_from:</strong> This function transfers the ownership of the NFT represented by token_id from the 'from' address to the 'to' address. The function allows a transfer to occur.
 This has parameters : token_id, two addresses, 'from' and 'to'</li>
 </ul>
-<pre><code>#[starknet::interface]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[starknet::interface]
 trait IERC721&lt;TContractState&gt; {
     fn owner_of(self: @TContractState, token_id: u256) -&gt; ContractAddress;
     fn get_approved(self: @TContractState, token_id: u256) -&gt; ContractAddress;
@@ -1833,7 +1880,7 @@ trait IERC721&lt;TContractState&gt; {
         ref self: TContractState, from: ContractAddress, to: ContractAddress, token_id: u256
     );
 }
-</code></pre>
+<span class="boring">}</span></code></pre></pre>
 <p><strong>IERC1155 functionalities</strong></p>
 <p>The IERC1155 interface defines the core functions for an ERC1155 token contract. ERC1155 is a token standard that allows a single contract to manage multiple token types, which can be a mix of fungible and non-fungible tokens.</p>
 <ul>
@@ -1841,7 +1888,9 @@ trait IERC721&lt;TContractState&gt; {
 <li><strong>is_approved_for_all:</strong> This function checks if an operator is approved to manage all tokens for a given account. This takes parameter: The 'account', the address of the token owner, and the 'operator', the address being checked for approval. The function returns a boolean value: true if the operator is approved for all tokens, and false otherwise.</li>
 <li><strong>safe_transfer_from:</strong> This function transfers a specified amount of tokens of type id from the 'from' address to the 'to' address. This takes parameter: Two address 'from', the address from which the tokens are being released and 'to', the address from which the tokens are being sent to. The id is the token identifier, amount is the number of tokens to transfer, and data is additional data to be passed to the recipient.</li>
 </ul>
-<pre><code>#[starknet::interface]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[starknet::interface]
 trait IERC1155&lt;TContractState&gt; {
     fn balance_of(self: @TContractState, account: ContractAddress, id: u256) -&gt; u256;
     fn is_approved_for_all(
@@ -1856,7 +1905,7 @@ trait IERC1155&lt;TContractState&gt; {
         data: Span&lt;felt252&gt;
     );
 }
-</code></pre>
+<span class="boring">}</span></code></pre></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="cairo-academy-understanding-a-stake-contract"><a class="header" href="#cairo-academy-understanding-a-stake-contract">Cairo Academy: Understanding a Stake Contract</a></h1>
 <p>This chapter delves into the basics of a staking contract implemented in Cairo. This contract demonstrates the core functionalities of a basic Stake contract, providing a practical example for learning how to build a basic staking contract on StarkNet.</p>
 <h2 id="purpose-and-functionality-6"><a class="header" href="#purpose-and-functionality-6">Purpose and Functionality</a></h2>
@@ -1870,7 +1919,9 @@ amount</li>
 <li><strong>get_rewards</strong> This function computes rewards</li>
 <li><strong>claim_rewards</strong> This function makes claiming of rewards possible.</li>
 </ul>
-<pre><code>use starknet::ContractAddress;
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>use starknet::ContractAddress;
  
 #[starknet::interface]
 pub trait IStakingContract&lt;TContractState&gt; {
@@ -2130,7 +2181,7 @@ pub mod StakingContract {
         }
     }
 }
-</code></pre>
+<span class="boring">}</span></code></pre></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="introduction-to-cairo-academys-ai-agent-examples"><a class="header" href="#introduction-to-cairo-academys-ai-agent-examples">Introduction to Cairo Academy's AI Agent Examples</a></h1>
 <p>Welcome to the Cairo Academy's collection of AI Agent examples, designed for educational exploration of AI concepts within the StarkNet ecosystem. This resource aims to provide developers with accessible examples to learn how to integrate AI functionalities on StarkNet.</p>
 <h2 id="purpose-1"><a class="header" href="#purpose-1">Purpose</a></h2>
