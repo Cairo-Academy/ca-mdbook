@@ -4,7 +4,7 @@ This chapter delves into the basics of a staking contract implemented in Cairo. 
 
 ## Purpose and Functionality
 
-The provided Cairo code defines a basic Stake contract. It implements essential Staking Contract functionalities
+The provided Cairo code defines a basic Stake contract. It implements essential Staking Contract functionalities.
 
 - **set_reward_amount** This function sets the reward amount. This takes a parameter:
 amount
