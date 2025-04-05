@@ -4,7 +4,7 @@ This chapter delves into the basics of a staking contract implemented in Cairo. 
 
 ## Purpose and Functionality
 
-The provided Cairo code defines a basic Stake contract. It implements essential Staking Contract functionalities
+The provided Cairo code defines a basic Stake contract. It implements essential Staking Contract functionalities.
 
 - **set_reward_amount** This function sets the reward amount. This takes a parameter:
 amount
@@ -14,7 +14,7 @@ amount
 - **get_rewards** This function computes rewards
 - **claim_rewards** This function makes claiming of rewards possible.
 
-``` rust
+```
 use starknet::ContractAddress;
  
 #[starknet::interface]
@@ -57,11 +57,14 @@ pub mod StakingContract {
         pub duration: u256,
         pub current_reward_per_staked_token: u256,
         pub finish_at: u256,
+        // last time an operation (staking / withdrawal / rewards claimed) was registered
         pub last_updated_at: u256,
         pub last_user_reward_per_staked_token: Map::<ContractAddress, u256>,
         pub unclaimed_rewards: Map::<ContractAddress, u256>,
         pub total_distributed_rewards: u256,
+        // total amount of staked tokens
         pub total_supply: u256,
+        // amount of staked tokens per user
         pub balance_of: Map::<ContractAddress, u256>,
     }
  
@@ -109,6 +112,7 @@ pub mod StakingContract {
  
             assert(duration > 0, super::Errors::NULL_DURATION);
  
+            // can only set duration if the previous duration has already finished
             assert(
                 self.finish_at.read() < get_block_timestamp().into(),
                 super::Errors::UNFINISHED_DURATION,
@@ -142,9 +146,12 @@ pub mod StakingContract {
  
             self.reward_rate.write(rate);
  
+            // even if the previous reward duration has not finished, we reset the finish_at
+            // variable
             self.finish_at.write(block_timestamp + self.duration.read());
             self.last_updated_at.write(block_timestamp);
  
+            // reset total distributed rewards
             self.total_distributed_rewards.write(0);
         }
  
@@ -199,6 +206,7 @@ pub mod StakingContract {
  
     #[generate_trait]
     impl PrivateFunctions of PrivateFunctionsTrait {
+        // call this function every time a user (including owner) performs a state-modifying action
         fn update_rewards(ref self: ContractState, account: ContractAddress) {
             self
                 .current_reward_per_staked_token
@@ -218,21 +226,27 @@ pub mod StakingContract {
         }
  
         fn distribute_user_rewards(ref self: ContractState, account: ContractAddress) {
+            // compute earned rewards since last update for the user `account`
             let user_rewards = self.get_rewards(account);
             self.unclaimed_rewards.write(account, user_rewards);
  
+            // track amount of total rewards distributed
             self
                 .total_distributed_rewards
                 .write(self.total_distributed_rewards.read() + user_rewards);
         }
  
         fn send_rewards_finished_event(ref self: ContractState) {
+            // check whether we should send a RewardsFinished event
             if self.last_updated_at.read() == self.finish_at.read() {
                 let total_rewards = self.reward_rate.read() * self.duration.read();
  
                 if total_rewards != 0 && self.total_distributed_rewards.read() == total_rewards {
+                    // owner should set up NEW rewards into the contract
                     self.emit(RewardsFinished { msg: 'Rewards all distributed' });
                 } else {
+                    // owner should set up rewards into the contract (or add duration by setting up
+                    // rewards)
                     self.emit(RewardsFinished { msg: 'Rewards not active yet' });
                 }
             }
@@ -275,4 +289,6 @@ pub mod StakingContract {
         }
     }
 }
+
+
 ```
