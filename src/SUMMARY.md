@@ -11,6 +11,7 @@
   - [NFT Auction Contract](./contract/nftauction.md)
   - [Marketplace Contract](./contract/marketplace.md)
   - [Stake Contract](./contract/stake.md)
+  - [Token Bridge Contract](./contract/tokenbridge.md)
 - [Starknet AI Agents](./aiagents.md)
 - [Dojo Games](./dojo.md)
 - [Cairo Programs](./programs.md)
