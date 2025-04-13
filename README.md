@@ -21,8 +21,9 @@ Before contributing, you'll need:
    ```bash
    mdbook --version
    ```
-   
+
 **Troubleshooting**:
+
 - If you encounter permission errors, try installing with `cargo install mdbook --locked`
 - Ensure you have Rust installed if using the cargo method
 
@@ -41,6 +42,7 @@ Before contributing, you'll need:
 
 The key files you'll work with:
 All within the `/src` directory
+
 - `SUMMARY.md`: The table of contents that organizes all chapters
 - Individual chapter files (e.g., `contract/erc20.md`): The content files
 - `book.toml`: Configuration for mdBook
@@ -54,6 +56,7 @@ All within the `/src` directory
 3. Edit `SUMMARY.md` to include your new chapter in the table of contents
 
 **Example**: To add a new ERC721 chapter under "Starknet Smart Contracts":
+
 ```markdown
 - [ERC721 Token Contract](./contract/erc721.md)
 ```
@@ -79,6 +82,7 @@ All within the `/src` directory
    This will automatically open your browser to `http://localhost:3000`
 
 **Common Issues**:
+
 - If links don't work, check your `summary.md` entries
 - If formatting looks wrong, validate your Markdown syntax
 
@@ -115,6 +119,7 @@ All within the `/src` directory
 ## Need Help?
 
 If you encounter any issues or have questions:
+
 - Open an issue in the repository
 - [Join our community chat](https://t.me/+uQKuqWrTlhs5ZWI0)
 
