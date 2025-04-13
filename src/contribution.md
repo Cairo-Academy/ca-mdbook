@@ -133,6 +133,16 @@ We are grateful to the following contributors for improving and expanding Cairo 
                         <p>Emmanuel Okeke</p>
                       </a>
                     </td>
+                    <td>
+                      <a href="https://github.com/Signor1">
+                        <img
+                          src="https://avatars.githubusercontent.com/u/94352660?v=4&s=100"
+                          alt="Signor1's Image"
+                        />
+                        <br />
+                        <p>Omemgboji Emmanuel</p>
+                      </a>
+                    </td>
                   </tr>
     </tbody>
 </table>
