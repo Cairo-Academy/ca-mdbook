@@ -8,3 +8,10 @@ title = "Cairo Academy Book"
 git-repository-url = "https://github.com/Cairo-Academy/ca-mdbook"
 edit-url-template = "https://github.com/Cairo-Academy/ca-mdbook/edit/main/{path}"
 site-url = "/book/"
+
+[output.html.fold]
+enable = true
+level = 2
+git-repository-url = "https://github.com/Cairo-Academy/ca-mdbook"
+edit-url-template = "https://github.com/Cairo-Academy/ca-mdbook/edit/main/{path}"
+site-url = "/book/"
