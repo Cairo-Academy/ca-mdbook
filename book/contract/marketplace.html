@@ -126,6 +126,12 @@
                         <a href="../print.html" title="Print this book" aria-label="Print this book">
                             <i id="print-button" class="fa fa-print"></i>
                         </a>
+                        <a href="https://github.com/Cairo-Academy/ca-mdbook" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+                        <a href="https://github.com/Cairo-Academy/ca-mdbook/edit/main/src/contract/marketplace.md" title="Suggest an edit" aria-label="Suggest an edit">
+                            <i id="git-edit-button" class="fa fa-edit"></i>
+                        </a>
 
                     </div>
                 </div>
@@ -156,8 +162,10 @@
 <p>This chapter delves into the basics of a Marketplace contract implemented in Cairo. This contract demonstrates the core functionalities of a basic Marketplace contract, providing a practical example for learning how to build a basic Marketplace contract on StarkNet.</p>
 <h2 id="purpose-and-functionality"><a class="header" href="#purpose-and-functionality">Purpose and Functionality</a></h2>
 <p>The provided Cairo code defines a basic lottery contract. It implements essential Marketplace, ERC20 and IERC721, IERC1155 functionalities</p>
-<pre><code>use starknet::ContractAddress;
-</code></pre>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>use starknet::ContractAddress;
+<span class="boring">}</span></code></pre></pre>
 <p><strong>Marketplace functionalities</strong></p>
 <ul>
 <li><strong>list_asset:</strong> This creates new listing with nft ownership verification. This has parameters:
@@ -174,7 +182,9 @@ listing_id, quantity, payment_token, price_per_token, expiration</li>
 listing_id, quantity, reserve_price, buy_now_price, payment_token, start_time, duration</li>
 <li><strong>get_listing_count:</strong> Returns total number of listings created.</li>
 </ul>
-<pre><code>#[starknet::interface]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[starknet::interface]
 trait IMarketplace&lt;TContractState&gt; {
     fn list_asset(
         ref self: TContractState,
@@ -223,7 +233,7 @@ trait IMarketplace&lt;TContractState&gt; {
     );
     fn get_listing_count(self: @TContractState) -&gt; u256;
 }
-</code></pre>
+<span class="boring">}</span></code></pre></pre>
 <p><strong>ERC20 functionalities</strong></p>
 <p>The IERC20 interface defines the core functions for an ERC20 token contract</p>
 <ul>
@@ -232,7 +242,9 @@ account: The account parameter is the address of the account whose balance is be
 <li><strong>allowance:</strong> This function returns the amount of tokens that one account (spender) is authorized to spend on behalf of another account (owner). This has parameters: owner and spender</li>
 <li><strong>transfer:</strong> This function transfers a specified amount of tokens from the caller's account to the recipient account. This has parameters: spender, recipient and amount</li>
 </ul>
-<pre><code>#[starknet::interface]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[starknet::interface]
 trait IERC20&lt;TContractState&gt; {
     fn balance_of(self: @TContractState, account: ContractAddress) -&gt; u256;
     fn allowance(self: @TContractState, owner: ContractAddress, spender: ContractAddress) -&gt; u256;
@@ -241,7 +253,7 @@ trait IERC20&lt;TContractState&gt; {
         ref self: TContractState, sender: ContractAddress, recipient: ContractAddress, amount: u256
     );
 }
-</code></pre>
+<span class="boring">}</span></code></pre></pre>
 <p><strong>IERC721 functionalities</strong></p>
 <p>The IERC721 interface defines the basic functions that an ERC721-compliant contract should implement.ERC721 is a standard for representing non-fungible tokens (NFTs)</p>
 <ul>
@@ -251,7 +263,9 @@ trait IERC20&lt;TContractState&gt; {
 <li><strong>transfer_from:</strong> This function transfers the ownership of the NFT represented by token_id from the 'from' address to the 'to' address. The function allows a transfer to occur.
 This has parameters : token_id, two addresses, 'from' and 'to'</li>
 </ul>
-<pre><code>#[starknet::interface]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[starknet::interface]
 trait IERC721&lt;TContractState&gt; {
     fn owner_of(self: @TContractState, token_id: u256) -&gt; ContractAddress;
     fn get_approved(self: @TContractState, token_id: u256) -&gt; ContractAddress;
@@ -262,7 +276,7 @@ trait IERC721&lt;TContractState&gt; {
         ref self: TContractState, from: ContractAddress, to: ContractAddress, token_id: u256
     );
 }
-</code></pre>
+<span class="boring">}</span></code></pre></pre>
 <p><strong>IERC1155 functionalities</strong></p>
 <p>The IERC1155 interface defines the core functions for an ERC1155 token contract. ERC1155 is a token standard that allows a single contract to manage multiple token types, which can be a mix of fungible and non-fungible tokens.</p>
 <ul>
@@ -270,7 +284,9 @@ trait IERC721&lt;TContractState&gt; {
 <li><strong>is_approved_for_all:</strong> This function checks if an operator is approved to manage all tokens for a given account. This takes parameter: The 'account', the address of the token owner, and the 'operator', the address being checked for approval. The function returns a boolean value: true if the operator is approved for all tokens, and false otherwise.</li>
 <li><strong>safe_transfer_from:</strong> This function transfers a specified amount of tokens of type id from the 'from' address to the 'to' address. This takes parameter: Two address 'from', the address from which the tokens are being released and 'to', the address from which the tokens are being sent to. The id is the token identifier, amount is the number of tokens to transfer, and data is additional data to be passed to the recipient.</li>
 </ul>
-<pre><code>#[starknet::interface]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[starknet::interface]
 trait IERC1155&lt;TContractState&gt; {
     fn balance_of(self: @TContractState, account: ContractAddress, id: u256) -&gt; u256;
     fn is_approved_for_all(
@@ -285,7 +301,7 @@ trait IERC1155&lt;TContractState&gt; {
         data: Span&lt;felt252&gt;
     );
 }
-</code></pre>
+<span class="boring">}</span></code></pre></pre>
 
                     </main>
 
@@ -316,6 +332,22 @@ trait IERC1155&lt;TContractState&gt; {
 
         </div>
 
+        <!-- Livereload script (if served using the cli tool) -->
+        <script>
+            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
+            const socket = new WebSocket(wsAddress);
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
 
 
 

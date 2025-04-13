@@ -126,6 +126,12 @@
                         <a href="../print.html" title="Print this book" aria-label="Print this book">
                             <i id="print-button" class="fa fa-print"></i>
                         </a>
+                        <a href="https://github.com/Cairo-Academy/ca-mdbook" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+                        <a href="https://github.com/Cairo-Academy/ca-mdbook/edit/main/src/contract/dao.md" title="Suggest an edit" aria-label="Suggest an edit">
+                            <i id="git-edit-button" class="fa fa-edit"></i>
+                        </a>
 
                     </div>
                 </div>
@@ -164,7 +170,9 @@
 </ul>
 <h2 id="key-components"><a class="header" href="#key-components">Key Components</a></h2>
 <h3 id="data-structures"><a class="header" href="#data-structures">Data Structures</a></h3>
-<pre><code class="language-cairo">#[derive(Copy, Drop, Hash)]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[derive(Copy, Drop, Hash)]
 struct ProposalId {
     id: u64
 }
@@ -185,7 +193,7 @@ struct Member {
     address: ContractAddress,
     voting_power: u256
 }
-</code></pre>
+<span class="boring">}</span></code></pre></pre>
 <h3 id="core-functionalities"><a class="header" href="#core-functionalities">Core Functionalities</a></h3>
 <ol>
 <li>
@@ -221,7 +229,9 @@ struct Member {
 </li>
 </ol>
 <h3 id="interface-definition"><a class="header" href="#interface-definition">Interface Definition</a></h3>
-<pre><code class="language-cairo">#[starknet::interface]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[starknet::interface]
 pub trait IDAO&lt;TContractState&gt; {
     fn create_proposal(ref self: TContractState, description: felt252);
     fn vote(ref self: TContractState, proposal_id: ProposalId, support: bool);
@@ -231,9 +241,11 @@ pub trait IDAO&lt;TContractState&gt; {
     fn get_proposal(self: @TContractState, proposal_id: ProposalId) -&gt; Proposal;
     fn get_member(self: @TContractState, member: ContractAddress) -&gt; Member;
 }
-</code></pre>
+<span class="boring">}</span></code></pre></pre>
 <h3 id="event-system"><a class="header" href="#event-system">Event System</a></h3>
-<pre><code class="language-cairo">#[event]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[event]
 enum Event {
     ProposalCreated: ProposalCreatedEvent,
     Voted: VotedEvent,
@@ -241,7 +253,7 @@ enum Event {
     MemberAdded: MemberAddedEvent,
     MemberRemoved: MemberRemovedEvent
 }
-</code></pre>
+<span class="boring">}</span></code></pre></pre>
 <h3 id="security-features"><a class="header" href="#security-features">Security Features</a></h3>
 <ul>
 <li>Member verification for proposal creation</li>
@@ -257,7 +269,9 @@ enum Event {
 <li>After voting period, anyone can execute_proposal if it passed</li>
 </ul>
 <h3 id="full-implementation"><a class="header" href="#full-implementation">Full Implementation</a></h3>
-<pre><code class="language-cairo">use core::num::traits::Zero;
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>use core::num::traits::Zero;
 use starknet::ContractAddress;
 
 #[derive(Copy, Drop, Hash)]
@@ -445,7 +459,7 @@ mod dao {
         }
     }
 }
-</code></pre>
+<span class="boring">}</span></code></pre></pre>
 <p>This contract serves as a foundation for building more complex DAO systems on StarkNet, demonstrating key concepts like decentralized governance and member voting.</p>
 
                     </main>
@@ -477,6 +491,22 @@ mod dao {
 
         </div>
 
+        <!-- Livereload script (if served using the cli tool) -->
+        <script>
+            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
+            const socket = new WebSocket(wsAddress);
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
 
 
 

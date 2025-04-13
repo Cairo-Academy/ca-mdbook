@@ -126,6 +126,12 @@
                         <a href="print.html" title="Print this book" aria-label="Print this book">
                             <i id="print-button" class="fa fa-print"></i>
                         </a>
+                        <a href="https://github.com/Cairo-Academy/ca-mdbook" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+                        <a href="https://github.com/Cairo-Academy/ca-mdbook/edit/main/src/contribution.md" title="Suggest an edit" aria-label="Suggest an edit">
+                            <i id="git-edit-button" class="fa fa-edit"></i>
+                        </a>
 
                     </div>
                 </div>
@@ -285,6 +291,16 @@
                         <p>Emmanuel Okeke</p>
                       </a>
                     </td>
+                    <td>
+                      <a href="https://github.com/Signor1">
+                        <img
+                          src="https://avatars.githubusercontent.com/u/94352660?v=4&s=100"
+                          alt="Signor1's Image"
+                        />
+                        <br />
+                        <p>Omemgboji Emmanuel</p>
+                      </a>
+                    </td>
                   </tr>
     </tbody>
 </table>
@@ -318,6 +334,22 @@
 
         </div>
 
+        <!-- Livereload script (if served using the cli tool) -->
+        <script>
+            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
+            const socket = new WebSocket(wsAddress);
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
 
 
 

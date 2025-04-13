@@ -127,6 +127,9 @@
                         <a href="print.html" title="Print this book" aria-label="Print this book">
                             <i id="print-button" class="fa fa-print"></i>
                         </a>
+                        <a href="https://github.com/Cairo-Academy/ca-mdbook" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
 
                     </div>
                 </div>
@@ -263,7 +266,9 @@
 <li><strong>Withdrawal:</strong> Allowing the contract owner to withdraw tokens from the contract.</li>
 </ul>
 <p>This contract serves as a foundational example for understanding the mechanics of ERC20 tokens within the StarkNet ecosystem.</p>
-<pre><code class="language-cairo">use starknet::ContractAddress;
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>use starknet::ContractAddress;
 use starknet::storage::Map;
 use starknet::{get_caller_address, get_contract_address};
 
@@ -416,7 +421,7 @@ mod ERC20Token {
         fn get_owner(self: @ContractState) -&gt; ContractAddress {
             self.owner.read()
         }
-</code></pre>
+<span class="boring">}</span></code></pre></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="cairo-academy-understanding-a-basic-lottery-contract"><a class="header" href="#cairo-academy-understanding-a-basic-lottery-contract">Cairo Academy: Understanding a Basic Lottery Contract</a></h1>
 <p>This chapter delves into the basics of a lottery contract implemented in Cairo. This contract demonstrates the core functionalities of a basic lottery contract, providing a practical example for learning how to build a basic lottery contract on StarkNet.</p>
 <h2 id="purpose-and-functionality-1"><a class="header" href="#purpose-and-functionality-1">Purpose and Functionality</a></h2>
@@ -450,7 +455,9 @@ random_seed : Additional entropy source to enhance randomness</p>
 <li><strong>Is the lottery active</strong> This return a bool (true or flase) the active state of the lottery ticket</li>
 </ul>
 <p>This contract serves as a foundational example for understanding the mechanics of Lottery Contract within the StarkNet ecosystem.</p>
-<pre><code>use starknet::ContractAddress;
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>use starknet::ContractAddress;
 use array::ArrayTrait;
 use option::OptionTrait;
 
@@ -923,7 +930,7 @@ pub mod LotteryContract {
         }
     }
 }
-</code></pre>
+<span class="boring">}</span></code></pre></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="cairo-academy-understanding-a-basic-dao-contract"><a class="header" href="#cairo-academy-understanding-a-basic-dao-contract">Cairo Academy: Understanding a Basic DAO Contract</a></h1>
 <p>This chapter explores a fundamental DAO (Decentralized Autonomous Organization) contract implemented in Cairo. This contract demonstrates core DAO functionalities, providing a practical example for learning how to build decentralized governance systems on StarkNet.</p>
 <h2 id="purpose-and-functionality-2"><a class="header" href="#purpose-and-functionality-2">Purpose and Functionality</a></h2>
@@ -936,7 +943,9 @@ pub mod LotteryContract {
 </ul>
 <h2 id="key-components"><a class="header" href="#key-components">Key Components</a></h2>
 <h3 id="data-structures"><a class="header" href="#data-structures">Data Structures</a></h3>
-<pre><code class="language-cairo">#[derive(Copy, Drop, Hash)]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[derive(Copy, Drop, Hash)]
 struct ProposalId {
     id: u64
 }
@@ -957,7 +966,7 @@ struct Member {
     address: ContractAddress,
     voting_power: u256
 }
-</code></pre>
+<span class="boring">}</span></code></pre></pre>
 <h3 id="core-functionalities"><a class="header" href="#core-functionalities">Core Functionalities</a></h3>
 <ol>
 <li>
@@ -993,7 +1002,9 @@ struct Member {
 </li>
 </ol>
 <h3 id="interface-definition"><a class="header" href="#interface-definition">Interface Definition</a></h3>
-<pre><code class="language-cairo">#[starknet::interface]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[starknet::interface]
 pub trait IDAO&lt;TContractState&gt; {
     fn create_proposal(ref self: TContractState, description: felt252);
     fn vote(ref self: TContractState, proposal_id: ProposalId, support: bool);
@@ -1003,9 +1014,11 @@ pub trait IDAO&lt;TContractState&gt; {
     fn get_proposal(self: @TContractState, proposal_id: ProposalId) -&gt; Proposal;
     fn get_member(self: @TContractState, member: ContractAddress) -&gt; Member;
 }
-</code></pre>
+<span class="boring">}</span></code></pre></pre>
 <h3 id="event-system"><a class="header" href="#event-system">Event System</a></h3>
-<pre><code class="language-cairo">#[event]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[event]
 enum Event {
     ProposalCreated: ProposalCreatedEvent,
     Voted: VotedEvent,
@@ -1013,7 +1026,7 @@ enum Event {
     MemberAdded: MemberAddedEvent,
     MemberRemoved: MemberRemovedEvent
 }
-</code></pre>
+<span class="boring">}</span></code></pre></pre>
 <h3 id="security-features"><a class="header" href="#security-features">Security Features</a></h3>
 <ul>
 <li>Member verification for proposal creation</li>
@@ -1029,7 +1042,9 @@ enum Event {
 <li>After voting period, anyone can execute_proposal if it passed</li>
 </ul>
 <h3 id="full-implementation"><a class="header" href="#full-implementation">Full Implementation</a></h3>
-<pre><code class="language-cairo">use core::num::traits::Zero;
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>use core::num::traits::Zero;
 use starknet::ContractAddress;
 
 #[derive(Copy, Drop, Hash)]
@@ -1217,7 +1232,7 @@ mod dao {
         }
     }
 }
-</code></pre>
+<span class="boring">}</span></code></pre></pre>
 <p>This contract serves as a foundation for building more complex DAO systems on StarkNet, demonstrating key concepts like decentralized governance and member voting.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="cairo-academy-understanding-an-escrow-contract"><a class="header" href="#cairo-academy-understanding-an-escrow-contract">Cairo Academy: Understanding an Escrow Contract</a></h1>
 <p>This chapter explores an Escrow contract implemented in Cairo. This contract demonstrates a secure token exchange mechanism between two parties, providing a trustless way to facilitate transactions on StarkNet.</p>
@@ -1231,7 +1246,9 @@ mod dao {
 </ul>
 <h2 id="key-components-1"><a class="header" href="#key-components-1">Key Components</a></h2>
 <h3 id="data-structures-1"><a class="header" href="#data-structures-1">Data Structures</a></h3>
-<pre><code class="language-cairo">#[derive(Copy, Drop, Hash)]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[derive(Copy, Drop, Hash)]
 struct EscrowId {
     sender: ContractAddress,
     recipient: ContractAddress,
@@ -1245,7 +1262,7 @@ pub struct EscrowDetails {
     pub out_amount: u256,
     pub created_at: u64, 
 }
-</code></pre>
+<span class="boring">}</span></code></pre></pre>
 <h3 id="core-functionalities-1"><a class="header" href="#core-functionalities-1">Core Functionalities</a></h3>
 <ol>
 <li>
@@ -1282,7 +1299,9 @@ pub struct EscrowDetails {
 </li>
 </ol>
 <h3 id="interface-definition-1"><a class="header" href="#interface-definition-1">Interface Definition</a></h3>
-<pre><code class="language-cairo">##[starknet::interface]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[starknet::interface]
 pub trait IEscrow&lt;TContractState&gt; {
     fn examine(
         self: @TContractState, sender: ContractAddress, recipient: ContractAddress, in_token: ContractAddress
@@ -1301,15 +1320,17 @@ pub trait IEscrow&lt;TContractState&gt; {
 
     fn execute(ref self: TContractState, sender: ContractAddress, in_token: ContractAddress);
 }
-</code></pre>
+<span class="boring">}</span></code></pre></pre>
 <h3 id="event-system-1"><a class="header" href="#event-system-1">Event System</a></h3>
-<pre><code class="language-cairo">#[event]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[event]
 enum Event {
     EscrowCreated: EscrowCreatedEvent,
     EscrowExecuted: EscrowExecutedEvent,
     EscrowRefunded: EscrowRefundedEvent
 }
-</code></pre>
+<span class="boring">}</span></code></pre></pre>
 <h3 id="security-features-1"><a class="header" href="#security-features-1">Security Features</a></h3>
 <ul>
 <li>Token transfers use StarkNet's native token standards</li>
@@ -1322,7 +1343,9 @@ enum Event {
 <ol>
 <li><strong>Creating an Escrow:</strong></li>
 </ol>
-<pre><code class="language-cairo">// Alice wants to trade 100 TOKA for 200 TOKB with Bob
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// Alice wants to trade 100 TOKA for 200 TOKB with Bob
 escrow.enter(
     bob_address,
     token_a_address,
@@ -1330,21 +1353,27 @@ escrow.enter(
     token_b_address,
     200
 );
-</code></pre>
+<span class="boring">}</span></code></pre></pre>
 <ol start="2">
 <li><strong>Executing the Trade:</strong></li>
 </ol>
-<pre><code class="language-cairo">// When Bob is ready, he executes the escrow
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// When Bob is ready, he executes the escrow
 escrow.execute(alice_address, token_a_address);
-</code></pre>
+<span class="boring">}</span></code></pre></pre>
 <ol start="3">
 <li><strong>Refunding:</strong></li>
 </ol>
-<pre><code class="language-cairo">// If Bob doesn't complete within 7 days, Alice can refund
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// If Bob doesn't complete within 7 days, Alice can refund
 escrow.exit(alice_address, bob_address, token_a_address);
-</code></pre>
+<span class="boring">}</span></code></pre></pre>
 <h3 id="full-implementation-1"><a class="header" href="#full-implementation-1">Full Implementation</a></h3>
-<pre><code class="language-cairo">use core::num::traits::Zero;
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>use core::num::traits::Zero;
 use starknet::ContractAddress;
 
 #[derive(Copy, Drop, Hash)]
@@ -1549,7 +1578,7 @@ mod escrow {
         }
     }
 }
-</code></pre>
+<span class="boring">}</span></code></pre></pre>
 <p>This contract serves as a foundation for building secure token exchange systems on StarkNet, demonstrating key concepts like atomic swaps and time-locked transactions.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="cairo-academy-understanding-a-basic-nft-auction-contract"><a class="header" href="#cairo-academy-understanding-a-basic-nft-auction-contract">Cairo Academy: Understanding a Basic NFT Auction Contract</a></h1>
 <p>This chapter delves into the basics of an NFT Auction Contract implemented in Cairo. This contract demonstrates the core functionalities of a NFT Auction Contract, providing a practical example for learning how to build a basic NFT Auction Contract on StarkNet.</p>
@@ -1569,9 +1598,13 @@ spender : Authorized person to spend on behalf of the owner</li>
 <li><strong>Increase Allowance:</strong> This function increases the allowance of spender by added_value.</li>
 <li><strong>Decrease Allowance:</strong> This function decreases the allowance of spender by subtracted_value</li>
 </ul>
-<pre><code>use starknet::ContractAddress;
-</code></pre>
-<pre><code>#[starknet::interface]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>use starknet::ContractAddress;
+<span class="boring">}</span></code></pre></pre>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[starknet::interface]
 pub trait IERC20&lt;TContractState&gt; {
     fn get_name(self: @TContractState) -&gt; felt252;
     fn get_symbol(self: @TContractState) -&gt; felt252;
@@ -1594,7 +1627,7 @@ pub trait IERC20&lt;TContractState&gt; {
         ref self: TContractState, spender: ContractAddress, subtracted_value: felt252,
     );
 }
-</code></pre>
+<span class="boring">}</span></code></pre></pre>
 <p>This NFT Auction Contract implements essential functionalities of IERC721 such as:</p>
 <ul>
 <li><strong>Get Name:</strong> This function returns the name of the NFT (eg Cairo Academy Token)</li>
@@ -1611,7 +1644,9 @@ token_id</li>
 <li><strong>Transfer from:</strong> This function transfers the ownership of a specific token (token_id) from one address (from) to another address (to). The caller must be approved to make this transfer. This takes parameter: token_id, address (from) and address (to)</li>
 <li><strong>Mint:</strong> This function creates a new token (token_id) and assigns it to a specific address (to). This takes parameter: token_id and an address</li>
 </ul>
-<pre><code>#[starknet::interface]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[starknet::interface]
 trait IERC721&lt;TContractState&gt; {
     fn get_name(self: @TContractState) -&gt; felt252;
     fn get_symbol(self: @TContractState) -&gt; felt252;
@@ -1629,15 +1664,19 @@ trait IERC721&lt;TContractState&gt; {
     );
     fn mint(ref self: TContractState, to: ContractAddress, token_id: u256);
 }
-</code></pre>
+<span class="boring">}</span></code></pre></pre>
 <p>This NFT Auction Contract also implements <strong>Buy</strong> and <strong>Get Price</strong> functions. This functions buys and gets price of the NFTs</p>
-<pre><code>pub trait INFTAuction&lt;TContractState&gt; {
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>pub trait INFTAuction&lt;TContractState&gt; {
     fn buy(ref self: TContractState, token_id: u256);
     fn get_price(self: @TContractState) -&gt; u64;
 }
-</code></pre>
+<span class="boring">}</span></code></pre></pre>
 <h2 id="implementation"><a class="header" href="#implementation">Implementation</a></h2>
-<pre><code>#[starknet::contract]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[starknet::contract]
 pub mod NFTAuction {
     use super::{IERC20Dispatcher, IERC20DispatcherTrait, IERC721Dispatcher, IERC721DispatcherTrait};
     use starknet::{ContractAddress, get_caller_address, get_block_timestamp};
@@ -1722,13 +1761,15 @@ pub mod NFTAuction {
         }
     }
 }
-</code></pre>
+<span class="boring">}</span></code></pre></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="cairo-academy-understanding-a-marketplace-contract"><a class="header" href="#cairo-academy-understanding-a-marketplace-contract">Cairo Academy: Understanding a Marketplace Contract</a></h1>
 <p>This chapter delves into the basics of a Marketplace contract implemented in Cairo. This contract demonstrates the core functionalities of a basic Marketplace contract, providing a practical example for learning how to build a basic Marketplace contract on StarkNet.</p>
 <h2 id="purpose-and-functionality-5"><a class="header" href="#purpose-and-functionality-5">Purpose and Functionality</a></h2>
 <p>The provided Cairo code defines a basic lottery contract. It implements essential Marketplace, ERC20 and IERC721, IERC1155 functionalities</p>
-<pre><code>use starknet::ContractAddress;
-</code></pre>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>use starknet::ContractAddress;
+<span class="boring">}</span></code></pre></pre>
 <p><strong>Marketplace functionalities</strong></p>
 <ul>
 <li><strong>list_asset:</strong> This creates new listing with nft ownership verification. This has parameters:
@@ -1745,7 +1786,9 @@ listing_id, quantity, payment_token, price_per_token, expiration</li>
 listing_id, quantity, reserve_price, buy_now_price, payment_token, start_time, duration</li>
 <li><strong>get_listing_count:</strong> Returns total number of listings created.</li>
 </ul>
-<pre><code>#[starknet::interface]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[starknet::interface]
 trait IMarketplace&lt;TContractState&gt; {
     fn list_asset(
         ref self: TContractState,
@@ -1794,7 +1837,7 @@ trait IMarketplace&lt;TContractState&gt; {
     );
     fn get_listing_count(self: @TContractState) -&gt; u256;
 }
-</code></pre>
+<span class="boring">}</span></code></pre></pre>
 <p><strong>ERC20 functionalities</strong></p>
 <p>The IERC20 interface defines the core functions for an ERC20 token contract</p>
 <ul>
@@ -1803,7 +1846,9 @@ account: The account parameter is the address of the account whose balance is be
 <li><strong>allowance:</strong> This function returns the amount of tokens that one account (spender) is authorized to spend on behalf of another account (owner). This has parameters: owner and spender</li>
 <li><strong>transfer:</strong> This function transfers a specified amount of tokens from the caller's account to the recipient account. This has parameters: spender, recipient and amount</li>
 </ul>
-<pre><code>#[starknet::interface]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[starknet::interface]
 trait IERC20&lt;TContractState&gt; {
     fn balance_of(self: @TContractState, account: ContractAddress) -&gt; u256;
     fn allowance(self: @TContractState, owner: ContractAddress, spender: ContractAddress) -&gt; u256;
@@ -1812,7 +1857,7 @@ trait IERC20&lt;TContractState&gt; {
         ref self: TContractState, sender: ContractAddress, recipient: ContractAddress, amount: u256
     );
 }
-</code></pre>
+<span class="boring">}</span></code></pre></pre>
 <p><strong>IERC721 functionalities</strong></p>
 <p>The IERC721 interface defines the basic functions that an ERC721-compliant contract should implement.ERC721 is a standard for representing non-fungible tokens (NFTs)</p>
 <ul>
@@ -1822,7 +1867,9 @@ trait IERC20&lt;TContractState&gt; {
 <li><strong>transfer_from:</strong> This function transfers the ownership of the NFT represented by token_id from the 'from' address to the 'to' address. The function allows a transfer to occur.
 This has parameters : token_id, two addresses, 'from' and 'to'</li>
 </ul>
-<pre><code>#[starknet::interface]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[starknet::interface]
 trait IERC721&lt;TContractState&gt; {
     fn owner_of(self: @TContractState, token_id: u256) -&gt; ContractAddress;
     fn get_approved(self: @TContractState, token_id: u256) -&gt; ContractAddress;
@@ -1833,7 +1880,7 @@ trait IERC721&lt;TContractState&gt; {
         ref self: TContractState, from: ContractAddress, to: ContractAddress, token_id: u256
     );
 }
-</code></pre>
+<span class="boring">}</span></code></pre></pre>
 <p><strong>IERC1155 functionalities</strong></p>
 <p>The IERC1155 interface defines the core functions for an ERC1155 token contract. ERC1155 is a token standard that allows a single contract to manage multiple token types, which can be a mix of fungible and non-fungible tokens.</p>
 <ul>
@@ -1841,7 +1888,9 @@ trait IERC721&lt;TContractState&gt; {
 <li><strong>is_approved_for_all:</strong> This function checks if an operator is approved to manage all tokens for a given account. This takes parameter: The 'account', the address of the token owner, and the 'operator', the address being checked for approval. The function returns a boolean value: true if the operator is approved for all tokens, and false otherwise.</li>
 <li><strong>safe_transfer_from:</strong> This function transfers a specified amount of tokens of type id from the 'from' address to the 'to' address. This takes parameter: Two address 'from', the address from which the tokens are being released and 'to', the address from which the tokens are being sent to. The id is the token identifier, amount is the number of tokens to transfer, and data is additional data to be passed to the recipient.</li>
 </ul>
-<pre><code>#[starknet::interface]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[starknet::interface]
 trait IERC1155&lt;TContractState&gt; {
     fn balance_of(self: @TContractState, account: ContractAddress, id: u256) -&gt; u256;
     fn is_approved_for_all(
@@ -1856,11 +1905,11 @@ trait IERC1155&lt;TContractState&gt; {
         data: Span&lt;felt252&gt;
     );
 }
-</code></pre>
+<span class="boring">}</span></code></pre></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="cairo-academy-understanding-a-stake-contract"><a class="header" href="#cairo-academy-understanding-a-stake-contract">Cairo Academy: Understanding a Stake Contract</a></h1>
 <p>This chapter delves into the basics of a staking contract implemented in Cairo. This contract demonstrates the core functionalities of a basic Stake contract, providing a practical example for learning how to build a basic staking contract on StarkNet.</p>
 <h2 id="purpose-and-functionality-6"><a class="header" href="#purpose-and-functionality-6">Purpose and Functionality</a></h2>
-<p>The provided Cairo code defines a basic Stake contract. It implements essential Staking Contract functionalities</p>
+<p>The provided Cairo code defines a basic Stake contract. It implements essential Staking Contract functionalities.</p>
 <ul>
 <li><strong>set_reward_amount</strong> This function sets the reward amount. This takes a parameter:
 amount</li>
@@ -1870,7 +1919,9 @@ amount</li>
 <li><strong>get_rewards</strong> This function computes rewards</li>
 <li><strong>claim_rewards</strong> This function makes claiming of rewards possible.</li>
 </ul>
-<pre><code>use starknet::ContractAddress;
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>use starknet::ContractAddress;
  
 #[starknet::interface]
 pub trait IStakingContract&lt;TContractState&gt; {
@@ -2130,7 +2181,385 @@ pub mod StakingContract {
         }
     }
 }
-</code></pre>
+<span class="boring">}</span></code></pre></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="cairo-academy-understanding-a-token-bridge-contract"><a class="header" href="#cairo-academy-understanding-a-token-bridge-contract">Cairo Academy: Understanding a Token Bridge Contract</a></h1>
+<p>This chapter explores a Token Bridge contract implemented in Cairo. This contract demonstrates a mechanism for transferring tokens between Layer 1 (L1) and Layer 2 (L2) on StarkNet, providing a practical example for learning how to build cross-layer token bridging systems.</p>
+<h2 id="purpose-and-functionality-7"><a class="header" href="#purpose-and-functionality-7">Purpose and Functionality</a></h2>
+<p>The provided Cairo code defines a basic Token Bridge contract that facilitates the movement of tokens between StarkNet (L2) and an Ethereum-based L1 blockchain. It implements essential functionalities such as:</p>
+<ul>
+<li><strong>Bridging to L1:</strong> Initiates the transfer of tokens from L2 to L1 by burning them on L2 and sending a message to mint them on L1.</li>
+<li><strong>Handling Deposits from L1:</strong> Processes incoming token deposits from L1 by minting equivalent tokens on L2.</li>
+<li><strong>Configuration Management:</strong> Allows a governor to set the L1 bridge address and the L2 token contract address.</li>
+<li><strong>State Tracking:</strong> Provides getters to retrieve the governor, L1 bridge address, and L2 token contract address.</li>
+</ul>
+<p>This contract serves as a foundational example for understanding token bridging mechanics within the StarkNet ecosystem, showcasing cross-layer communication and token management.</p>
+<h2 id="key-components-2"><a class="header" href="#key-components-2">Key Components</a></h2>
+<h3 id="interfaces"><a class="header" href="#interfaces">Interfaces</a></h3>
+<p>The contract defines two key interfaces:</p>
+<ol>
+<li>
+<p><strong>IMintableToken</strong>: A simplified interface for a token contract that supports minting and burning.</p>
+<ul>
+<li><code>mint</code>: Creates new tokens and assigns them to an account.</li>
+<li><code>burn</code>: Destroys tokens from an account.</li>
+</ul>
+</li>
+<li>
+<p><strong>ITokenBridge</strong>: The main interface for the token bridge contract.</p>
+<ul>
+<li><code>bridge_to_l1</code>: Initiates a token transfer from L2 to L1.</li>
+<li><code>set_l1_bridge</code>: Sets the L1 bridge address (governor only).</li>
+<li><code>set_token</code>: Sets the L2 token contract address (governor only).</li>
+<li><code>governor</code>: Returns the governor’s address.</li>
+<li><code>l1_bridge</code>: Returns the L1 bridge address.</li>
+<li><code>l2_token</code>: Returns the L2 token contract address.</li>
+</ul>
+</li>
+</ol>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[starknet::interface]
+pub trait IMintableToken&lt;TContractState&gt; {
+    fn mint(ref self: TContractState, account: ContractAddress, amount: u256);
+    fn burn(ref self: TContractState, account: ContractAddress, amount: u256);
+}
+
+#[starknet::interface]
+pub trait ITokenBridge&lt;TContractState&gt; {
+    fn bridge_to_l1(ref self: TContractState, l1_recipient: EthAddress, amount: u256);
+    fn set_l1_bridge(ref self: TContractState, l1_bridge_address: EthAddress);
+    fn set_token(ref self: TContractState, l2_token_address: ContractAddress);
+    fn governor(self: @TContractState) -&gt; ContractAddress;
+    fn l1_bridge(self: @TContractState) -&gt; felt252;
+    fn l2_token(self: @TContractState) -&gt; ContractAddress;
+}
+<span class="boring">}</span></code></pre></pre>
+<h3 id="state-management"><a class="header" href="#state-management">State Management</a></h3>
+<p>The contract uses a <code>Storage</code> struct to maintain its persistent state on StarkNet:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[storage]
+pub struct Storage {
+    // The address of the L2 governor of this contract. Only the governor can set the other storage variables.
+    pub governor: ContractAddress,
+    // The L1 bridge address. Zero when unset.
+    pub l1_bridge: felt252,
+    // The L2 token contract address. Zero when unset.
+    pub l2_token: ContractAddress,
+}
+<span class="boring">}</span></code></pre></pre>
+<ul>
+<li><strong><code>governor</code>:</strong> Stores the address of the L2 governor, who has exclusive rights to configure the contract (e.g., setting the L1 bridge and L2 token addresses).</li>
+<li><strong><code>l1_bridge</code>:</strong> Holds the L1 bridge contract address as a <code>felt252</code>. It defaults to zero until set by the governor.</li>
+<li><strong><code>l2_token</code>:</strong> Stores the address of the L2 token contract that the bridge interacts with, also defaulting to zero until configured.</li>
+</ul>
+<p>These variables are critical for the contract’s operation, ensuring that bridging actions reference the correct L1 and L2 contracts and that only the governor can modify the configuration.</p>
+<h3 id="core-functionalities-2"><a class="header" href="#core-functionalities-2">Core Functionalities</a></h3>
+<ol>
+<li>
+<p><strong>Bridging Tokens to L1:</strong></p>
+<ul>
+<li>Burns tokens on L2 from the caller’s balance.</li>
+<li>Sends a message to the L1 bridge contract to mint the equivalent amount for the specified L1 recipient.</li>
+<li>Emits a <code>WithdrawInitiated</code> event.</li>
+</ul>
+</li>
+<li>
+<p><strong>Handling Deposits from L1:</strong></p>
+<ul>
+<li>Receives a message from the L1 bridge (via an L1 handler).</li>
+<li>Mints tokens on L2 for the specified recipient.</li>
+<li>Emits a <code>DepositHandled</code> event.</li>
+</ul>
+</li>
+<li>
+<p><strong>Configuration:</strong></p>
+<ul>
+<li><code>set_l1_bridge</code>: Allows the governor to specify the L1 bridge contract address.</li>
+<li><code>set_token</code>: Allows the governor to specify the L2 token contract address.</li>
+<li>Both functions emit events (<code>L1BridgeSet</code> and <code>L2TokenSet</code>) to log changes.</li>
+</ul>
+</li>
+<li>
+<p><strong>Security Checks:</strong></p>
+<ul>
+<li>Ensures only the governor can configure the contract.</li>
+<li>Validates that the L1 bridge and L2 token addresses are set before bridging operations.</li>
+<li>Restricts deposit handling to messages from the configured L1 bridge.</li>
+</ul>
+</li>
+</ol>
+<h3 id="event-system-2"><a class="header" href="#event-system-2">Event System</a></h3>
+<p>The contract includes an event system to log key actions:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[event]
+#[derive(Drop, starknet::Event)]
+pub enum Event {
+    WithdrawInitiated: WithdrawInitiated,
+    DepositHandled: DepositHandled,
+    L1BridgeSet: L1BridgeSet,
+    L2TokenSet: L2TokenSet,
+}
+
+#[derive(Drop, starknet::Event)]
+pub struct WithdrawInitiated {
+    pub l1_recipient: EthAddress,
+    pub amount: u256,
+    pub caller_address: ContractAddress,
+}
+
+#[derive(Drop, starknet::Event)]
+pub struct DepositHandled {
+    pub account: ContractAddress,
+    pub amount: u256,
+}
+
+#[derive(Drop, starknet::Event)]
+struct L1BridgeSet {
+    l1_bridge_address: EthAddress,
+}
+
+#[derive(Drop, starknet::Event)]
+struct L2TokenSet {
+    l2_token_address: ContractAddress,
+}
+<span class="boring">}</span></code></pre></pre>
+<h3 id="error-handling"><a class="header" href="#error-handling">Error Handling</a></h3>
+<p>The contract defines a set of error messages in the <code>Errors</code> module to handle invalid states or inputs:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>pub mod Errors {
+    pub const EXPECTED_FROM_BRIDGE_ONLY: felt252 = 'Expected from bridge only';
+    pub const INVALID_ADDRESS: felt252 = 'Invalid address';
+    pub const INVALID_AMOUNT: felt252 = 'Invalid amount';
+    pub const UNAUTHORIZED: felt252 = 'Unauthorized';
+    pub const TOKEN_NOT_SET: felt252 = 'Token not set';
+    pub const L1_BRIDGE_NOT_SET: felt252 = 'L1 bridge address not set';
+}
+<span class="boring">}</span></code></pre></pre>
+<ul>
+<li><strong><code>EXPECTED_FROM_BRIDGE_ONLY</code>:</strong> Thrown when the <code>handle_deposit</code> function is called by an address other than the configured L1 bridge.</li>
+<li><strong><code>INVALID_ADDRESS</code>:</strong> Raised when an address (e.g., recipient, governor, or contract address) is zero or otherwise invalid.</li>
+<li><strong><code>INVALID_AMOUNT</code>:</strong> Triggered when a token amount is zero during bridging or deposit operations.</li>
+<li><strong><code>UNAUTHORIZED</code>:</strong> Emitted when a non-governor attempts to call configuration functions.</li>
+<li><strong><code>TOKEN_NOT_SET</code>:</strong> Occurs if the L2 token address hasn’t been set before a bridging operation.</li>
+<li><strong><code>L1_BRIDGE_NOT_SET</code>:</strong> Thrown if the L1 bridge address hasn’t been configured prior to bridging.</li>
+</ul>
+<p>These error messages enhance the contract’s robustness by providing clear feedback on why an operation failed.</p>
+<h3 id="security-features-2"><a class="header" href="#security-features-2">Security Features</a></h3>
+<ul>
+<li><strong>Governor-Only Access:</strong> Only the governor can set the L1 bridge and L2 token addresses, ensuring controlled configuration.</li>
+<li><strong>Non-Zero Checks:</strong> Validates addresses and amounts to prevent invalid operations.</li>
+<li><strong>L1 Handler Restriction:</strong> The <code>handle_deposit</code> function only accepts messages from the configured L1 bridge.</li>
+<li><strong>Cross-Layer Messaging:</strong> Uses StarkNet’s <code>send_message_to_l1_syscall</code> for secure L1 communication.</li>
+</ul>
+<h2 id="usage-example-2"><a class="header" href="#usage-example-2">Usage Example</a></h2>
+<ol>
+<li>
+<p><strong>Setting Up the Bridge:</strong></p>
+<ul>
+<li>
+<p>The governor deploys the contract and sets the L1 bridge and L2 token addresses:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>token_bridge.set_l1_bridge(l1_bridge_address);
+token_bridge.set_token(l2_token_address);
+<span class="boring">}</span></code></pre></pre>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>Bridging Tokens to L1:</strong></p>
+<ul>
+<li>
+<p>A user initiates a transfer of 100 tokens to an L1 address:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>token_bridge.bridge_to_l1(l1_recipient_address, 100);
+<span class="boring">}</span></code></pre></pre>
+</li>
+<li>
+<p>The tokens are burned on L2, and a message is sent to L1 to mint them.</p>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>Handling a Deposit from L1:</strong></p>
+<ul>
+<li>
+<p>The L1 bridge sends a message to deposit 50 tokens for an L2 user. The contract automatically mints them:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// Handled via L1 message, not directly called
+token_bridge.handle_deposit(l1_bridge_address, l2_recipient, 50);
+<span class="boring">}</span></code></pre></pre>
+</li>
+</ul>
+</li>
+</ol>
+<h2 id="full-implementation-2"><a class="header" href="#full-implementation-2">Full Implementation</a></h2>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>use starknet::{ContractAddress, EthAddress};
+ 
+#[starknet::interface]
+pub trait IMintableToken&lt;TContractState&gt; {
+    fn mint(ref self: TContractState, account: ContractAddress, amount: u256);
+    fn burn(ref self: TContractState, account: ContractAddress, amount: u256);
+}
+ 
+#[starknet::interface]
+pub trait ITokenBridge&lt;TContractState&gt; {
+    fn bridge_to_l1(ref self: TContractState, l1_recipient: EthAddress, amount: u256);
+    fn set_l1_bridge(ref self: TContractState, l1_bridge_address: EthAddress);
+    fn set_token(ref self: TContractState, l2_token_address: ContractAddress);
+    fn governor(self: @TContractState) -&gt; ContractAddress;
+    fn l1_bridge(self: @TContractState) -&gt; felt252;
+    fn l2_token(self: @TContractState) -&gt; ContractAddress;
+}
+ 
+#[starknet::contract]
+pub mod TokenBridge {
+    use core::num::traits::Zero;
+    use starknet::{ContractAddress, EthAddress, get_caller_address, syscalls, SyscallResultTrait};
+    use starknet::storage::{StoragePointerReadAccess, StoragePointerWriteAccess};
+    use super::{IMintableTokenDispatcher, IMintableTokenDispatcherTrait};
+ 
+    #[storage]
+    pub struct Storage {
+        pub governor: ContractAddress,
+        pub l1_bridge: felt252,
+        pub l2_token: ContractAddress,
+    }
+ 
+    #[event]
+    #[derive(Drop, starknet::Event)]
+    pub enum Event {
+        WithdrawInitiated: WithdrawInitiated,
+        DepositHandled: DepositHandled,
+        L1BridgeSet: L1BridgeSet,
+        L2TokenSet: L2TokenSet,
+    }
+ 
+    #[derive(Drop, starknet::Event)]
+    pub struct WithdrawInitiated {
+        pub l1_recipient: EthAddress,
+        pub amount: u256,
+        pub caller_address: ContractAddress,
+    }
+ 
+    #[derive(Drop, starknet::Event)]
+    pub struct DepositHandled {
+        pub account: ContractAddress,
+        pub amount: u256,
+    }
+ 
+    #[derive(Drop, starknet::Event)]
+    struct L1BridgeSet {
+        l1_bridge_address: EthAddress,
+    }
+ 
+    #[derive(Drop, starknet::Event)]
+    struct L2TokenSet {
+        l2_token_address: ContractAddress,
+    }
+ 
+    pub mod Errors {
+        pub const EXPECTED_FROM_BRIDGE_ONLY: felt252 = 'Expected from bridge only';
+        pub const INVALID_ADDRESS: felt252 = 'Invalid address';
+        pub const INVALID_AMOUNT: felt252 = 'Invalid amount';
+        pub const UNAUTHORIZED: felt252 = 'Unauthorized';
+        pub const TOKEN_NOT_SET: felt252 = 'Token not set';
+        pub const L1_BRIDGE_NOT_SET: felt252 = 'L1 bridge address not set';
+    }
+ 
+    #[constructor]
+    fn constructor(ref self: ContractState, governor: ContractAddress) {
+        assert(governor.is_non_zero(), Errors::INVALID_ADDRESS);
+        self.governor.write(governor);
+    }
+ 
+    #[abi(embed_v0)]
+    impl TokenBridge of super::ITokenBridge&lt;ContractState&gt; {
+        fn bridge_to_l1(ref self: ContractState, l1_recipient: EthAddress, amount: u256) {
+            assert(l1_recipient.is_non_zero(), Errors::INVALID_ADDRESS);
+            assert(amount.is_non_zero(), Errors::INVALID_AMOUNT);
+            self._assert_l1_bridge_set();
+            self._assert_token_set();
+ 
+            let caller_address = get_caller_address();
+            IMintableTokenDispatcher { contract_address: self.l2_token.read() }
+                .burn(caller_address, amount);
+ 
+            let mut payload: Array&lt;felt252&gt; = array![
+                l1_recipient.into(), amount.low.into(), amount.high.into(),
+            ];
+            syscalls::send_message_to_l1_syscall(self.l1_bridge.read(), payload.span())
+                .unwrap_syscall();
+ 
+            self.emit(WithdrawInitiated { l1_recipient, amount, caller_address });
+        }
+ 
+        fn set_l1_bridge(ref self: ContractState, l1_bridge_address: EthAddress) {
+            self._assert_only_governor();
+            assert(l1_bridge_address.is_non_zero(), Errors::INVALID_ADDRESS);
+ 
+            self.l1_bridge.write(l1_bridge_address.into());
+            self.emit(L1BridgeSet { l1_bridge_address });
+        }
+ 
+        fn set_token(ref self: ContractState, l2_token_address: ContractAddress) {
+            self._assert_only_governor();
+            assert(l2_token_address.is_non_zero(), Errors::INVALID_ADDRESS);
+ 
+            self.l2_token.write(l2_token_address);
+            self.emit(L2TokenSet { l2_token_address });
+        }
+ 
+        fn governor(self: @ContractState) -&gt; ContractAddress {
+            self.governor.read()
+        }
+ 
+        fn l1_bridge(self: @ContractState) -&gt; felt252 {
+            self.l1_bridge.read()
+        }
+ 
+        fn l2_token(self: @ContractState) -&gt; ContractAddress {
+            self.l2_token.read()
+        }
+    }
+ 
+    #[generate_trait]
+    impl Internal of InternalTrait {
+        fn _assert_only_governor(self: @ContractState) {
+            assert(get_caller_address() == self.governor.read(), Errors::UNAUTHORIZED);
+        }
+ 
+        fn _assert_token_set(self: @ContractState) {
+            assert(self.l2_token.read().is_non_zero(), Errors::TOKEN_NOT_SET);
+        }
+ 
+        fn _assert_l1_bridge_set(self: @ContractState) {
+            assert(self.l1_bridge.read().is_non_zero(), Errors::L1_BRIDGE_NOT_SET);
+        }
+    }
+ 
+    #[l1_handler]
+    pub fn handle_deposit(
+        ref self: ContractState, from_address: felt252, account: ContractAddress, amount: u256,
+    ) {
+        assert(from_address == self.l1_bridge.read(), Errors::EXPECTED_FROM_BRIDGE_ONLY);
+        assert(account.is_non_zero(), Errors::INVALID_ADDRESS);
+        assert(amount.is_non_zero(), Errors::INVALID_AMOUNT);
+        self._assert_token_set();
+ 
+        IMintableTokenDispatcher { contract_address: self.l2_token.read() }.mint(account, amount);
+ 
+        self.emit(Event::DepositHandled(DepositHandled { account, amount }));
+    }
+}
+<span class="boring">}</span></code></pre></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="introduction-to-cairo-academys-ai-agent-examples"><a class="header" href="#introduction-to-cairo-academys-ai-agent-examples">Introduction to Cairo Academy's AI Agent Examples</a></h1>
 <p>Welcome to the Cairo Academy's collection of AI Agent examples, designed for educational exploration of AI concepts within the StarkNet ecosystem. This resource aims to provide developers with accessible examples to learn how to integrate AI functionalities on StarkNet.</p>
 <h2 id="purpose-1"><a class="header" href="#purpose-1">Purpose</a></h2>
@@ -2383,6 +2812,16 @@ pub mod StakingContract {
                         <p>Emmanuel Okeke</p>
                       </a>
                     </td>
+                    <td>
+                      <a href="https://github.com/Signor1">
+                        <img
+                          src="https://avatars.githubusercontent.com/u/94352660?v=4&s=100"
+                          alt="Signor1's Image"
+                        />
+                        <br />
+                        <p>Omemgboji Emmanuel</p>
+                      </a>
+                    </td>
                   </tr>
     </tbody>
 </table>
@@ -2410,6 +2849,22 @@ pub mod StakingContract {
 
         </div>
 
+        <!-- Livereload script (if served using the cli tool) -->
+        <script>
+            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
+            const socket = new WebSocket(wsAddress);
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
 
 
 
