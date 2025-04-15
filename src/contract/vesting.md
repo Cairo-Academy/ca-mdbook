@@ -9,7 +9,7 @@ The provided Cairo code defines a basic Vesting contract. It implements essentia
 **calculate_vested_amount:** This function calculates the vested amount of the beneficiary
 **calculate_releasable_amount:** This function calculates the vested amount that can be released.
 **get_beneficiary_count:** This gets the number of beneficiarie
-**create_vesting_schedule:** This function sets up the vesting contract time
+**create_vesting_schedule:** This function sets up the vesting contract time.
 **release:** This function allows the release tokens to users
 **release_my_tokens:** This functions lets users claim their tokens
 **revoke:** This function return unvested tokens to owner
