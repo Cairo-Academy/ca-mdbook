@@ -112,8 +112,8 @@ We are grateful to the following contributors for improving and expanding Cairo 
                         <br />
                         <p>Pedro Coelho</p>
                       </a>
-                    </td>
-                    <td>
+                  </td>
+                  <td>
                       <a href="https://github.com/Oluwatos94">
                         <img
                           src="https://avatars.githubusercontent.com/u/111003311?v=4&s=100"
@@ -122,8 +122,8 @@ We are grateful to the following contributors for improving and expanding Cairo 
                         <br />
                         <p>Tosin Akinbowa</p>
                       </a>
-                    </td>
-                    <td>
+                  </td>
+                  <td>
                       <a href="https://github.com/mimiprosper">
                         <img
                           src="https://avatars.githubusercontent.com/u/12185633?v=4&s=100"
@@ -132,8 +132,8 @@ We are grateful to the following contributors for improving and expanding Cairo 
                         <br />
                         <p>Emmanuel Okeke</p>
                       </a>
-                    </td>
-                    <td>
+                  </td>
+                  <td>
                       <a href="https://github.com/Signor1">
                         <img
                           src="https://avatars.githubusercontent.com/u/94352660?v=4&s=100"
@@ -142,8 +142,18 @@ We are grateful to the following contributors for improving and expanding Cairo 
                         <br />
                         <p>Omemgboji Emmanuel</p>
                       </a>
-                    </td>
-                  </tr>
+                  </td>
+                  <td>
+                      <a href="https://github.com/Snehagupta1907">
+                        <img
+                          src="https://avatars.githubusercontent.com/u/96808735?v=4&s=100"
+                          alt="Sneha's Image"
+                        />
+                        <br />
+                        <p>Sneha Gupta</p>
+                      </a>
+                  </td>
+                </tr>
     </tbody>
 </table>
 
