@@ -16,7 +16,7 @@ The provided Cairo code defines a basic Vesting contract. It implements essentia
 **transfer_beneficiary:** This function changes beneficiary 
 **get_beneficiaries:** This function get all beneficiaries
 
-```
+``` rust
 use core::array::Array;
 use starknet::ContractAddress;
 
