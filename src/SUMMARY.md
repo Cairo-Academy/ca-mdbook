@@ -13,6 +13,7 @@
   - [Stake Contract](./contract/stake.md)
   - [Token Bridge Contract](./contract/tokenbridge.md)
   - [Vesting Contract](./contract/vesting.md)
+  -[Voting Contract](./contract/votingcontract.md)
 - [Starknet AI Agents](./aiagents.md)
 - [Dojo Games](./dojo.md)
 - [Cairo Programs](./programs.md)
